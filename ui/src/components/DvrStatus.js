@@ -10,16 +10,21 @@ import axios from "axios";
 
 export default function useDvrVodStatus() {
   const navigate = useNavigate();
-  const [vodStatus, setVodStatus] = React.useState();
-  const [dvrStatus, setDvrStatus] = React.useState();
+  const [status, setStatus] = React.useState({ vod: undefined, dvr: undefined });
 
   React.useEffect(() => {
-    axios.post('/terraform/v1/hooks/vod/query', {
-    }, {
+    const p0 = axios.post('/terraform/v1/hooks/vod/query', {}, {
       headers: Token.loadBearerHeader(),
-    }).then(res => {
-      console.log(`VodPattern: Query ok, ${JSON.stringify(res.data.data)}`);
-      setVodStatus(res.data.data);
+    });
+    const p1 = axios.post('/terraform/v1/hooks/dvr/query', {}, {
+      headers: Token.loadBearerHeader(),
+    });
+
+    Promise.all([p0, p1]).then(([vodRes, dvrRes]) => {
+      console.log(`VodPattern: Query ok, ${JSON.stringify(vodRes.data.data)}`);
+      console.log(`DvrPattern: Query ok, ${JSON.stringify(dvrRes.data.data)}`);
+      // Update state once to prevent unnecessary re-renders.
+      setStatus({ vod: vodRes.data.data, dvr: dvrRes.data.data });
     }).catch(e => {
       const err = e.response.data;
       if (err.code === Errors.auth) {
@@ -31,25 +36,7 @@ export default function useDvrVodStatus() {
     });
   }, [navigate]);
 
-  React.useEffect(() => {
-    axios.post('/terraform/v1/hooks/dvr/query', {
-    }, {
-      headers: Token.loadBearerHeader(),
-    }).then(res => {
-      console.log(`DvrPattern: Query ok, ${JSON.stringify(res.data.data)}`);
-      setDvrStatus(res.data.data);
-    }).catch(e => {
-      const err = e.response.data;
-      if (err.code === Errors.auth) {
-        alert(`Token过期，请重新登录，${err.code}: ${err.data.message}`);
-        navigate('/routers-logout');
-      } else {
-        alert(`服务器错误，${err.code}: ${err.data.message}`);
-      }
-    });
-  }, [navigate]);
-
-  return [dvrStatus, vodStatus];
+  return [status.dvr, status.vod];
 }
 
 export function useRecordStatus() {
