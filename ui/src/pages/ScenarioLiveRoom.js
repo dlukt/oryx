@@ -114,10 +114,17 @@ function ScenarioLiveRoomList({setRoomId}) {
         headers: Token.loadBearerHeader(),
       }).then(res => {
         const {rooms} = res.data.data;
-        setRooms(rooms?.sort((a, b) => {
+        const newRoomsSorted = rooms?.sort((a, b) => {
           if (a.created_at === b.created_at) return a.uuid > b.uuid ? -1 : 1;
           return a.created_at > b.created_at ? -1 : 1;
-        }) || []);
+        }) || [];
+
+        setRooms(prevRooms => {
+          if (JSON.stringify(prevRooms) === JSON.stringify(newRoomsSorted)) {
+            return prevRooms;
+          }
+          return newRoomsSorted;
+        });
         console.log(`Status: List ok, data=${JSON.stringify(res.data.data)}`);
       }).catch(handleError);
     };
@@ -126,7 +133,6 @@ function ScenarioLiveRoomList({setRoomId}) {
     const timer = setInterval(() => refreshLiveRoomsTask(), 3 * 1000);
     return () => {
       clearInterval(timer);
-      setRooms([]);
     }
   }, [handleError, setRooms, refreshNow]);
 
