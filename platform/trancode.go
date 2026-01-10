@@ -99,6 +99,10 @@ func (v *TranscodeWorker) Handle(ctx context.Context, handler *http.ServeMux) er
 				return errors.Wrapf(err, "authenticate")
 			}
 
+			if err := ValidateServerURL(config.Server); err != nil {
+				return err
+			}
+
 			if b, err := json.Marshal(config); err != nil {
 				return errors.Wrapf(err, "marshal conf %v", config)
 			} else if err := rdb.HSet(ctx, SRS_TRANSCODE_CONFIG, "global", string(b)).Err(); err != nil && err != redis.Nil {
