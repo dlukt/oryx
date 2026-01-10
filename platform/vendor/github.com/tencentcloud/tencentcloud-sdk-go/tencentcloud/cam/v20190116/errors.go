@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,30 @@ const (
 	// 操作访问密钥错误。
 	FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
 
+	// 协助审批人已达到上限。
+	FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+
+	// 生成AuthToken异常。
+	FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+
+	// CIC的身份提供商禁止操作
+	FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
+
+	// 存在高风险操作。
+	FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+
+	// 凭据操作失败。
+	FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+
+	// 禁止当前用户创建子账号。
+	FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
+
+	// 获取用户地域信息失败
+	FAILEDOPERATION_GETUSERAREAERROR = "FailedOperation.GetUserAreaError"
+
+	// 集团策略不允许操作。
+	FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
+
 	// 用户策略数超过上限。
 	FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 
@@ -44,6 +68,9 @@ const (
 	// 解绑标签失败。
 	FAILEDOPERATION_UNTAGRESOURCEFAILED = "FailedOperation.UnTagResourceFailed"
 
+	// 禁止变更
+	FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
+
 	// 用户未绑定手机。
 	FAILEDOPERATION_USERNOTBINDPHONE = "FailedOperation.UserNotBindPhone"
 
@@ -59,6 +86,9 @@ const (
 	// 内部错误。
 	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 
+	// 系统错误，未知异常。
+	INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
@@ -73,6 +103,9 @@ const (
 
 	// 策略语法中操作服务不存在。
 	INVALIDPARAMETER_ACTIONSERVICENOTEXIST = "InvalidParameter.ActionServiceNotExist"
+
+	// 协助审批类型不合法。
+	INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
 
 	// principal字段的授权对象关联策略数已达到上限。
 	INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -113,8 +146,17 @@ const (
 	// 用户组中的子用户数量达到上限。
 	INVALIDPARAMETER_GROUPUSERFULL = "InvalidParameter.GroupUserFull"
 
+	// IP段格式不合法。
+	INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+
+	// IP段重复。
+	INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
+
 	// 身份提供商名称已经使用。
 	INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
+
+	// 接口不存在。
+	INVALIDPARAMETER_INTERFACENOTEXIST = "InvalidParameter.InterfaceNotExist"
 
 	// Keyword字段不合法。
 	INVALIDPARAMETER_KEYWORDERROR = "InvalidParameter.KeywordError"
@@ -122,11 +164,17 @@ const (
 	// 多因子Token验证失败。
 	INVALIDPARAMETER_MFATOKENERROR = "InvalidParameter.MFATokenError"
 
+	// 名字或者id号错误。
+	INVALIDPARAMETER_NAMEORIDCARDERROR = "InvalidParameter.NameOrIdCardError"
+
 	// CAM不支持策略文档中所指定的资源类型。
 	INVALIDPARAMETER_NOTSUPPORTPRODUCT = "InvalidParameter.NotSupportProduct"
 
 	// 一次操作实体数过多。
 	INVALIDPARAMETER_OPERATEENTITIESOVERLIMIT = "InvalidParameter.OperateEntitiesOverLimit"
+
+	// 一次操作策略数过多。
+	INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 
 	// 当前角色仅支持企业管理员操作，如需修改，请联系企业管理员。
 	INVALIDPARAMETER_ORGANIZATIONROLEOPERATEERROR = "InvalidParameter.OrganizationRoleOperateError"
@@ -169,6 +217,9 @@ const (
 
 	// PrincipalService不存在。
 	INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
+
+	// 消息接收人超出限制。
+	INVALIDPARAMETER_RECEIVEROVERLIMIT = "InvalidParameter.ReceiverOverLimit"
 
 	// 策略语法中资源内容不正确。
 	INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
@@ -221,11 +272,14 @@ const (
 	// 策略文档的Statement字段不合法。
 	INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 
-	// 子帐号数量达到上限。
+	// 子账号数量达到上限。
 	INVALIDPARAMETER_SUBUSERFULL = "InvalidParameter.SubUserFull"
 
 	// 子用户名称重复。
 	INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
+
+	// 子账号不存在已认证的手机。
+	INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
 
 	// 超出标签限制。
 	INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
@@ -241,6 +295,9 @@ const (
 
 	// 用户名不合法。
 	INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
+
+	// 用户未实名。
+	INVALIDPARAMETER_USERNOTAUTH = "InvalidParameter.UserNotAuth"
 
 	// 用户对象不存在。
 	INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
@@ -266,11 +323,20 @@ const (
 	// 身份提供商已达到上限。
 	LIMITEXCEEDED_IDENTITYFULL = "LimitExceeded.IdentityFull"
 
+	// 请求超出限制。
+	LIMITEXCEEDED_UIN = "LimitExceeded.Uin"
+
 	// 每个账号最多支持两个AccessKey。
 	OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 
+	// 禁止变更 CIC Policy。
+	OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+
 	// 存在未删除的API密钥。
 	OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
+
+	// 关联到标签组的策略，不能包含标签条件键。
+	OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 
 	// 子用户不允许操作主账号密钥。
 	OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
@@ -278,11 +344,17 @@ const (
 	// 被操作密钥与账号不匹配。
 	OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
 
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+
 	// 创建子用户频率超过限制。
 	REQUESTLIMITEXCEEDED_CREATEUSER = "RequestLimitExceeded.CreateUser"
 
 	// 用户账号超出了限制。
 	REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
+
+	// 未开启CAM数据流认证。
+	RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
 
 	// 用户组不存在。
 	RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
@@ -301,6 +373,12 @@ const (
 
 	// 用户不存在。
 	RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+
+	// 用户不存在。
+	RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+
+	// 凭据信息异常。
+	RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"

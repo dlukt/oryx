@@ -4,12 +4,12 @@ import {useSrsLanguage} from "../components/LanguageSwitch";
 import {useTranslation} from "react-i18next";
 import {Locale, Token} from "../utils";
 import axios from "axios";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {OpenAISecretSettings} from "../components/OpenAISettings";
 import {useLocation, useNavigate} from "react-router-dom";
 
 export default function ScenarioOCR(props) {
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [config, setConfig] = React.useState();
   const [uuid, setUuid] = React.useState();
   const [activeKey, setActiveKey] = React.useState();
@@ -43,7 +43,7 @@ export default function ScenarioOCR(props) {
 function ScenarioOCRImpl({activeKey, defaultEnabled, defaultConf, defaultUuid}) {
   const language = useSrsLanguage();
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const navigate = useNavigate();
   const location = useLocation();
 

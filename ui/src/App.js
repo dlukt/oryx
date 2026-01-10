@@ -30,7 +30,7 @@ import Components from "./pages/Components";
 import Scenario from "./pages/Scenario";
 import Settings from "./pages/Settings";
 import Contact from "./pages/Contact";
-import {ErrorBoundary, useErrorHandler} from 'react-error-boundary';
+import {ErrorBoundary, useErrorBoundary} from 'react-error-boundary';
 import {SrsErrorBoundary} from "./components/SrsErrorBoundary";
 import resources from "./resources/locale.json";
 import {SrsEnvContext} from "./components/SrsEnvContext";
@@ -56,7 +56,7 @@ function RootError({error}) {
 
 function AppPreImpl() {
   const [env, setEnv] = React.useContext(SrsEnvContext);
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   React.useEffect(() => {
     if (!setEnv) return;
@@ -76,7 +76,7 @@ function AppImpl() {
   const [loading, setLoading] = React.useState(true);
   // Possible value is 1: yes, -1: no, 0: undefined.
   const [initialized, setInitialized] = React.useState(0);
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   React.useEffect(() => {
     axios.get('/terraform/v1/mgmt/check').then(res => {

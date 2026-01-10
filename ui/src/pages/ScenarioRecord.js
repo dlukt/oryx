@@ -9,7 +9,7 @@ import {Token, StreamURL, Clipboard} from "../utils";
 import axios from "axios";
 import moment from "moment";
 import {useRecordStatus} from "../components/DvrStatus";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {useSrsLanguage} from "../components/LanguageSwitch";
 import * as Icon from "react-bootstrap-icons";
@@ -50,7 +50,7 @@ export default function ScenarioRecord() {
 function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultPostProcess, defaultPostProcessValue, recordHome}) {
   const language = useSrsLanguage();
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   const [recordAll, setRecordAll] = React.useState(defaultApplyAll);
   const [recordFiles, setRecordFiles] = React.useState();

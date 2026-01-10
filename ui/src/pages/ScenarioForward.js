@@ -8,7 +8,7 @@ import React from "react";
 import {Token} from "../utils";
 import axios from "axios";
 import moment from "moment";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useSrsLanguage} from "../components/LanguageSwitch";
 import {useTranslation} from "react-i18next";
 import {SrsEnvContext} from "../components/SrsEnvContext";
@@ -17,7 +17,7 @@ export default function ScenarioForward() {
   const [init, setInit] = React.useState();
   const [activeKey, setActiveKey] = React.useState();
   const [secrets, setSecrets] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   React.useEffect(() => {
     axios.post('/terraform/v1/ffmpeg/forward/secret', {
@@ -54,7 +54,7 @@ export default function ScenarioForward() {
 function ScenarioForwardImpl({defaultActiveKey, defaultSecrets}) {
   const language = useSrsLanguage();
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const env = React.useContext(SrsEnvContext)[0];
 
   const [configs, setConfigs] = React.useState([]);

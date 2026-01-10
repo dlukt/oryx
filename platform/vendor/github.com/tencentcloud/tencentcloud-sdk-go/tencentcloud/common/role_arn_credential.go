@@ -2,6 +2,7 @@ package common
 
 import (
 	"log"
+	"sync"
 	"time"
 )
 
@@ -14,9 +15,13 @@ type RoleArnCredential struct {
 	tmpSecretId     string
 	tmpSecretKey    string
 	source          Provider
+	mu              sync.Mutex
 }
 
 func (c *RoleArnCredential) GetSecretId() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.needRefresh() {
 		c.refresh()
 	}
@@ -24,6 +29,9 @@ func (c *RoleArnCredential) GetSecretId() string {
 }
 
 func (c *RoleArnCredential) GetSecretKey() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.needRefresh() {
 		c.refresh()
 	}
@@ -32,10 +40,23 @@ func (c *RoleArnCredential) GetSecretKey() string {
 }
 
 func (c *RoleArnCredential) GetToken() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if c.needRefresh() {
 		c.refresh()
 	}
 	return c.token
+}
+
+func (c *RoleArnCredential) GetCredential() (string, string, string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.needRefresh() {
+		c.refresh()
+	}
+	return c.tmpSecretId, c.tmpSecretKey, c.token
 }
 
 func (c *RoleArnCredential) needRefresh() bool {
@@ -49,6 +70,16 @@ func (c *RoleArnCredential) refresh() {
 	newCre, err := c.source.GetCredential()
 	if err != nil {
 		log.Println(err)
+		return
 	}
-	*c = *newCre.(*RoleArnCredential)
+
+	newCred := newCre.(*RoleArnCredential)
+	c.roleArn = newCred.roleArn
+	c.roleSessionName = newCred.roleSessionName
+	c.durationSeconds = newCred.durationSeconds
+	c.expiredTime = newCred.expiredTime
+	c.token = newCred.token
+	c.tmpSecretId = newCred.tmpSecretId
+	c.tmpSecretKey = newCred.tmpSecretKey
+	c.source = newCred.source
 }

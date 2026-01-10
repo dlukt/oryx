@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ const (
 
 	// 操作失败：不支持的封面类型。
 	FAILEDOPERATION_COVERTYPE = "FailedOperation.CoverType"
+
+	// 操作失败：数据库操作失败。
+	FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 
 	// 域名部署中，不能变更配置。
 	FAILEDOPERATION_DOMAINDEPLOYING = "FailedOperation.DomainDeploying"
@@ -142,6 +145,9 @@ const (
 
 	// 参数值错误：AI 识别 Definition。
 	INVALIDPARAMETERVALUE_AIRECOGNITIONTASKDEFINITION = "InvalidParameterValue.AiRecognitionTaskDefinition"
+
+	// 没有开通点播业务。
+	INVALIDPARAMETERVALUE_APPID = "InvalidParameterValue.AppId"
 
 	// Area 参数错误。
 	INVALIDPARAMETERVALUE_AREA = "InvalidParameterValue.Area"
@@ -266,8 +272,14 @@ const (
 	// 参数错误：无效的结束时间。
 	INVALIDPARAMETERVALUE_ENDTIMEOFFSET = "InvalidParameterValue.EndTimeOffset"
 
+	// 名字重复
+	INVALIDPARAMETERVALUE_EXISTEDNAME = "InvalidParameterValue.ExistedName"
+
 	// 参数值错误：ExpireTime 格式错误。
 	INVALIDPARAMETERVALUE_EXPIRETIME = "InvalidParameterValue.ExpireTime"
+
+	// ExpiredTime 错误。
+	INVALIDPARAMETERVALUE_EXPIREDTIME = "InvalidParameterValue.ExpiredTime"
 
 	// 参数值错误：人脸重复。
 	INVALIDPARAMETERVALUE_FACEDUPLICATE = "InvalidParameterValue.FaceDuplicate"
@@ -338,14 +350,23 @@ const (
 	// 参数错误：图片水印模板。
 	INVALIDPARAMETERVALUE_IMAGETEMPLATE = "InvalidParameterValue.ImageTemplate"
 
+	// Index 参数错误。
+	INVALIDPARAMETERVALUE_INDEX = "InvalidParameterValue.Index"
+
 	// 参数值错误：Interval 无效。
 	INVALIDPARAMETERVALUE_INTERVAL = "InvalidParameterValue.Interval"
 
 	// 参数错误：无效的操作类型。
 	INVALIDPARAMETERVALUE_INVALIDOPERATIONTYPE = "InvalidParameterValue.InvalidOperationType"
 
+	// 参数值错误：错误固化参数。
+	INVALIDPARAMETERVALUE_ISPERSISTENCE = "InvalidParameterValue.IsPersistence"
+
 	// Isps 参数错误。
 	INVALIDPARAMETERVALUE_ISPS = "InvalidParameterValue.Isps"
+
+	// ItemId 错误。
+	INVALIDPARAMETERVALUE_ITEMID = "InvalidParameterValue.ItemId"
 
 	// 参数值错误：打点信息内容过长。
 	INVALIDPARAMETERVALUE_KEYFRAMEDESCCONTENTTOOLONG = "InvalidParameterValue.KeyFrameDescContentTooLong"
@@ -404,11 +425,20 @@ const (
 	// 参数值错误：文件原存储类型异常。
 	INVALIDPARAMETERVALUE_ORIGINALSTORAGECLASS = "InvalidParameterValue.OriginalStorageClass"
 
+	// 参数值错误：错误的输出媒体文件类型。
+	INVALIDPARAMETERVALUE_OUTPUTMEDIATYPE = "InvalidParameterValue.OutputMediaType"
+
 	// 参数值错误：ParentId 无效。
 	INVALIDPARAMETERVALUE_PARENTID = "InvalidParameterValue.ParentId"
 
 	// 参数值错误：人脸图片格式错误。
 	INVALIDPARAMETERVALUE_PICFORMATERROR = "InvalidParameterValue.PicFormatError"
+
+	// 参数值错误：错误的精度参数。
+	INVALIDPARAMETERVALUE_PRECISION = "InvalidParameterValue.Precision"
+
+	// 参数值错误：错误的 Procedure 。
+	INVALIDPARAMETERVALUE_PROCEDURE = "InvalidParameterValue.Procedure"
 
 	// 任务流模板名无效。
 	INVALIDPARAMETERVALUE_PROCEDURENAME = "InvalidParameterValue.ProcedureName"
@@ -443,6 +473,15 @@ const (
 	// 参数值错误：ReviewWallSwitch 参数取值非法。
 	INVALIDPARAMETERVALUE_REVIEWWALLSWITCH = "InvalidParameterValue.ReviewWallSwitch"
 
+	// 相同 ID 的播单已经存在。
+	INVALIDPARAMETERVALUE_ROUNDPLAYALREADYEXISTS = "InvalidParameterValue.RoundPlayAlreadyExists"
+
+	// RoundPlayId 参数错误。
+	INVALIDPARAMETERVALUE_ROUNDPLAYID = "InvalidParameterValue.RoundPlayId"
+
+	// RoundPlaylist 参数长度错误。
+	INVALIDPARAMETERVALUE_ROUNDPLAYLIST = "InvalidParameterValue.RoundPlaylist"
+
 	// 参数值错误：RowCount。
 	INVALIDPARAMETERVALUE_ROWCOUNT = "InvalidParameterValue.RowCount"
 
@@ -454,6 +493,15 @@ const (
 
 	// 参数值错误：SampleType。
 	INVALIDPARAMETERVALUE_SAMPLETYPE = "InvalidParameterValue.SampleType"
+
+	// 场景类型参数取值无效。
+	INVALIDPARAMETERVALUE_SCENARIOTYPE = "InvalidParameterValue.ScenarioType"
+
+	// 参数错误：Scheme 无效。
+	INVALIDPARAMETERVALUE_SCHEME = "InvalidParameterValue.Scheme"
+
+	// 域名没有开启 https。
+	INVALIDPARAMETERVALUE_SCHEMECONFLICT = "InvalidParameterValue.SchemeConflict"
 
 	// 参数值错误：ScreenshotInterval 参数取值非法。
 	INVALIDPARAMETERVALUE_SCREENSHOTINTERVAL = "InvalidParameterValue.ScreenshotInterval"
@@ -512,7 +560,7 @@ const (
 	// 无效的流ID参数。
 	INVALIDPARAMETERVALUE_STREAMIDS = "InvalidParameterValue.StreamIds"
 
-	// 参数值错误：子应用 ID。
+	// 参数值错误：应用 ID。
 	INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
 
 	// 参数值错误：SubtitleFormat 参数非法。
@@ -569,6 +617,9 @@ const (
 	// 去重识别码一天内重复，请求被去重。
 	INVALIDPARAMETERVALUE_UNIQUEIDENTIFIER = "InvalidParameterValue.UniqueIdentifier"
 
+	// 域名不能被设置。
+	INVALIDPARAMETERVALUE_UNSUPPORTDOMAIN = "InvalidParameterValue.UnsupportDomain"
+
 	// 参数值错误：文件不支持该解冻方式。
 	INVALIDPARAMETERVALUE_UNSUPPORTEDRESTORETIER = "InvalidParameterValue.UnsupportedRestoreTier"
 
@@ -617,10 +668,22 @@ const (
 	// 超过限制值：新旧打点信息个数和超过限制值。
 	LIMITEXCEEDED_KEYFRAMEDESCCOUNTREACHMAX = "LimitExceeded.KeyFrameDescCountReachMax"
 
+	// 播放列表长度太大。
+	LIMITEXCEEDED_PLAYLIST = "LimitExceeded.PlayList"
+
+	// 播单列表长度超过上限。
+	LIMITEXCEEDED_ROUNDPLAYLIST = "LimitExceeded.RoundPlaylist"
+
+	// 超过播单总数限制。
+	LIMITEXCEEDED_ROUNDPLAYS = "LimitExceeded.RoundPlays"
+
+	// 运行中的播单超过最大数量。
+	LIMITEXCEEDED_RUNNINGROUNDPLAYS = "LimitExceeded.RunningRoundPlays"
+
 	// 超过限制值：新旧标签个数和超过限制值。
 	LIMITEXCEEDED_TAGCOUNTREACHMAX = "LimitExceeded.TagCountReachMax"
 
-	// 超过限制值：模板数超限。
+	// 超过限制值：模板数超过上限 100 个，如需更多请[提交工单](https://console.cloud.tencent.com/workorder/category)。
 	LIMITEXCEEDED_TOOMUCHTEMPLATE = "LimitExceeded.TooMuchTemplate"
 
 	// 缺少参数错误。
@@ -661,6 +724,9 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 域名解析验证失败
+	UNAUTHORIZEDOPERATION_DOMAINRECORDNOTVERIFIED = "UnauthorizedOperation.DomainRecordNotVerified"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"

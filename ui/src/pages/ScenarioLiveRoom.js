@@ -9,7 +9,7 @@ import {Accordion, Button, Card, Form, Nav, Spinner, Table} from "react-bootstra
 import {useTranslation} from "react-i18next";
 import axios from "axios";
 import {Clipboard, Locale, Token} from "../utils";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useSearchParams} from "react-router-dom";
 import {buildUrls} from "../components/UrlGenerator";
 import {SrsEnvContext} from "../components/SrsEnvContext";
@@ -37,7 +37,7 @@ export default function ScenarioLiveRoom() {
 function ScenarioLiveRoomList({setRoomId}) {
   const language = useSrsLanguage();
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [searchParams, setSearchParams] = useSearchParams();
   const [name, setName] = React.useState('My Live Room');
   const [rooms, setRooms] = React.useState([]);
@@ -227,7 +227,7 @@ function ScenarioLiveRoomList({setRoomId}) {
 
 function ScenarioLiveRoomImpl({roomId, setRoomId}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [requesting, setRequesting] = React.useState(false);
   const [room, setRoom] = React.useState();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -413,7 +413,7 @@ function LiveRoomStreamer({room}) {
 
 function LiveRoomAssistant({room, requesting, updateRoom}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const language = useSrsLanguage();
 
   const [aiName, setAiName] = React.useState(room.aiName);
