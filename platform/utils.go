@@ -1389,6 +1389,14 @@ func ChooseNotEmpty(strings ...string) string {
 	return ""
 }
 
+// ValidateServerURL checks if the server URL is valid to prevent argument injection.
+func ValidateServerURL(server string) error {
+	if strings.HasPrefix(server, "-") {
+		return errors.Errorf("invalid server %v", server)
+	}
+	return nil
+}
+
 // RebuildStreamURL rebuild the stream URL, escape username and password in URL.
 func RebuildStreamURL(rawURL string) (*url.URL, error) {
 	// If parse success, for example, no special chars in username and password, return the URL.

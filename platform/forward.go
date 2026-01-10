@@ -87,6 +87,9 @@ func (v *ForwardWorker) Handle(ctx context.Context, handler *http.ServeMux) erro
 				if userConf.Server == "" {
 					return errors.New("no server")
 				}
+				if err := ValidateServerURL(userConf.Server); err != nil {
+					return err
+				}
 				if userConf.Server == "" && userConf.Secret == "" {
 					return errors.New("no secret")
 				}

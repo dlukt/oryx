@@ -36,6 +36,45 @@ func TestUtils_RebuildStreamURL(t *testing.T) {
 	}
 }
 
+func TestValidateServerURL(t *testing.T) {
+	tests := []struct {
+		name      string
+		server    string
+		shouldErr bool
+	}{
+		{
+			name:      "Valid server",
+			server:    "rtmp://localhost/live",
+			shouldErr: false,
+		},
+		{
+			name:      "Invalid server starts with dash",
+			server:    "-f",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid server starts with double dash",
+			server:    "--help",
+			shouldErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateServerURL(tt.server)
+			if tt.shouldErr {
+				if err == nil {
+					t.Errorf("Expected error for server %v, but got none", tt.server)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected valid for server %v, but got error: %v", tt.server, err)
+				}
+			}
+		})
+	}
+}
+
 func TestUtils_ParseFFmpegLogs(t *testing.T) {
 	for _, e := range []struct {
 		log   string
