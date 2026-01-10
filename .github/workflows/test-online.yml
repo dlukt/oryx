@@ -254,8 +254,8 @@ jobs:
               tar xf platform.tar.gz
               docker load -i platform.tar
             fi
-            docker tag platform:latest ossrs/oryx:$SRS_TAG
-            docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/ossrs/oryx:$SRS_TAG
+            docker tag platform:latest ghcr.io/dlukt/oryx:$SRS_TAG
+            docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/dlukt/oryx:$SRS_TAG
             docker image prune -f
             docker images
             
