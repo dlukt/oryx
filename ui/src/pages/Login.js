@@ -23,11 +23,10 @@ export default function Login({onLogin}) {
 
 function LoginImpl({onLogin}) {
   const [plaintext, setPlaintext] = React.useState(true);
-  const [password, setPassword] = React.useState();
+  const [password, setPassword] = React.useState('');
   const [operating, setOperating] = React.useState(false);
   const navigate = useNavigate();
-  const passwordRef = React.useRef();
-  const plaintextRef = React.useRef();
+  const inputRef = React.useRef();
   const handleError = useErrorHandler();
   const {t} = useTranslation();
 
@@ -53,10 +52,10 @@ function LoginImpl({onLogin}) {
     }).catch(handleError);
   }, [navigate, handleError]);
 
-  // Focus to password input.
+  // Focus to password input on mount.
   React.useEffect(() => {
-    plaintext ? plaintextRef.current?.focus() : passwordRef.current?.focus();
-  }, [plaintext]);
+    inputRef.current?.focus();
+  }, []);
 
   // User click login button.
   // Note that we use callback, because when we use it in other hooks, it might be null, for example, to use handleLogin
@@ -83,34 +82,47 @@ function LoginImpl({onLogin}) {
   return (
     <>
       <Container fluid>
-        <Form>
+        <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>{t('login.passwordLabel')}</Form.Label>
-            {
-              !plaintext &&
-              <Form.Control type="password" placeholder="Password" ref={passwordRef} defaultValue={password}
-                onChange={(e) => setPassword(e.target.value)}/>
-            }
-            {
-              plaintext &&
-              <Form.Control type="text" placeholder="Password" ref={plaintextRef} defaultValue={password}
-                onChange={(e) => setPassword(e.target.value)}/>
-            }
+            <Form.Control
+              type={plaintext ? "text" : "password"}
+              placeholder={t('login.passwordLabel')}
+              ref={inputRef}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <Form.Text className="text-muted">
               * {t('login.passwordTip')}
             </Form.Text>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label={t('login.labelShow')} defaultChecked={plaintext}
-              onClick={() => setPlaintext(!plaintext)}/>
+            <Form.Check
+              type="checkbox"
+              label={t('login.labelShow')}
+              checked={plaintext}
+              onChange={() => setPlaintext(!plaintext)}
+            />
           </Form.Group>
-          <Button variant="primary" type="submit" disabled={operating} onClick={(e) => handleLogin(e)}>
-            {t('login.labelLogin')}
-          </Button> &nbsp;
-          {operating && <Spinner animation="border" variant="success" style={{verticalAlign: 'middle'}} />}
+          <Button variant="primary" type="submit" disabled={operating}>
+            {operating ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                {t('login.labelLogin')}...
+              </>
+            ) : (
+              t('login.labelLogin')
+            )}
+          </Button>
         </Form>
       </Container>
     </>
   );
 }
-
