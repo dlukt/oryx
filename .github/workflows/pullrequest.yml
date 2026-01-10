@@ -107,10 +107,10 @@ jobs:
       - name: Run test for platform image
         run: |
           docker load -i platform.tar
-          docker tag platform ossrs/oryx:5
+          docker tag platform ghcr.io/dlukt/oryx:5
           docker run --rm -d -p 2022:2022 -p 2443:2443 -p 1935:1935 \
             -p 8000:8000/udp -p 10080:10080/udp --name oryx \
-            -v /data:/data -e REACT_APP_LOCALE=zh ossrs/oryx:5
+            -v /data:/data -e REACT_APP_LOCALE=zh ghcr.io/dlukt/oryx:5
       - name: Check and Test service
         run: |
           # We will handle the error by ourselves.
@@ -179,10 +179,10 @@ jobs:
       - name: Run test for platform image
         run: |
           docker load -i platform.tar
-          docker tag platform ossrs/oryx:5
+          docker tag platform ghcr.io/dlukt/oryx:5
           docker run --rm -d -p 2022:2022 -p 2443:2443 -p 1935:1935 \
             -p 8000:8000/udp -p 10080:10080/udp --name oryx \
-            -v /data:/data -e REACT_APP_LOCALE=en ossrs/oryx:5
+            -v /data:/data -e REACT_APP_LOCALE=en ghcr.io/dlukt/oryx:5
       - name: Check and Test service
         run: |
           # We will handle the error by ourselves.
@@ -260,8 +260,8 @@ jobs:
       - name: Load platform image
         run: |
           docker load -i platform.tar
-          docker tag platform:latest ossrs/oryx:$SRS_TAG
-          docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/ossrs/oryx:$SRS_TAG
+          docker tag platform:latest ghcr.io/dlukt/oryx:$SRS_TAG
+          docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/dlukt/oryx:$SRS_TAG
           docker images
       - name: Build package
         run: |
@@ -349,8 +349,8 @@ jobs:
       - name: Load platform image
         run: |
           docker load -i platform.tar
-          docker tag platform:latest ossrs/oryx:$SRS_TAG
-          docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/ossrs/oryx:$SRS_TAG
+          docker tag platform:latest ghcr.io/dlukt/oryx:$SRS_TAG
+          docker tag platform:latest registry.cn-hangzhou.aliyuncs.com/dlukt/oryx:$SRS_TAG
           docker images
       - name: Build package
         run: |
