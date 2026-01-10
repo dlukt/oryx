@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ func NewAddUserResponse() (response *AddUserResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // AddUser
@@ -69,6 +70,8 @@ func NewAddUserResponse() (response *AddUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_SUBUSERFULL = "InvalidParameter.SubUserFull"
@@ -85,6 +88,8 @@ func (c *Client) AddUser(request *AddUserRequest) (response *AddUserResponse, er
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_SUBUSERFULL = "InvalidParameter.SubUserFull"
@@ -95,6 +100,7 @@ func (c *Client) AddUserWithContext(ctx context.Context, request *AddUserRequest
     if request == nil {
         request = NewAddUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AddUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUser require credential")
@@ -123,6 +129,7 @@ func NewAddUserToGroupResponse() (response *AddUserToGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // AddUserToGroup
@@ -155,6 +162,7 @@ func (c *Client) AddUserToGroupWithContext(ctx context.Context, request *AddUser
     if request == nil {
         request = NewAddUserToGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AddUserToGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUserToGroup require credential")
@@ -183,12 +191,14 @@ func NewAttachGroupPolicyResponse() (response *AttachGroupPolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // AttachGroupPolicy
 // 本接口（AttachGroupPolicy）可用于绑定策略到用户组。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -207,6 +217,7 @@ func (c *Client) AttachGroupPolicy(request *AttachGroupPolicyRequest) (response 
 // 本接口（AttachGroupPolicy）可用于绑定策略到用户组。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -221,6 +232,7 @@ func (c *Client) AttachGroupPolicyWithContext(ctx context.Context, request *Atta
     if request == nil {
         request = NewAttachGroupPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachGroupPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachGroupPolicy require credential")
@@ -249,12 +261,14 @@ func NewAttachRolePolicyResponse() (response *AttachRolePolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // AttachRolePolicy
 // 本接口（AttachRolePolicy）用于绑定策略到角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -270,6 +284,7 @@ func (c *Client) AttachRolePolicy(request *AttachRolePolicyRequest) (response *A
 // 本接口（AttachRolePolicy）用于绑定策略到角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -281,6 +296,7 @@ func (c *Client) AttachRolePolicyWithContext(ctx context.Context, request *Attac
     if request == nil {
         request = NewAttachRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachRolePolicy require credential")
@@ -309,12 +325,14 @@ func NewAttachUserPolicyResponse() (response *AttachUserPolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // AttachUserPolicy
 // 本接口（AttachUserPolicy）可用于绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -332,6 +350,7 @@ func (c *Client) AttachUserPolicy(request *AttachUserPolicyRequest) (response *A
 // 本接口（AttachUserPolicy）可用于绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -345,6 +364,7 @@ func (c *Client) AttachUserPolicyWithContext(ctx context.Context, request *Attac
     if request == nil {
         request = NewAttachUserPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachUserPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachUserPolicy require credential")
@@ -353,6 +373,64 @@ func (c *Client) AttachUserPolicyWithContext(ctx context.Context, request *Attac
     request.SetContext(ctx)
     
     response = NewAttachUserPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBuildDataFlowAuthTokenRequest() (request *BuildDataFlowAuthTokenRequest) {
+    request = &BuildDataFlowAuthTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "BuildDataFlowAuthToken")
+
+
+    return
+}
+
+func NewBuildDataFlowAuthTokenResponse() (response *BuildDataFlowAuthTokenResponse) {
+    response = &BuildDataFlowAuthTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// BuildDataFlowAuthToken
+// 获取数据流认证Token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+//  FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
+//  RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
+func (c *Client) BuildDataFlowAuthToken(request *BuildDataFlowAuthTokenRequest) (response *BuildDataFlowAuthTokenResponse, err error) {
+    return c.BuildDataFlowAuthTokenWithContext(context.Background(), request)
+}
+
+// BuildDataFlowAuthToken
+// 获取数据流认证Token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
+//  FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  RESOURCENOTFOUND_DATAFLOWAUTHCLOSE = "ResourceNotFound.DataFlowAuthClose"
+//  RESOURCEUNAVAILABLE_FLOWAUTHSECET = "ResourceUnavailable.FlowAuthSecet"
+func (c *Client) BuildDataFlowAuthTokenWithContext(ctx context.Context, request *BuildDataFlowAuthTokenRequest) (response *BuildDataFlowAuthTokenResponse, err error) {
+    if request == nil {
+        request = NewBuildDataFlowAuthTokenRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "BuildDataFlowAuthToken")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("BuildDataFlowAuthToken require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewBuildDataFlowAuthTokenResponse()
     err = c.Send(request, response)
     return
 }
@@ -373,6 +451,7 @@ func NewConsumeCustomMFATokenResponse() (response *ConsumeCustomMFATokenResponse
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ConsumeCustomMFAToken
@@ -393,6 +472,7 @@ func (c *Client) ConsumeCustomMFATokenWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConsumeCustomMFATokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ConsumeCustomMFAToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConsumeCustomMFAToken require credential")
@@ -421,6 +501,7 @@ func NewCreateAccessKeyResponse() (response *CreateAccessKeyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateAccessKey
@@ -453,6 +534,7 @@ func (c *Client) CreateAccessKeyWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAccessKey require credential")
@@ -481,12 +563,14 @@ func NewCreateGroupResponse() (response *CreateGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateGroup
 // 创建用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPFULL = "InvalidParameter.GroupFull"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -498,6 +582,7 @@ func (c *Client) CreateGroup(request *CreateGroupRequest) (response *CreateGroup
 // 创建用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPFULL = "InvalidParameter.GroupFull"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -505,6 +590,7 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     if request == nil {
         request = NewCreateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateGroup require credential")
@@ -513,6 +599,68 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     request.SetContext(ctx)
     
     response = NewCreateGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMessageReceiverRequest() (request *CreateMessageReceiverRequest) {
+    request = &CreateMessageReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "CreateMessageReceiver")
+
+
+    return
+}
+
+func NewCreateMessageReceiverResponse() (response *CreateMessageReceiverResponse) {
+    response = &CreateMessageReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// CreateMessageReceiver
+// 创建消息接收人接口：仅允许已完成实名认证的用户访问消息接收人接口，并对每个用户限制每天最多请求10次。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INTERFACENOTEXIST = "InvalidParameter.InterfaceNotExist"
+//  INVALIDPARAMETER_RECEIVEROVERLIMIT = "InvalidParameter.ReceiverOverLimit"
+//  INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
+//  INVALIDPARAMETER_USERNOTAUTH = "InvalidParameter.UserNotAuth"
+//  LIMITEXCEEDED_UIN = "LimitExceeded.Uin"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateMessageReceiver(request *CreateMessageReceiverRequest) (response *CreateMessageReceiverResponse, err error) {
+    return c.CreateMessageReceiverWithContext(context.Background(), request)
+}
+
+// CreateMessageReceiver
+// 创建消息接收人接口：仅允许已完成实名认证的用户访问消息接收人接口，并对每个用户限制每天最多请求10次。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INTERFACENOTEXIST = "InvalidParameter.InterfaceNotExist"
+//  INVALIDPARAMETER_RECEIVEROVERLIMIT = "InvalidParameter.ReceiverOverLimit"
+//  INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
+//  INVALIDPARAMETER_USERNOTAUTH = "InvalidParameter.UserNotAuth"
+//  LIMITEXCEEDED_UIN = "LimitExceeded.Uin"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateMessageReceiverWithContext(ctx context.Context, request *CreateMessageReceiverRequest) (response *CreateMessageReceiverResponse, err error) {
+    if request == nil {
+        request = NewCreateMessageReceiverRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateMessageReceiver")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMessageReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewCreateMessageReceiverResponse()
     err = c.Send(request, response)
     return
 }
@@ -533,12 +681,14 @@ func NewCreateOIDCConfigResponse() (response *CreateOIDCConfigResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateOIDCConfig
 // 创建角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -553,6 +703,7 @@ func (c *Client) CreateOIDCConfig(request *CreateOIDCConfigRequest) (response *C
 // 创建角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -563,6 +714,7 @@ func (c *Client) CreateOIDCConfigWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOIDCConfig require credential")
@@ -591,6 +743,7 @@ func NewCreatePolicyResponse() (response *CreatePolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreatePolicy
@@ -616,6 +769,9 @@ func NewCreatePolicyResponse() (response *CreatePolicyResponse) {
 //  INVALIDPARAMETER_POLICYDOCUMENTLENGTHOVERLIMIT = "InvalidParameter.PolicyDocumentLengthOverLimit"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -656,6 +812,9 @@ func (c *Client) CreatePolicy(request *CreatePolicyRequest) (response *CreatePol
 //  INVALIDPARAMETER_POLICYDOCUMENTLENGTHOVERLIMIT = "InvalidParameter.PolicyDocumentLengthOverLimit"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -673,6 +832,7 @@ func (c *Client) CreatePolicyWithContext(ctx context.Context, request *CreatePol
     if request == nil {
         request = NewCreatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePolicy require credential")
@@ -701,6 +861,7 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreatePolicyVersion
@@ -708,6 +869,7 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -729,7 +891,9 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
 //  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -740,6 +904,8 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -752,6 +918,7 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -773,7 +940,9 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
 //  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -784,6 +953,8 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -791,6 +962,7 @@ func (c *Client) CreatePolicyVersionWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreatePolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreatePolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePolicyVersion require credential")
@@ -819,6 +991,7 @@ func NewCreateRoleResponse() (response *CreateRoleResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateRole
@@ -885,6 +1058,7 @@ func (c *Client) CreateRoleWithContext(ctx context.Context, request *CreateRoleR
     if request == nil {
         request = NewCreateRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRole require credential")
@@ -913,6 +1087,7 @@ func NewCreateSAMLProviderResponse() (response *CreateSAMLProviderResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateSAMLProvider
@@ -941,6 +1116,7 @@ func (c *Client) CreateSAMLProviderWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSAMLProvider require credential")
@@ -969,6 +1145,7 @@ func NewCreateServiceLinkedRoleResponse() (response *CreateServiceLinkedRoleResp
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateServiceLinkedRole
@@ -1019,6 +1196,7 @@ func (c *Client) CreateServiceLinkedRoleWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateServiceLinkedRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateServiceLinkedRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateServiceLinkedRole require credential")
@@ -1027,6 +1205,72 @@ func (c *Client) CreateServiceLinkedRoleWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewCreateServiceLinkedRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSubAccountLoginIpPolicyRequest() (request *CreateSubAccountLoginIpPolicyRequest) {
+    request = &CreateSubAccountLoginIpPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "CreateSubAccountLoginIpPolicy")
+
+
+    return
+}
+
+func NewCreateSubAccountLoginIpPolicyResponse() (response *CreateSubAccountLoginIpPolicyResponse) {
+    response = &CreateSubAccountLoginIpPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// CreateSubAccountLoginIpPolicy
+// 增加子账号登录IP策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+//  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
+//  INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
+//  INVALIDPARAMETER_EFFECTERROR = "InvalidParameter.EffectError"
+//  INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+//  INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+func (c *Client) CreateSubAccountLoginIpPolicy(request *CreateSubAccountLoginIpPolicyRequest) (response *CreateSubAccountLoginIpPolicyResponse, err error) {
+    return c.CreateSubAccountLoginIpPolicyWithContext(context.Background(), request)
+}
+
+// CreateSubAccountLoginIpPolicy
+// 增加子账号登录IP策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+//  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
+//  INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
+//  INVALIDPARAMETER_EFFECTERROR = "InvalidParameter.EffectError"
+//  INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+//  INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+func (c *Client) CreateSubAccountLoginIpPolicyWithContext(ctx context.Context, request *CreateSubAccountLoginIpPolicyRequest) (response *CreateSubAccountLoginIpPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateSubAccountLoginIpPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateSubAccountLoginIpPolicy")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSubAccountLoginIpPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewCreateSubAccountLoginIpPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -1047,6 +1291,7 @@ func NewCreateUserOIDCConfigResponse() (response *CreateUserOIDCConfigResponse) 
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateUserOIDCConfig
@@ -1079,6 +1324,7 @@ func (c *Client) CreateUserOIDCConfigWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserOIDCConfig require credential")
@@ -1107,6 +1353,7 @@ func NewCreateUserSAMLConfigResponse() (response *CreateUserSAMLConfigResponse) 
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // CreateUserSAMLConfig
@@ -1129,6 +1376,7 @@ func (c *Client) CreateUserSAMLConfigWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserSAMLConfig require credential")
@@ -1157,6 +1405,7 @@ func NewDeleteAccessKeyResponse() (response *DeleteAccessKeyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteAccessKey
@@ -1172,6 +1421,7 @@ func NewDeleteAccessKeyResponse() (response *DeleteAccessKeyResponse) {
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) DeleteAccessKey(request *DeleteAccessKeyRequest) (response *DeleteAccessKeyResponse, err error) {
     return c.DeleteAccessKeyWithContext(context.Background(), request)
 }
@@ -1189,10 +1439,12 @@ func (c *Client) DeleteAccessKey(request *DeleteAccessKeyRequest) (response *Del
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) DeleteAccessKeyWithContext(ctx context.Context, request *DeleteAccessKeyRequest) (response *DeleteAccessKeyResponse, err error) {
     if request == nil {
         request = NewDeleteAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAccessKey require credential")
@@ -1221,6 +1473,7 @@ func NewDeleteGroupResponse() (response *DeleteGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteGroup
@@ -1243,6 +1496,7 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     if request == nil {
         request = NewDeleteGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteGroup require credential")
@@ -1251,6 +1505,58 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     request.SetContext(ctx)
     
     response = NewDeleteGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteMessageReceiverRequest() (request *DeleteMessageReceiverRequest) {
+    request = &DeleteMessageReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "DeleteMessageReceiver")
+
+
+    return
+}
+
+func NewDeleteMessageReceiverResponse() (response *DeleteMessageReceiverResponse) {
+    response = &DeleteMessageReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// DeleteMessageReceiver
+// 删除消息接收人
+//
+// 可能返回的错误码:
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+func (c *Client) DeleteMessageReceiver(request *DeleteMessageReceiverRequest) (response *DeleteMessageReceiverResponse, err error) {
+    return c.DeleteMessageReceiverWithContext(context.Background(), request)
+}
+
+// DeleteMessageReceiver
+// 删除消息接收人
+//
+// 可能返回的错误码:
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXISTS = "ResourceNotFound.UserNotExists"
+func (c *Client) DeleteMessageReceiverWithContext(ctx context.Context, request *DeleteMessageReceiverRequest) (response *DeleteMessageReceiverResponse, err error) {
+    if request == nil {
+        request = NewDeleteMessageReceiverRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteMessageReceiver")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteMessageReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewDeleteMessageReceiverResponse()
     err = c.Send(request, response)
     return
 }
@@ -1271,6 +1577,7 @@ func NewDeleteOIDCConfigResponse() (response *DeleteOIDCConfigResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteOIDCConfig
@@ -1293,6 +1600,7 @@ func (c *Client) DeleteOIDCConfigWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOIDCConfig require credential")
@@ -1321,13 +1629,16 @@ func NewDeletePolicyResponse() (response *DeletePolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeletePolicy
 // 本接口（DeletePolicy）可用于删除策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -1341,7 +1652,9 @@ func (c *Client) DeletePolicy(request *DeletePolicyRequest) (response *DeletePol
 // 本接口（DeletePolicy）可用于删除策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_OPERATEPOLICIESOVERLIMIT = "InvalidParameter.OperatePoliciesOverLimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -1351,6 +1664,7 @@ func (c *Client) DeletePolicyWithContext(ctx context.Context, request *DeletePol
     if request == nil {
         request = NewDeletePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeletePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePolicy require credential")
@@ -1379,6 +1693,7 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeletePolicyVersion
@@ -1386,6 +1701,7 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1407,6 +1723,7 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -1420,6 +1737,7 @@ func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1441,6 +1759,7 @@ func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -1449,6 +1768,7 @@ func (c *Client) DeletePolicyVersionWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeletePolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeletePolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePolicyVersion require credential")
@@ -1477,6 +1797,7 @@ func NewDeleteRoleResponse() (response *DeleteRoleResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteRole
@@ -1507,6 +1828,7 @@ func (c *Client) DeleteRoleWithContext(ctx context.Context, request *DeleteRoleR
     if request == nil {
         request = NewDeleteRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRole require credential")
@@ -1535,6 +1857,7 @@ func NewDeleteRolePermissionsBoundaryResponse() (response *DeleteRolePermissions
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteRolePermissionsBoundary
@@ -1569,6 +1892,7 @@ func (c *Client) DeleteRolePermissionsBoundaryWithContext(ctx context.Context, r
     if request == nil {
         request = NewDeleteRolePermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteRolePermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRolePermissionsBoundary require credential")
@@ -1597,12 +1921,14 @@ func NewDeleteSAMLProviderResponse() (response *DeleteSAMLProviderResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteSAMLProvider
 // 删除SAML身份提供商
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteSAMLProvider(request *DeleteSAMLProviderRequest) (response *DeleteSAMLProviderResponse, err error) {
@@ -1613,12 +1939,14 @@ func (c *Client) DeleteSAMLProvider(request *DeleteSAMLProviderRequest) (respons
 // 删除SAML身份提供商
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 func (c *Client) DeleteSAMLProviderWithContext(ctx context.Context, request *DeleteSAMLProviderRequest) (response *DeleteSAMLProviderResponse, err error) {
     if request == nil {
         request = NewDeleteSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSAMLProvider require credential")
@@ -1647,6 +1975,7 @@ func NewDeleteServiceLinkedRoleResponse() (response *DeleteServiceLinkedRoleResp
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteServiceLinkedRole
@@ -1671,6 +2000,7 @@ func (c *Client) DeleteServiceLinkedRoleWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteServiceLinkedRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteServiceLinkedRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteServiceLinkedRole require credential")
@@ -1699,6 +2029,7 @@ func NewDeleteUserResponse() (response *DeleteUserResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteUser
@@ -1707,6 +2038,7 @@ func NewDeleteUserResponse() (response *DeleteUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -1721,6 +2053,7 @@ func (c *Client) DeleteUser(request *DeleteUserRequest) (response *DeleteUserRes
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -1729,6 +2062,7 @@ func (c *Client) DeleteUserWithContext(ctx context.Context, request *DeleteUserR
     if request == nil {
         request = NewDeleteUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUser require credential")
@@ -1757,6 +2091,7 @@ func NewDeleteUserPermissionsBoundaryResponse() (response *DeleteUserPermissions
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DeleteUserPermissionsBoundary
@@ -1787,6 +2122,7 @@ func (c *Client) DeleteUserPermissionsBoundaryWithContext(ctx context.Context, r
     if request == nil {
         request = NewDeleteUserPermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteUserPermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUserPermissionsBoundary require credential")
@@ -1815,6 +2151,7 @@ func NewDescribeOIDCConfigResponse() (response *DescribeOIDCConfigResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeOIDCConfig
@@ -1839,6 +2176,7 @@ func (c *Client) DescribeOIDCConfigWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOIDCConfig require credential")
@@ -1867,6 +2205,7 @@ func NewDescribeRoleListResponse() (response *DescribeRoleListResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeRoleList
@@ -1891,6 +2230,7 @@ func (c *Client) DescribeRoleListWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeRoleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeRoleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoleList require credential")
@@ -1919,6 +2259,7 @@ func NewDescribeSafeAuthFlagResponse() (response *DescribeSafeAuthFlagResponse) 
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeSafeAuthFlag
@@ -1943,6 +2284,7 @@ func (c *Client) DescribeSafeAuthFlagWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeSafeAuthFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlag require credential")
@@ -1971,10 +2313,11 @@ func NewDescribeSafeAuthFlagCollResponse() (response *DescribeSafeAuthFlagCollRe
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeSafeAuthFlagColl
-// 查询安全设置
+// 获取子账号安全设置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1985,7 +2328,7 @@ func (c *Client) DescribeSafeAuthFlagColl(request *DescribeSafeAuthFlagCollReque
 }
 
 // DescribeSafeAuthFlagColl
-// 查询安全设置
+// 获取子账号安全设置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1995,6 +2338,7 @@ func (c *Client) DescribeSafeAuthFlagCollWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSafeAuthFlagCollRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlagColl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlagColl require credential")
@@ -2023,6 +2367,7 @@ func NewDescribeSafeAuthFlagIntlResponse() (response *DescribeSafeAuthFlagIntlRe
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeSafeAuthFlagIntl
@@ -2047,6 +2392,7 @@ func (c *Client) DescribeSafeAuthFlagIntlWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSafeAuthFlagIntlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlagIntl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlagIntl require credential")
@@ -2075,6 +2421,7 @@ func NewDescribeSubAccountsResponse() (response *DescribeSubAccountsResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeSubAccounts
@@ -2099,6 +2446,7 @@ func (c *Client) DescribeSubAccountsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeSubAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSubAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSubAccounts require credential")
@@ -2127,6 +2475,7 @@ func NewDescribeUserOIDCConfigResponse() (response *DescribeUserOIDCConfigRespon
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeUserOIDCConfig
@@ -2147,6 +2496,7 @@ func (c *Client) DescribeUserOIDCConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserOIDCConfig require credential")
@@ -2175,13 +2525,18 @@ func NewDescribeUserSAMLConfigResponse() (response *DescribeUserSAMLConfigRespon
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DescribeUserSAMLConfig
 // 查询用户SAML配置
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) DescribeUserSAMLConfig(request *DescribeUserSAMLConfigRequest) (response *DescribeUserSAMLConfigResponse, err error) {
     return c.DescribeUserSAMLConfigWithContext(context.Background(), request)
 }
@@ -2190,11 +2545,16 @@ func (c *Client) DescribeUserSAMLConfig(request *DescribeUserSAMLConfigRequest) 
 // 查询用户SAML配置
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) DescribeUserSAMLConfigWithContext(ctx context.Context, request *DescribeUserSAMLConfigRequest) (response *DescribeUserSAMLConfigResponse, err error) {
     if request == nil {
         request = NewDescribeUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserSAMLConfig require credential")
@@ -2223,12 +2583,14 @@ func NewDetachGroupPolicyResponse() (response *DetachGroupPolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DetachGroupPolicy
 // 本接口（DetachGroupPolicy）可用于解除绑定到用户组的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -2244,6 +2606,7 @@ func (c *Client) DetachGroupPolicy(request *DetachGroupPolicyRequest) (response 
 // 本接口（DetachGroupPolicy）可用于解除绑定到用户组的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -2255,6 +2618,7 @@ func (c *Client) DetachGroupPolicyWithContext(ctx context.Context, request *Deta
     if request == nil {
         request = NewDetachGroupPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachGroupPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachGroupPolicy require credential")
@@ -2283,12 +2647,14 @@ func NewDetachRolePolicyResponse() (response *DetachRolePolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DetachRolePolicy
 // 本接口（DetachRolePolicy）用于解除绑定角色的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -2301,6 +2667,7 @@ func (c *Client) DetachRolePolicy(request *DetachRolePolicyRequest) (response *D
 // 本接口（DetachRolePolicy）用于解除绑定角色的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -2309,6 +2676,7 @@ func (c *Client) DetachRolePolicyWithContext(ctx context.Context, request *Detac
     if request == nil {
         request = NewDetachRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachRolePolicy require credential")
@@ -2337,12 +2705,14 @@ func NewDetachUserPolicyResponse() (response *DetachUserPolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DetachUserPolicy
 // 本接口（DetachUserPolicy）可用于解除绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -2359,6 +2729,7 @@ func (c *Client) DetachUserPolicy(request *DetachUserPolicyRequest) (response *D
 // 本接口（DetachUserPolicy）可用于解除绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -2371,6 +2742,7 @@ func (c *Client) DetachUserPolicyWithContext(ctx context.Context, request *Detac
     if request == nil {
         request = NewDetachUserPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachUserPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachUserPolicy require credential")
@@ -2399,6 +2771,7 @@ func NewDisableUserSSOResponse() (response *DisableUserSSOResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // DisableUserSSO
@@ -2419,6 +2792,7 @@ func (c *Client) DisableUserSSOWithContext(ctx context.Context, request *Disable
     if request == nil {
         request = NewDisableUserSSORequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DisableUserSSO")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableUserSSO require credential")
@@ -2447,10 +2821,11 @@ func NewGetAccountSummaryResponse() (response *GetAccountSummaryResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetAccountSummary
-// 查询账户摘要 
+// 查询账户摘要
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2459,7 +2834,7 @@ func (c *Client) GetAccountSummary(request *GetAccountSummaryRequest) (response 
 }
 
 // GetAccountSummary
-// 查询账户摘要 
+// 查询账户摘要
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2467,6 +2842,7 @@ func (c *Client) GetAccountSummaryWithContext(ctx context.Context, request *GetA
     if request == nil {
         request = NewGetAccountSummaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetAccountSummary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetAccountSummary require credential")
@@ -2495,6 +2871,7 @@ func NewGetCustomMFATokenInfoResponse() (response *GetCustomMFATokenInfoResponse
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetCustomMFATokenInfo
@@ -2515,6 +2892,7 @@ func (c *Client) GetCustomMFATokenInfoWithContext(ctx context.Context, request *
     if request == nil {
         request = NewGetCustomMFATokenInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetCustomMFATokenInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetCustomMFATokenInfo require credential")
@@ -2543,6 +2921,7 @@ func NewGetGroupResponse() (response *GetGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetGroup
@@ -2565,6 +2944,7 @@ func (c *Client) GetGroupWithContext(ctx context.Context, request *GetGroupReque
     if request == nil {
         request = NewGetGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetGroup require credential")
@@ -2593,6 +2973,7 @@ func NewGetPolicyResponse() (response *GetPolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetPolicy
@@ -2619,6 +3000,7 @@ func (c *Client) GetPolicyWithContext(ctx context.Context, request *GetPolicyReq
     if request == nil {
         request = NewGetPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPolicy require credential")
@@ -2647,6 +3029,7 @@ func NewGetPolicyVersionResponse() (response *GetPolicyVersionResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetPolicyVersion
@@ -2675,6 +3058,7 @@ func (c *Client) GetPolicyVersionWithContext(ctx context.Context, request *GetPo
     if request == nil {
         request = NewGetPolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetPolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPolicyVersion require credential")
@@ -2703,6 +3087,7 @@ func NewGetRoleResponse() (response *GetRoleResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetRole
@@ -2727,6 +3112,7 @@ func (c *Client) GetRoleWithContext(ctx context.Context, request *GetRoleRequest
     if request == nil {
         request = NewGetRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRole require credential")
@@ -2755,6 +3141,7 @@ func NewGetRolePermissionBoundaryResponse() (response *GetRolePermissionBoundary
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetRolePermissionBoundary
@@ -2781,6 +3168,7 @@ func (c *Client) GetRolePermissionBoundaryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetRolePermissionBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetRolePermissionBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRolePermissionBoundary require credential")
@@ -2809,6 +3197,7 @@ func NewGetSAMLProviderResponse() (response *GetSAMLProviderResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetSAMLProvider
@@ -2831,6 +3220,7 @@ func (c *Client) GetSAMLProviderWithContext(ctx context.Context, request *GetSAM
     if request == nil {
         request = NewGetSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSAMLProvider require credential")
@@ -2859,6 +3249,7 @@ func NewGetSecurityLastUsedResponse() (response *GetSecurityLastUsedResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetSecurityLastUsed
@@ -2881,6 +3272,7 @@ func (c *Client) GetSecurityLastUsedWithContext(ctx context.Context, request *Ge
     if request == nil {
         request = NewGetSecurityLastUsedRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetSecurityLastUsed")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSecurityLastUsed require credential")
@@ -2909,6 +3301,7 @@ func NewGetServiceLinkedRoleDeletionStatusResponse() (response *GetServiceLinked
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetServiceLinkedRoleDeletionStatus
@@ -2933,6 +3326,7 @@ func (c *Client) GetServiceLinkedRoleDeletionStatusWithContext(ctx context.Conte
     if request == nil {
         request = NewGetServiceLinkedRoleDeletionStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetServiceLinkedRoleDeletionStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetServiceLinkedRoleDeletionStatus require credential")
@@ -2961,6 +3355,7 @@ func NewGetUserResponse() (response *GetUserResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetUser
@@ -2985,6 +3380,7 @@ func (c *Client) GetUserWithContext(ctx context.Context, request *GetUserRequest
     if request == nil {
         request = NewGetUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUser require credential")
@@ -3013,6 +3409,7 @@ func NewGetUserAppIdResponse() (response *GetUserAppIdResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetUserAppId
@@ -3035,6 +3432,7 @@ func (c *Client) GetUserAppIdWithContext(ctx context.Context, request *GetUserAp
     if request == nil {
         request = NewGetUserAppIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUserAppId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUserAppId require credential")
@@ -3063,6 +3461,7 @@ func NewGetUserPermissionBoundaryResponse() (response *GetUserPermissionBoundary
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // GetUserPermissionBoundary
@@ -3089,6 +3488,7 @@ func (c *Client) GetUserPermissionBoundaryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetUserPermissionBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUserPermissionBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUserPermissionBoundary require credential")
@@ -3117,6 +3517,7 @@ func NewListAccessKeysResponse() (response *ListAccessKeysResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListAccessKeys
@@ -3125,6 +3526,7 @@ func NewListAccessKeysResponse() (response *ListAccessKeysResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
@@ -3141,6 +3543,7 @@ func (c *Client) ListAccessKeys(request *ListAccessKeysRequest) (response *ListA
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
@@ -3151,6 +3554,7 @@ func (c *Client) ListAccessKeysWithContext(ctx context.Context, request *ListAcc
     if request == nil {
         request = NewListAccessKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAccessKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAccessKeys require credential")
@@ -3179,6 +3583,7 @@ func NewListAttachedGroupPoliciesResponse() (response *ListAttachedGroupPolicies
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListAttachedGroupPolicies
@@ -3187,6 +3592,7 @@ func NewListAttachedGroupPoliciesResponse() (response *ListAttachedGroupPolicies
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 func (c *Client) ListAttachedGroupPolicies(request *ListAttachedGroupPoliciesRequest) (response *ListAttachedGroupPoliciesResponse, err error) {
     return c.ListAttachedGroupPoliciesWithContext(context.Background(), request)
 }
@@ -3197,10 +3603,12 @@ func (c *Client) ListAttachedGroupPolicies(request *ListAttachedGroupPoliciesReq
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 func (c *Client) ListAttachedGroupPoliciesWithContext(ctx context.Context, request *ListAttachedGroupPoliciesRequest) (response *ListAttachedGroupPoliciesResponse, err error) {
     if request == nil {
         request = NewListAttachedGroupPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedGroupPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedGroupPolicies require credential")
@@ -3229,6 +3637,7 @@ func NewListAttachedRolePoliciesResponse() (response *ListAttachedRolePoliciesRe
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListAttachedRolePolicies
@@ -3251,6 +3660,7 @@ func (c *Client) ListAttachedRolePoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListAttachedRolePoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedRolePolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedRolePolicies require credential")
@@ -3279,6 +3689,7 @@ func NewListAttachedUserAllPoliciesResponse() (response *ListAttachedUserAllPoli
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListAttachedUserAllPolicies
@@ -3303,6 +3714,7 @@ func (c *Client) ListAttachedUserAllPoliciesWithContext(ctx context.Context, req
     if request == nil {
         request = NewListAttachedUserAllPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedUserAllPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedUserAllPolicies require credential")
@@ -3331,6 +3743,7 @@ func NewListAttachedUserPoliciesResponse() (response *ListAttachedUserPoliciesRe
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListAttachedUserPolicies
@@ -3353,6 +3766,7 @@ func (c *Client) ListAttachedUserPoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListAttachedUserPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedUserPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedUserPolicies require credential")
@@ -3381,6 +3795,7 @@ func NewListCollaboratorsResponse() (response *ListCollaboratorsResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListCollaborators
@@ -3401,6 +3816,7 @@ func (c *Client) ListCollaboratorsWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListCollaboratorsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListCollaborators")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListCollaborators require credential")
@@ -3429,6 +3845,7 @@ func NewListEntitiesForPolicyResponse() (response *ListEntitiesForPolicyResponse
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListEntitiesForPolicy
@@ -3455,6 +3872,7 @@ func (c *Client) ListEntitiesForPolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewListEntitiesForPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListEntitiesForPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListEntitiesForPolicy require credential")
@@ -3483,6 +3901,7 @@ func NewListGroupsResponse() (response *ListGroupsResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListGroups
@@ -3503,6 +3922,7 @@ func (c *Client) ListGroupsWithContext(ctx context.Context, request *ListGroupsR
     if request == nil {
         request = NewListGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroups require credential")
@@ -3531,6 +3951,7 @@ func NewListGroupsForUserResponse() (response *ListGroupsForUserResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListGroupsForUser
@@ -3555,6 +3976,7 @@ func (c *Client) ListGroupsForUserWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListGroupsForUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListGroupsForUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroupsForUser require credential")
@@ -3583,12 +4005,14 @@ func NewListPoliciesResponse() (response *ListPoliciesResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListPolicies
 // 本接口（ListPolicies）可用于查询策略列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GETUSERAREAERROR = "FailedOperation.GetUserAreaError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_GROUPIDERROR = "InvalidParameter.GroupIdError"
 //  INVALIDPARAMETER_KEYWORDERROR = "InvalidParameter.KeywordError"
@@ -3605,6 +4029,7 @@ func (c *Client) ListPolicies(request *ListPoliciesRequest) (response *ListPolic
 // 本接口（ListPolicies）可用于查询策略列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GETUSERAREAERROR = "FailedOperation.GetUserAreaError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_GROUPIDERROR = "InvalidParameter.GroupIdError"
 //  INVALIDPARAMETER_KEYWORDERROR = "InvalidParameter.KeywordError"
@@ -3617,6 +4042,7 @@ func (c *Client) ListPoliciesWithContext(ctx context.Context, request *ListPolic
     if request == nil {
         request = NewListPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPolicies require credential")
@@ -3645,6 +4071,7 @@ func NewListPoliciesGrantingServiceAccessResponse() (response *ListPoliciesGrant
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListPoliciesGrantingServiceAccess
@@ -3671,6 +4098,7 @@ func (c *Client) ListPoliciesGrantingServiceAccessWithContext(ctx context.Contex
     if request == nil {
         request = NewListPoliciesGrantingServiceAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPoliciesGrantingServiceAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPoliciesGrantingServiceAccess require credential")
@@ -3699,6 +4127,7 @@ func NewListPolicyVersionsResponse() (response *ListPolicyVersionsResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListPolicyVersions
@@ -3725,6 +4154,7 @@ func (c *Client) ListPolicyVersionsWithContext(ctx context.Context, request *Lis
     if request == nil {
         request = NewListPolicyVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPolicyVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPolicyVersions require credential")
@@ -3733,6 +4163,62 @@ func (c *Client) ListPolicyVersionsWithContext(ctx context.Context, request *Lis
     request.SetContext(ctx)
     
     response = NewListPolicyVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListReceiverRequest() (request *ListReceiverRequest) {
+    request = &ListReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "ListReceiver")
+
+
+    return
+}
+
+func NewListReceiverResponse() (response *ListReceiverResponse) {
+    response = &ListReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// ListReceiver
+// 获取消息接收人列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
+func (c *Client) ListReceiver(request *ListReceiverRequest) (response *ListReceiverResponse, err error) {
+    return c.ListReceiverWithContext(context.Background(), request)
+}
+
+// ListReceiver
+// 获取消息接收人列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
+func (c *Client) ListReceiverWithContext(ctx context.Context, request *ListReceiverRequest) (response *ListReceiverResponse, err error) {
+    if request == nil {
+        request = NewListReceiverRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListReceiver")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewListReceiverResponse()
     err = c.Send(request, response)
     return
 }
@@ -3753,6 +4239,7 @@ func NewListSAMLProvidersResponse() (response *ListSAMLProvidersResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListSAMLProviders
@@ -3779,6 +4266,7 @@ func (c *Client) ListSAMLProvidersWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListSAMLProvidersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListSAMLProviders")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListSAMLProviders require credential")
@@ -3807,6 +4295,7 @@ func NewListUsersResponse() (response *ListUsersResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListUsers
@@ -3827,6 +4316,7 @@ func (c *Client) ListUsersWithContext(ctx context.Context, request *ListUsersReq
     if request == nil {
         request = NewListUsersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListUsers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUsers require credential")
@@ -3855,6 +4345,7 @@ func NewListUsersForGroupResponse() (response *ListUsersForGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListUsersForGroup
@@ -3877,6 +4368,7 @@ func (c *Client) ListUsersForGroupWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListUsersForGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListUsersForGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUsersForGroup require credential")
@@ -3905,6 +4397,7 @@ func NewListWeChatWorkSubAccountsResponse() (response *ListWeChatWorkSubAccounts
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // ListWeChatWorkSubAccounts
@@ -3927,6 +4420,7 @@ func (c *Client) ListWeChatWorkSubAccountsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewListWeChatWorkSubAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListWeChatWorkSubAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListWeChatWorkSubAccounts require credential")
@@ -3955,6 +4449,7 @@ func NewPutRolePermissionsBoundaryResponse() (response *PutRolePermissionsBounda
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // PutRolePermissionsBoundary
@@ -3991,6 +4486,7 @@ func (c *Client) PutRolePermissionsBoundaryWithContext(ctx context.Context, requ
     if request == nil {
         request = NewPutRolePermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "PutRolePermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutRolePermissionsBoundary require credential")
@@ -4019,6 +4515,7 @@ func NewPutUserPermissionsBoundaryResponse() (response *PutUserPermissionsBounda
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // PutUserPermissionsBoundary
@@ -4053,6 +4550,7 @@ func (c *Client) PutUserPermissionsBoundaryWithContext(ctx context.Context, requ
     if request == nil {
         request = NewPutUserPermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "PutUserPermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutUserPermissionsBoundary require credential")
@@ -4081,6 +4579,7 @@ func NewRemoveUserFromGroupResponse() (response *RemoveUserFromGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // RemoveUserFromGroup
@@ -4107,6 +4606,7 @@ func (c *Client) RemoveUserFromGroupWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewRemoveUserFromGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "RemoveUserFromGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveUserFromGroup require credential")
@@ -4135,12 +4635,14 @@ func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResp
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // SetDefaultPolicyVersion
 // 本接口（SetDefaultPolicyVersion）可用于设置生效的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -4176,6 +4678,7 @@ func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResp
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4188,6 +4691,7 @@ func (c *Client) SetDefaultPolicyVersion(request *SetDefaultPolicyVersionRequest
 // 本接口（SetDefaultPolicyVersion）可用于设置生效的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -4223,6 +4727,7 @@ func (c *Client) SetDefaultPolicyVersion(request *SetDefaultPolicyVersionRequest
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4231,6 +4736,7 @@ func (c *Client) SetDefaultPolicyVersionWithContext(ctx context.Context, request
     if request == nil {
         request = NewSetDefaultPolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "SetDefaultPolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetDefaultPolicyVersion require credential")
@@ -4259,6 +4765,7 @@ func NewSetMfaFlagResponse() (response *SetMfaFlagResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // SetMfaFlag
@@ -4269,6 +4776,7 @@ func NewSetMfaFlagResponse() (response *SetMfaFlagResponse) {
 //  FAILEDOPERATION_USERNOTBINDWECHAT = "FailedOperation.UserNotBindWechat"
 //  FAILEDOPERATION_USERUNBINDNOPERMISSION = "FailedOperation.UserUnbindNoPermission"
 //  INVALIDPARAMETER_MFATOKENERROR = "InvalidParameter.MFATokenError"
+//  INVALIDPARAMETER_NAMEORIDCARDERROR = "InvalidParameter.NameOrIdCardError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) SetMfaFlag(request *SetMfaFlagRequest) (response *SetMfaFlagResponse, err error) {
@@ -4283,12 +4791,14 @@ func (c *Client) SetMfaFlag(request *SetMfaFlagRequest) (response *SetMfaFlagRes
 //  FAILEDOPERATION_USERNOTBINDWECHAT = "FailedOperation.UserNotBindWechat"
 //  FAILEDOPERATION_USERUNBINDNOPERMISSION = "FailedOperation.UserUnbindNoPermission"
 //  INVALIDPARAMETER_MFATOKENERROR = "InvalidParameter.MFATokenError"
+//  INVALIDPARAMETER_NAMEORIDCARDERROR = "InvalidParameter.NameOrIdCardError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) SetMfaFlagWithContext(ctx context.Context, request *SetMfaFlagRequest) (response *SetMfaFlagResponse, err error) {
     if request == nil {
         request = NewSetMfaFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "SetMfaFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetMfaFlag require credential")
@@ -4317,6 +4827,7 @@ func NewTagRoleResponse() (response *TagRoleResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // TagRole
@@ -4353,6 +4864,7 @@ func (c *Client) TagRoleWithContext(ctx context.Context, request *TagRoleRequest
     if request == nil {
         request = NewTagRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "TagRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TagRole require credential")
@@ -4381,6 +4893,7 @@ func NewUntagRoleResponse() (response *UntagRoleResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UntagRole
@@ -4417,6 +4930,7 @@ func (c *Client) UntagRoleWithContext(ctx context.Context, request *UntagRoleReq
     if request == nil {
         request = NewUntagRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UntagRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UntagRole require credential")
@@ -4445,6 +4959,7 @@ func NewUpdateAccessKeyResponse() (response *UpdateAccessKeyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateAccessKey
@@ -4479,6 +4994,7 @@ func (c *Client) UpdateAccessKeyWithContext(ctx context.Context, request *Update
     if request == nil {
         request = NewUpdateAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateAccessKey require credential")
@@ -4507,6 +5023,7 @@ func NewUpdateAssumeRolePolicyResponse() (response *UpdateAssumeRolePolicyRespon
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateAssumeRolePolicy
@@ -4563,6 +5080,7 @@ func (c *Client) UpdateAssumeRolePolicyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateAssumeRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateAssumeRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateAssumeRolePolicy require credential")
@@ -4591,6 +5109,7 @@ func NewUpdateGroupResponse() (response *UpdateGroupResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateGroup
@@ -4619,6 +5138,7 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     if request == nil {
         request = NewUpdateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateGroup require credential")
@@ -4647,6 +5167,7 @@ func NewUpdateOIDCConfigResponse() (response *UpdateOIDCConfigResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateOIDCConfig
@@ -4681,6 +5202,7 @@ func (c *Client) UpdateOIDCConfigWithContext(ctx context.Context, request *Updat
     if request == nil {
         request = NewUpdateOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOIDCConfig require credential")
@@ -4709,6 +5231,7 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdatePolicy
@@ -4717,6 +5240,7 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
 // 如果已存在策略版本，本接口会直接更新策略的默认版本，不会创建新版本，如果不存在任何策略版本，则直接创建一个默认版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
@@ -4750,6 +5274,7 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4764,6 +5289,7 @@ func (c *Client) UpdatePolicy(request *UpdatePolicyRequest) (response *UpdatePol
 // 如果已存在策略版本，本接口会直接更新策略的默认版本，不会创建新版本，如果不存在任何策略版本，则直接创建一个默认版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
@@ -4797,6 +5323,7 @@ func (c *Client) UpdatePolicy(request *UpdatePolicyRequest) (response *UpdatePol
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4805,6 +5332,7 @@ func (c *Client) UpdatePolicyWithContext(ctx context.Context, request *UpdatePol
     if request == nil {
         request = NewUpdatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdatePolicy require credential")
@@ -4833,6 +5361,7 @@ func NewUpdateRoleConsoleLoginResponse() (response *UpdateRoleConsoleLoginRespon
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateRoleConsoleLogin
@@ -4857,6 +5386,7 @@ func (c *Client) UpdateRoleConsoleLoginWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateRoleConsoleLoginRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleConsoleLogin")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleConsoleLogin require credential")
@@ -4885,6 +5415,7 @@ func NewUpdateRoleDescriptionResponse() (response *UpdateRoleDescriptionResponse
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateRoleDescription
@@ -4911,6 +5442,7 @@ func (c *Client) UpdateRoleDescriptionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewUpdateRoleDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleDescription require credential")
@@ -4919,6 +5451,60 @@ func (c *Client) UpdateRoleDescriptionWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewUpdateRoleDescriptionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateRoleSessionDurationRequest() (request *UpdateRoleSessionDurationRequest) {
+    request = &UpdateRoleSessionDurationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cam", APIVersion, "UpdateRoleSessionDuration")
+
+
+    return
+}
+
+func NewUpdateRoleSessionDurationResponse() (response *UpdateRoleSessionDurationResponse) {
+    response = &UpdateRoleSessionDurationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+
+}
+
+// UpdateRoleSessionDuration
+// 修改角色会话时长
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+func (c *Client) UpdateRoleSessionDuration(request *UpdateRoleSessionDurationRequest) (response *UpdateRoleSessionDurationResponse, err error) {
+    return c.UpdateRoleSessionDurationWithContext(context.Background(), request)
+}
+
+// UpdateRoleSessionDuration
+// 修改角色会话时长
+//
+// 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+func (c *Client) UpdateRoleSessionDurationWithContext(ctx context.Context, request *UpdateRoleSessionDurationRequest) (response *UpdateRoleSessionDurationResponse, err error) {
+    if request == nil {
+        request = NewUpdateRoleSessionDurationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleSessionDuration")
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateRoleSessionDuration require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewUpdateRoleSessionDurationResponse()
     err = c.Send(request, response)
     return
 }
@@ -4939,12 +5525,14 @@ func NewUpdateSAMLProviderResponse() (response *UpdateSAMLProviderResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateSAMLProvider
 // 更新SAML身份提供商信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 func (c *Client) UpdateSAMLProvider(request *UpdateSAMLProviderRequest) (response *UpdateSAMLProviderResponse, err error) {
@@ -4955,12 +5543,14 @@ func (c *Client) UpdateSAMLProvider(request *UpdateSAMLProviderRequest) (respons
 // 更新SAML身份提供商信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 //  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
 func (c *Client) UpdateSAMLProviderWithContext(ctx context.Context, request *UpdateSAMLProviderRequest) (response *UpdateSAMLProviderResponse, err error) {
     if request == nil {
         request = NewUpdateSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateSAMLProvider require credential")
@@ -4989,6 +5579,7 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateUser
@@ -4997,6 +5588,9 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5010,6 +5604,9 @@ func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserRes
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5017,6 +5614,7 @@ func (c *Client) UpdateUserWithContext(ctx context.Context, request *UpdateUserR
     if request == nil {
         request = NewUpdateUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUser require credential")
@@ -5045,12 +5643,14 @@ func NewUpdateUserOIDCConfigResponse() (response *UpdateUserOIDCConfigResponse) 
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateUserOIDCConfig
 // 修改用户OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYKEYERROR = "InvalidParameterValue.IdentityKeyError"
@@ -5066,6 +5666,7 @@ func (c *Client) UpdateUserOIDCConfig(request *UpdateUserOIDCConfigRequest) (res
 // 修改用户OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYKEYERROR = "InvalidParameterValue.IdentityKeyError"
@@ -5077,6 +5678,7 @@ func (c *Client) UpdateUserOIDCConfigWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserOIDCConfig require credential")
@@ -5105,6 +5707,7 @@ func NewUpdateUserSAMLConfigResponse() (response *UpdateUserSAMLConfigResponse) 
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
+
 }
 
 // UpdateUserSAMLConfig
@@ -5127,6 +5730,7 @@ func (c *Client) UpdateUserSAMLConfigWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserSAMLConfig require credential")

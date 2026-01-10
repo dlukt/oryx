@@ -7,7 +7,7 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {Button, Col, Form, InputGroup, ListGroup, Row, Spinner} from "react-bootstrap";
 import {SrsErrorBoundary} from "./SrsErrorBoundary";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import axios from "axios";
 import {MediaSource, Token} from "../utils";
 import FileUploader from "./FileUploader";
@@ -84,7 +84,7 @@ export default function ChooseVideoSource({platform, endpoint, vLiveFiles, setVL
 
 function VLiveStreamSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [inputStream, setInputStream] = React.useState(vLiveFiles?.length ? vLiveFiles[0].target :'');
   const [submiting, setSubmiting] = React.useState();
 
@@ -146,7 +146,7 @@ function VLiveStreamSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
 
 function VLiveFileSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   // TODO: FIXME: As the file path is changed after used, so we can not use te target.
   const [inputFile, setInputFile] = React.useState('');
 
@@ -200,7 +200,7 @@ function VLiveFileSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
 
 function YtdlFileSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   // TODO: FIXME: As the file path is changed after used, so we can not use te target.
   const [ytdlUrl, setYtdlUrl] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -263,7 +263,7 @@ function YtdlFileSelector({platform, endpoint, vLiveFiles, setVLiveFiles}) {
 
 function VLiveFileUploader({platform, endpoint, vLiveFiles, setVLiveFiles}) {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [loading, setLoading] = React.useState(false);
 
   const updateSources = React.useCallback(async (platform, files, setFiles) => {

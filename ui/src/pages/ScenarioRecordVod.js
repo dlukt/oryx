@@ -11,7 +11,7 @@ import SetupCamSecret from '../components/SetupCamSecret';
 import useDvrVodStatus from "../components/DvrStatus";
 import moment from "moment";
 import {TutorialsButton, useTutorials} from "../components/TutorialsButton";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {useSrsLanguage} from "../components/LanguageSwitch";
 
@@ -56,7 +56,7 @@ function ScenarioRecordVodCn() {
 function ScenarioRecordVodImpl({activeKey, defaultApplyAll, enabled}) {
   const [vodAll, setVodAll] = React.useState(defaultApplyAll);
   const [vodFiles, setVodFiles] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   const vodTutorials = useTutorials({

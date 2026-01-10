@@ -10,7 +10,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {Token, Tools} from '../utils';
 import {SrsErrorBoundary} from "../components/SrsErrorBoundary";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 
 export default function Login({onLogin}) {
@@ -28,7 +28,7 @@ function LoginImpl({onLogin}) {
   const navigate = useNavigate();
   const passwordRef = React.useRef();
   const plaintextRef = React.useRef();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   // Verify the token if exists.

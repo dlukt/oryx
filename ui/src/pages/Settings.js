@@ -9,7 +9,7 @@ import {Clipboard, Token} from "../utils";
 import axios from "axios";
 import {useSearchParams} from "react-router-dom";
 import {SrsErrorBoundary} from "../components/SrsErrorBoundary";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {TutorialsButton, useTutorials} from "../components/TutorialsButton";
 import moment from "moment";
@@ -103,7 +103,7 @@ function SettingsImpl2({defaultActiveTab}) {
 function SettingHighPerformanceHLS() {
   const [noHlsCtx, setNoHlsCtx] = React.useState();
   const [hlsLL, setHlsLL] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   React.useEffect(() => {
@@ -184,7 +184,7 @@ function SettingHighPerformanceHLS() {
 
 function SettingOpenApi({copyToClipboard}) {
   const [apiSecret, setAPISecret] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   React.useEffect(() => {
@@ -280,7 +280,7 @@ $.ajax({
 }
 
 function SettingCallback() {
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [config, setConfig] = React.useState();
   const [activeKey, setActiveKey] = React.useState();
 
@@ -309,7 +309,7 @@ function SettingCallback() {
 
 function SettingCallbackImpl({activeKey, defaultEnabled, defaultConf}) {
   const defaultUrl = `${window.location.protocol}//${window.location.host}/terraform/v1/mgmt/hooks/example?fail=false`;
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
   const [target, setTarget] = React.useState(defaultConf.target || defaultUrl);
   const [opaque, setOpaque] = React.useState(defaultConf.opaque);
@@ -424,7 +424,7 @@ function SettingCallbackImpl({activeKey, defaultEnabled, defaultConf}) {
 }
 
 function SettingStreams() {
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
   const [streams, setStreams] = React.useState();
   const [refresh, setRefresh] = React.useState(false);
@@ -498,7 +498,7 @@ function SettingStreams() {
 
 function SettingLLM() {
   const {t} = useTranslation();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   const [aiSecretKey, setAiSecretKey] = React.useState();
   const [aiBaseURL, setAiBaseURL] = React.useState();
@@ -552,7 +552,7 @@ function SettingLLM() {
 }
 
 function SettingLimits() {
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
   const [vLiveBitrate, setVLiveBitrate] = React.useState();
   const [ipCameraBitrate, setIpCameraBitrate] = React.useState();
@@ -609,7 +609,7 @@ function SettingLimits() {
 function SettingBeian() {
   const [beian, setBeian] = React.useState();
   const [siteTitle, setSiteTitle] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   React.useEffect(() => {
@@ -686,7 +686,7 @@ function SettingAuth() {
   const [allowNoAuth, setAllowNoAuth] = React.useState();
   const [noAuth, setNoAuth] = React.useState();
   const [searchParams] = useSearchParams();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   React.useEffect(() => {
@@ -771,7 +771,7 @@ function SettingAuth() {
 function SettingHttps() {
   const [config, setConfig] = React.useState({});
   const [loading, setLoading] = React.useState(true);
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   React.useEffect(() => {
     setLoading(true);
@@ -793,7 +793,7 @@ function SettingHttpsImpl({config}) {
   const [crt, setCrt] = React.useState(config.crt);
   const [domain, setDomain] = React.useState(config.domain);
   const [operating, setOperating] = React.useState(false);
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
   const domainRegex = React.useMemo(() => {
@@ -966,7 +966,7 @@ function RunOpenAPI(props) {
 
 function OpenAPIResult({apiSecret, api, data}) {
   const [openAPIRes, setOpenAPIRes] = React.useState();
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   React.useEffect(() => {
     axios.post(api, data, {

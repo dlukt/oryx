@@ -5,7 +5,7 @@
 //
 import React from 'react';
 import {useLocation, useSearchParams} from "react-router-dom";
-import {useErrorHandler} from "react-error-boundary";
+import {useErrorBoundary} from "react-error-boundary";
 import {Spinner} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import axios from "axios";
@@ -19,7 +19,7 @@ export default function Popouts() {
   const location = useLocation();
   const {i18n} = useTranslation();
   const [initialized, setInitialized] = React.useState(false);
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
 
   // Switch language for popout, because it does not use navigator, so there is no
   // LanguageSwitch to do this.
@@ -63,7 +63,7 @@ export default function Popouts() {
 }
 
 function PopoutsImpl() {
-  const handleError = useErrorHandler();
+  const { showBoundary: handleError } = useErrorBoundary();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = React.useState(true);
 
