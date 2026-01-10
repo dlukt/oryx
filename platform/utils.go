@@ -6,6 +6,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -1362,7 +1363,7 @@ func Authenticate(ctx context.Context, apiSecret, token string, header http.Head
 			return errors.Wrapf(err, "parse bearer token")
 		}
 
-		if authSecret != apiSecret {
+		if subtle.ConstantTimeCompare([]byte(authSecret), []byte(apiSecret)) != 1 {
 			return errors.New("invalid bearer token")
 		}
 		return nil
