@@ -105,9 +105,18 @@ function LoginImpl({onLogin}) {
               onClick={() => setPlaintext(!plaintext)}/>
           </Form.Group>
           <Button variant="primary" type="submit" disabled={operating} onClick={(e) => handleLogin(e)}>
+            {operating && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                className="me-2"
+              />
+            )}
             {t('login.labelLogin')}
-          </Button> &nbsp;
-          {operating && <Spinner animation="border" variant="success" style={{verticalAlign: 'middle'}} />}
+          </Button>
         </Form>
       </Container>
     </>
