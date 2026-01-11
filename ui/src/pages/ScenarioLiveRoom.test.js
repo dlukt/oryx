@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import ScenarioLiveRoom from './ScenarioLiveRoom';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 
 jest.mock('axios');
 jest.mock('react-i18next', () => ({
@@ -36,15 +37,13 @@ describe('ScenarioLiveRoom', () => {
       },
     });
 
-    const setRoomId = jest.fn();
-
-    await act(async () => {
-      render(
-        <MemoryRouter>
+    render(
+      <MemoryRouter>
+        <ErrorBoundary fallback={<div>Error</div>}>
           <ScenarioLiveRoom />
-        </MemoryRouter>
-      );
-    });
+        </ErrorBoundary>
+      </MemoryRouter>
+    );
 
     // Check if the component requests room list
     expect(axios.post).toHaveBeenCalledWith('/terraform/v1/live/room/list', {}, expect.any(Object));

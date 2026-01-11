@@ -118,7 +118,7 @@ function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultP
         headers: Token.loadBearerHeader(),
       }).then(res => {
         console.log(`Record: Files ok, ${JSON.stringify(res.data.data)}`);
-        setRecordFiles(res.data.data.map(file => {
+        const newRecordFiles = res.data.data.map(file => {
           const l = window.location;
           const schema = l.protocol.replace(':', '');
           const httpPort = l.port || (l.protocol === 'http:' ? 80 : 443);
@@ -141,7 +141,13 @@ function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultP
           return b.update - a.update;
         }).map((file, i) => {
           return {...file, i: i + 1};
-        }));
+        });
+        setRecordFiles(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newRecordFiles)) {
+            return prev;
+          }
+          return newRecordFiles;
+        });
       }).catch(handleError);
     };
 
