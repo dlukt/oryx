@@ -1,8 +1,81 @@
 package main
 
 import (
+	"context"
+	"net/http"
+	"strings"
 	"testing"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
+
+func TestAuthenticate_SigningMethod(t *testing.T) {
+	apiSecret := "test-secret"
+
+	// 1. Create a valid token with HS256 (expected).
+	tokenHS256, err := func() (string, error) {
+		createAt, expireAt := time.Now(), time.Now().Add(365*24*time.Hour)
+		claims := struct {
+			Version string `json:"v"`
+			Nonce   string `json:"nonce"`
+			jwt.RegisteredClaims
+		}{
+			Version: "1.0",
+			Nonce:   "nonce",
+			RegisteredClaims: jwt.RegisteredClaims{
+				ExpiresAt: jwt.NewNumericDate(expireAt),
+				IssuedAt:  jwt.NewNumericDate(createAt),
+			},
+		}
+		return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(apiSecret))
+	}()
+	if err != nil {
+		t.Fatalf("Failed to create HS256 token: %v", err)
+	}
+
+	// 2. Create a token with 'none' alg.
+	noneToken := jwt.New(jwt.SigningMethodNone)
+	noneToken.Claims = jwt.MapClaims{
+		"foo": "bar",
+		"exp": time.Now().Add(time.Hour).Unix(),
+	}
+	tokenNone, _ := noneToken.SignedString(jwt.UnsafeAllowNoneSignatureType)
+
+	tests := []struct {
+		name      string
+		token     string
+		shouldErr bool
+	}{
+		{
+			name:      "Valid HS256 Token",
+			token:     tokenHS256,
+			shouldErr: false,
+		},
+		{
+			name:      "None Algorithm Token",
+			token:     tokenNone,
+			shouldErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			header := http.Header{}
+			err := Authenticate(context.Background(), apiSecret, tt.token, header)
+
+			if tt.shouldErr {
+				if err == nil {
+					t.Errorf("Expected error for %s, but got none", tt.name)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected success for %s, but got error: %v", tt.name, err)
+				}
+			}
+		})
+	}
+}
 
 func TestUtils_RebuildStreamURL(t *testing.T) {
 	urlSamples := []struct {
@@ -95,5 +168,77 @@ func TestUtils_ParseFFmpegLogs(t *testing.T) {
 		} else if speed != e.speed {
 			t.Errorf("Fail for speed %v of %v", speed, e)
 		}
+	}
+}
+
+func TestAuthenticate_TimingAttack(t *testing.T) {
+	// This test ensures the Authenticate function works correctly after
+	// the fix for timing attack vulnerability.
+
+	apiSecret := "supersecret"
+	ctx := context.Background()
+
+	tests := []struct {
+		name        string
+		apiSecret   string
+		token       string
+		header      http.Header
+		wantErr     bool
+		errContains string
+	}{
+		{
+			name:      "No API Secret",
+			apiSecret: "",
+			token:     "",
+			header:    http.Header{},
+			wantErr:   true,
+			errContains: "no api secret",
+		},
+		{
+			name:      "No Auth",
+			apiSecret: apiSecret,
+			token:     "",
+			header:    http.Header{},
+			wantErr:   true,
+			errContains: "no Authorization or token",
+		},
+		{
+			name:      "Valid Bearer",
+			apiSecret: apiSecret,
+			token:     "",
+			header:    http.Header{"Authorization": []string{"Bearer " + apiSecret}},
+			wantErr:   false,
+		},
+		{
+			name:      "Invalid Bearer Format",
+			apiSecret: apiSecret,
+			token:     "",
+			header:    http.Header{"Authorization": []string{"Basic " + apiSecret}},
+			wantErr:   true,
+			errContains: "Invalid Authorization format",
+		},
+		{
+			name:      "Invalid Bearer Secret",
+			apiSecret: apiSecret,
+			token:     "",
+			header:    http.Header{"Authorization": []string{"Bearer wrongsecret"}},
+			wantErr:   true,
+			errContains: "invalid bearer token",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := Authenticate(ctx, tt.apiSecret, tt.token, tt.header)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Authenticate() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if tt.wantErr && tt.errContains != "" {
+				if err == nil || !strings.Contains(err.Error(), tt.errContains) {
+					t.Errorf("Authenticate() error = %v, wantErr containing %v", err, tt.errContains)
+				}
+			}
+		})
 	}
 }

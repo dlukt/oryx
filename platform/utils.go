@@ -1372,6 +1372,10 @@ func Authenticate(ctx context.Context, apiSecret, token string, header http.Head
 	// Verify token first, @see https://www.npmjs.com/package/jsonwebtoken#errors--codes
 	// See https://pkg.go.dev/github.com/golang-jwt/jwt/v4#example-Parse-Hmac
 	if _, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
 		return []byte(apiSecret), nil
 	}); err != nil {
 		return errors.Wrapf(err, "verify token %v", token)
