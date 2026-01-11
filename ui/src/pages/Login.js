@@ -5,13 +5,14 @@
 //
 import React from "react";
 import Container from "react-bootstrap/Container";
-import {Form, Button, Spinner} from 'react-bootstrap';
+import {Form, Button, Spinner, InputGroup} from 'react-bootstrap';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {Token, Tools} from '../utils';
 import {SrsErrorBoundary} from "../components/SrsErrorBoundary";
 import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
+import {Eye, EyeSlash} from "react-bootstrap-icons";
 
 export default function Login({onLogin}) {
   return (
@@ -23,11 +24,11 @@ export default function Login({onLogin}) {
 
 function LoginImpl({onLogin}) {
   const [plaintext, setPlaintext] = React.useState(true);
-  const [password, setPassword] = React.useState();
+  const [password, setPassword] = React.useState('');
   const [operating, setOperating] = React.useState(false);
   const navigate = useNavigate();
+  // We use a single ref for the password input now.
   const passwordRef = React.useRef();
-  const plaintextRef = React.useRef();
   const { showBoundary: handleError } = useErrorBoundary();
   const {t} = useTranslation();
 
@@ -53,15 +54,14 @@ function LoginImpl({onLogin}) {
     }).catch(handleError);
   }, [navigate, handleError]);
 
-  // Focus to password input.
-  React.useEffect(() => {
-    plaintext ? plaintextRef.current?.focus() : passwordRef.current?.focus();
-  }, [plaintext]);
+  // Focus to password input on mount or when visibility changes (optional, but good for UX)
+  // Actually with single component, focus should remain if we just toggle type,
+  // but if we want to ensure focus, we can keep this.
+  // However, toggling type shouldn't lose focus in modern browsers.
+  // Let's remove the manual focus effect that was needed for component swapping.
+  // We'll focus only on mount if needed, or rely on autoFocus if we added it (we didn't).
 
   // User click login button.
-  // Note that we use callback, because when we use it in other hooks, it might be null, for example, to use handleLogin
-  // in useEffect, which should depends on the hooks, but should never depends on RAW function, because it always
-  // changes its value. See https://stackoverflow.com/a/55854902/17679565
   const handleLogin = React.useCallback((e) => {
     e.preventDefault();
     setOperating(true);
@@ -86,24 +86,29 @@ function LoginImpl({onLogin}) {
         <Form>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>{t('login.passwordLabel')}</Form.Label>
-            {
-              !plaintext &&
-              <Form.Control type="password" placeholder="Password" ref={passwordRef} defaultValue={password}
-                onChange={(e) => setPassword(e.target.value)}/>
-            }
-            {
-              plaintext &&
-              <Form.Control type="text" placeholder="Password" ref={plaintextRef} defaultValue={password}
-                onChange={(e) => setPassword(e.target.value)}/>
-            }
+            <InputGroup>
+              <Form.Control
+                type={plaintext ? "text" : "password"}
+                placeholder="Password"
+                ref={passwordRef}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={() => setPlaintext(!plaintext)}
+                onMouseDown={(e) => e.preventDefault()}
+                aria-label={plaintext ? "Hide password" : "Show password"}
+                title={plaintext ? "Hide password" : "Show password"}
+              >
+                {plaintext ? <EyeSlash /> : <Eye />}
+              </Button>
+            </InputGroup>
             <Form.Text className="text-muted">
               * {t('login.passwordTip')}
             </Form.Text>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label={t('login.labelShow')} defaultChecked={plaintext}
-              onClick={() => setPlaintext(!plaintext)}/>
-          </Form.Group>
+          {/* Checkbox removed in favor of InputGroup button */}
           <Button variant="primary" type="submit" disabled={operating} onClick={(e) => handleLogin(e)}>
             {operating && (
               <Spinner
@@ -122,4 +127,3 @@ function LoginImpl({onLogin}) {
     </>
   );
 }
-
