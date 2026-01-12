@@ -130,6 +130,36 @@ func TestValidateServerURL(t *testing.T) {
 			server:    "--help",
 			shouldErr: true,
 		},
+		{
+			name:      "Invalid server file protocol",
+			server:    "file:///tmp/output.flv",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid server http protocol",
+			server:    "http://localhost/live",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid server exec protocol",
+			server:    "exec://whoami",
+			shouldErr: true,
+		},
+		{
+			name:      "Valid server rtmps protocol",
+			server:    "rtmps://localhost/live",
+			shouldErr: false,
+		},
+		{
+			name:      "Valid server srt protocol",
+			server:    "srt://localhost/live",
+			shouldErr: false,
+		},
+		{
+			name:      "Valid server rtsp protocol",
+			server:    "rtsp://localhost/live",
+			shouldErr: false,
+		},
 	}
 
 	for _, tt := range tests {

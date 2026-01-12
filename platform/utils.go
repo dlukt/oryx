@@ -1399,7 +1399,15 @@ func ValidateServerURL(server string) error {
 	if strings.HasPrefix(server, "-") {
 		return errors.Errorf("invalid server %v", server)
 	}
-	return nil
+
+	allowed := []string{"rtmp://", "rtmps://", "srt://", "rtsp://"}
+	for _, prefix := range allowed {
+		if strings.HasPrefix(server, prefix) {
+			return nil
+		}
+	}
+
+	return errors.Errorf("invalid server protocol %v", server)
 }
 
 // RebuildStreamURL rebuild the stream URL, escape username and password in URL.

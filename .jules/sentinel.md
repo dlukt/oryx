@@ -1,5 +1,13 @@
 # Sentinel's Journal
 
+## 2026-01-12 - Arbitrary File Write via FFmpeg Protocol Abuse
+
+**Vulnerability:** The previous fix for command injection (blocking `-`) was insufficient. Attackers could still use FFmpeg protocols like `file://` in the `Server` configuration to overwrite arbitrary files on the system when combined with the `Secret` field to form the output URL.
+
+**Learning:** Blacklisting dangerous characters (like `-`) is often insufficient. When constructing URLs or paths passed to powerful tools like FFmpeg, allowlisting protocols (e.g., only allowing `rtmp://`, `srt://`) is mandatory to prevent protocol smuggling or abuse (like `file://`, `http://` for SSRF, etc.).
+
+**Prevention:** Updated `ValidateServerURL` to strictly allowlist only `rtmp://`, `rtmps://`, `srt://`, and `rtsp://` protocols.
+
 ## 2024-05-23 - Command Argument Injection in FFmpeg Configurations
 
 **Vulnerability:** Found an argument injection vulnerability in the `forward` and `transcode` modules. The `Server` configuration field was used to construct the output URL for `ffmpeg`. Since `exec.Command` passes arguments directly to the process, a malicious `Server` value starting with `-` (e.g., `-version` or `-f`) would be interpreted by `ffmpeg` as a flag rather than a URL.
