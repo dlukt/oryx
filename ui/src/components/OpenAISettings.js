@@ -1,13 +1,15 @@
 import React from "react";
 import axios from "axios";
 import {Token} from "../utils";
-import {Button, Form, Spinner} from "react-bootstrap";
+import {Button, Form, Spinner, InputGroup} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useErrorBoundary} from "react-error-boundary";
+import {Eye, EyeSlash} from "react-bootstrap-icons";
 
 export function OpenAISecretSettings({baseURL, setBaseURL, secretKey, setSecretKey, organization, setOrganization}) {
   const {t} = useTranslation();
   const { showBoundary: handleError } = useErrorBoundary();
+  const [plaintext, setPlaintext] = React.useState(false);
 
   const [checking, setChecking] = React.useState(false);
 
@@ -35,7 +37,23 @@ export function OpenAISecretSettings({baseURL, setBaseURL, secretKey, setSecretK
       <Form.Group className="mb-3">
         <Form.Label>{t('transcript.key')}</Form.Label>
         <Form.Text> * {t('transcript.key2')}, <a href='https://platform.openai.com/api-keys' target='_blank' rel='noreferrer'>{t('helper.link')}</a></Form.Text>
-        <Form.Control as="input" type='password' defaultValue={secretKey} onChange={(e) => setSecretKey(e.target.value)} />
+        <InputGroup>
+          <Form.Control
+            as="input"
+            type={plaintext ? "text" : "password"}
+            value={secretKey || ''}
+            onChange={(e) => setSecretKey(e.target.value)}
+          />
+          <Button
+            variant="outline-secondary"
+            onClick={() => setPlaintext(!plaintext)}
+            onMouseDown={(e) => e.preventDefault()}
+            aria-label={plaintext ? "Hide secret key" : "Show secret key"}
+            title={plaintext ? "Hide secret key" : "Show secret key"}
+          >
+            {plaintext ? <EyeSlash /> : <Eye />}
+          </Button>
+        </InputGroup>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>{t('transcript.base')}</Form.Label>
