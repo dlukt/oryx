@@ -1,3 +1,3 @@
-## 2024-05-22 - Password Input Refactoring
-**Learning:** Swapping components (like toggling between two `Form.Control`s for password visibility) can cause focus management issues and disrupt the accessibility tree.
-**Action:** Always use a single component and toggle its `type` attribute (e.g., `type={plaintext ? "text" : "password"}`) instead of conditional rendering of different components. This preserves focus, selection state, and event listeners naturally.
+## 2024-05-22 - Default Password Visibility
+**Learning:** Users (and security best practices) expect password fields to be masked by default. Defaulting to plaintext, even with a toggle, creates immediate friction and potential security exposure.
+**Action:** Always default password inputs to `type="password"`. Ensure tests explicitly check for this default state.
