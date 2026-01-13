@@ -81,9 +81,22 @@ function ScenarioTranscodeImpl({activeKey, urls, defaultEnabled, defaultConf}) {
           task.frame.update = task?.frame?.update ? moment(task.frame.update) : null;
         }
 
-        setTask(task);
-        if (task?.input) setTaskInputUrls(buildUrls(task.input, urls.secret, env));
-        if (task?.output) setTaskOutputUrls(buildUrls(task.output, urls.secret, env));
+        setTask(prev => {
+          return JSON.stringify(prev) === JSON.stringify(task) ? prev : task;
+        });
+
+        if (task?.input) {
+          const newUrls = buildUrls(task.input, urls.secret, env);
+          setTaskInputUrls(prev => {
+            return JSON.stringify(prev) === JSON.stringify(newUrls) ? prev : newUrls;
+          });
+        }
+        if (task?.output) {
+          const newUrls = buildUrls(task.output, urls.secret, env);
+          setTaskOutputUrls(prev => {
+            return JSON.stringify(prev) === JSON.stringify(newUrls) ? prev : newUrls;
+          });
+        }
         console.log(`Transcode: Query task ${JSON.stringify(task)}`);
       }).catch(handleError);
     };
