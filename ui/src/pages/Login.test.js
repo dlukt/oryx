@@ -1,9 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Login from './Login';
 import { BrowserRouter } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
-import axios from 'axios';
 import '@testing-library/jest-dom';
 
 // Mock react-i18next
@@ -81,21 +79,21 @@ describe('Login Component', () => {
       </BrowserRouter>
     );
 
-    // Initial state: plaintext is true, so "Hide password" should be the label
-    const toggleButton = screen.getByLabelText('Hide password');
+    // Initial state: plaintext is false, so "Show password" should be the label
+    const toggleButton = screen.getByLabelText('Show password');
     const passwordInput = screen.getByPlaceholderText('Password');
 
-    // Default state: plaintext is true in the component (based on initial state true)
-    // So initially it should be type="text".
-    expect(passwordInput).toHaveAttribute('type', 'text');
+    // Default state: plaintext is false in the component
+    // So initially it should be type="password".
+    expect(passwordInput).toHaveAttribute('type', 'password');
 
     // Click toggle button
     fireEvent.click(toggleButton);
 
-    // Now it should be password type
-    expect(passwordInput).toHaveAttribute('type', 'password');
+    // Now it should be text type
+    expect(passwordInput).toHaveAttribute('type', 'text');
 
     // And button label should change
-    expect(screen.getByLabelText('Show password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hide password')).toBeInTheDocument();
   });
 });
