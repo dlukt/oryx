@@ -1,5 +1,13 @@
 # Sentinel's Journal
 
+## 2026-01-12 - SSRF and Arbitrary File Read in Dubbing Service
+
+**Vulnerability:** The `/terraform/v1/dubbing/source` endpoint allowed `FFprobeSourceTypeStream` inputs without protocol validation. This allowed an attacker to supply `file://` or other dangerous protocols (like `http://` for SSRF) to `ffprobe`, potentially leaking file metadata or accessing internal services.
+
+**Learning:** When accepting "stream" URLs or any user-defined URLs that are passed to tools like `ffmpeg` or `ffprobe`, always validate the protocol against a strict allowlist. Assuming "stream" implies safe network protocols is dangerous.
+
+**Prevention:** Applied `ValidateServerURL` to the `FFprobeSourceTypeStream` path in `platform/dubbing.go`. This enforces that only `rtmp://`, `rtmps://`, `srt://`, and `rtsp://` protocols are allowed, preventing `file://` access and SSRF.
+
 ## 2026-01-12 - Arbitrary File Write via FFmpeg Protocol Abuse
 
 **Vulnerability:** The previous fix for command injection (blocking `-`) was insufficient. Attackers could still use FFmpeg protocols like `file://` in the `Server` configuration to overwrite arbitrary files on the system when combined with the `Secret` field to form the output URL.

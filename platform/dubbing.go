@@ -1052,6 +1052,11 @@ func handleDubbingService(ctx context.Context, handler *http.ServeMux) error {
 				}
 				// Rebuild the stream url, because it may contain special characters.
 				if strings.Contains(file.Target, "://") {
+					// Validate the protocol to prevent SSRF or local file access.
+					if err := ValidateServerURL(file.Target); err != nil {
+						return errors.Wrapf(err, "validate %v", file.Target)
+					}
+
 					if u, err := RebuildStreamURL(file.Target); err != nil {
 						return errors.Wrapf(err, "rebuild %v", file.Target)
 					} else {
