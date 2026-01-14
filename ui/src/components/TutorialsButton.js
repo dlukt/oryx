@@ -225,13 +225,21 @@ function TutorialsToast({tutorials, onClose}) {
 
 // The tutorials button, the props tutorials is a array, create by useTutorials.
 function TutorialsButton({tutorials, prefixLine}) {
+  const {t} = useTranslation();
   const [show, setShow] = React.useState(false);
 
   return (
     <>
-      <div role='button' style={{display: 'inline-block'}}>
-        <Icon.PatchQuestion onClick={() => setShow(!show)} />
-      </div>
+      <button
+        type="button"
+        className="btn btn-link p-0 text-decoration-none text-reset align-baseline border-0 bg-transparent"
+        style={{display: 'inline-block', cursor: 'pointer'}}
+        onClick={() => setShow(!show)}
+        aria-label={t('scenario.tutorials')}
+        aria-expanded={show}
+      >
+        <Icon.PatchQuestion />
+      </button>
       {show && prefixLine && <p></p>}
       {show &&
         <TutorialsToast
