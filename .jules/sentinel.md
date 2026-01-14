@@ -1,5 +1,13 @@
 # Sentinel's Journal
 
+## 2026-01-13 - Incomplete Validation Fix in Dubbing Service (Bypass)
+
+**Vulnerability:** The previous fix for SSRF in `platform/dubbing.go` applied `ValidateServerURL` only when the input contained `://`. Attackers could bypass this check by supplying a local file path (e.g., `/etc/passwd`) which does not contain `://` but is still accepted by `ffprobe` as a valid input, resulting in arbitrary file read.
+
+**Learning:** Do not condition security validation on the presence of specific characters (like `://`) in the input. If an input type (like `stream`) implies a protocol restriction, enforce that restriction unconditionally. If the input format doesn't match the expectation (e.g., missing protocol), reject it immediately.
+
+**Prevention:** Updated `platform/dubbing.go` to unconditionally call `ValidateServerURL` for all `FFprobeSourceTypeStream` inputs.
+
 ## 2026-01-12 - SSRF and Arbitrary File Read in Dubbing Service
 
 **Vulnerability:** The `/terraform/v1/dubbing/source` endpoint allowed `FFprobeSourceTypeStream` inputs without protocol validation. This allowed an attacker to supply `file://` or other dangerous protocols (like `http://` for SSRF) to `ffprobe`, potentially leaking file metadata or accessing internal services.

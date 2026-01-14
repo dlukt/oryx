@@ -160,6 +160,11 @@ func TestValidateServerURL(t *testing.T) {
 			server:    "rtsp://localhost/live",
 			shouldErr: false,
 		},
+		{
+			name:      "Invalid server local file path",
+			server:    "/etc/passwd",
+			shouldErr: true,
+		},
 	}
 
 	for _, tt := range tests {

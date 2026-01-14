@@ -1050,6 +1050,14 @@ func handleDubbingService(ctx context.Context, handler *http.ServeMux) error {
 				if strings.HasPrefix(file.Target, "rtsp://") {
 					args = append(args, "-rtsp_transport", "tcp")
 				}
+
+				// For stream type, we always require a valid protocol.
+				if file.Type == FFprobeSourceTypeStream {
+					if err := ValidateServerURL(file.Target); err != nil {
+						return errors.Wrapf(err, "validate %v", file.Target)
+					}
+				}
+
 				// Rebuild the stream url, because it may contain special characters.
 				if strings.Contains(file.Target, "://") {
 					// Validate the protocol to prevent SSRF or local file access.
