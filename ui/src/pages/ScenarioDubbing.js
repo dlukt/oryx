@@ -79,10 +79,16 @@ function ScenarioDubbingList({setDubbingId}) {
         headers: Token.loadBearerHeader(),
       }).then(res => {
         const {projects} = res.data.data;
-        setProjects(projects?.sort((a, b) => {
+        const newProjects = projects?.sort((a, b) => {
           if (a.created_at === b.created_at) return a.uuid > b.uuid ? -1 : 1;
           return a.created_at > b.created_at ? -1 : 1;
-        }) || []);
+        }) || [];
+        setProjects(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newProjects)) {
+            return prev;
+          }
+          return newProjects;
+        });
         console.log(`Status: List ok, data=${JSON.stringify(res.data.data)}`);
       }).catch(handleError);
     };
