@@ -28,7 +28,7 @@ jobs:
     outputs:
       SRS_TAG: ${{ env.SRS_TAG }}
       SRS_MAJOR: ${{ env.SRS_MAJOR }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
   docker:
     needs:
@@ -57,7 +57,7 @@ jobs:
         run: |
           docker tag ghcr.io/dlukt/oryx:$SRS_TAG ghcr.io/dlukt/oryx:$SRS_MAJOR
           docker push --all-tags ghcr.io/dlukt/oryx
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
   aliyun:
     needs:
@@ -83,7 +83,7 @@ jobs:
           dst: |
             registry.cn-hangzhou.aliyuncs.com/dlukt/oryx:${{ env.SRS_TAG }}
             registry.cn-hangzhou.aliyuncs.com/dlukt/oryx:${{ env.SRS_MAJOR }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
   deploy:
     needs:
@@ -139,4 +139,4 @@ jobs:
               docker rmi -f $image
               echo "Remove image $image, r0=$?"
             done
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
