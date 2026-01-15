@@ -929,7 +929,12 @@ function DubbingStudioEditor({project, isFullscreen, setIsFullscreen}) {
                 regenerateTaskGroup(g);
               });
             }
-            setTask(task);
+            // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+            // when the polled task data hasn't changed.
+            setTask(prev => {
+              if (JSON.stringify(prev) === JSON.stringify(task)) return prev;
+              return task;
+            });
             console.log(`Project: Query dubbing task ok, uuid=${project.uuid}, task=${task.uuid}, data=${JSON.stringify(res.data.data)}`, task);
             resolve(res.data.data);
           }).catch(handleError);
