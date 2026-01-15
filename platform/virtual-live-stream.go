@@ -701,8 +701,21 @@ func (v *VLiveWorker) Handle(ctx context.Context, handler *http.ServeMux) error 
 				if strings.HasPrefix(file.Target, "rtsp://") {
 					args = append(args, "-rtsp_transport", "tcp")
 				}
+
+				// For stream type, we always require a valid protocol.
+				if file.Type == FFprobeSourceTypeStream {
+					if err := ValidateServerURL(file.Target); err != nil {
+						return errors.Wrapf(err, "validate %v", file.Target)
+					}
+				}
+
 				// Rebuild the stream url, because it may contain special characters.
 				if strings.Contains(file.Target, "://") {
+					// Validate the protocol to prevent SSRF or local file access.
+					if err := ValidateServerURL(file.Target); err != nil {
+						return errors.Wrapf(err, "validate %v", file.Target)
+					}
+
 					if u, err := RebuildStreamURL(file.Target); err != nil {
 						return errors.Wrapf(err, "rebuild %v", file.Target)
 					} else {
@@ -1228,8 +1241,21 @@ func (v *VLiveTask) doVirtualLiveStream(ctx context.Context, input *FFprobeSourc
 	if strings.HasPrefix(input.Target, "rtsp://") {
 		args = append(args, "-rtsp_transport", "tcp")
 	}
+
+	// For stream type, we always require a valid protocol.
+	if input.Type == FFprobeSourceTypeStream {
+		if err := ValidateServerURL(input.Target); err != nil {
+			return errors.Wrapf(err, "validate %v", input.Target)
+		}
+	}
+
 	// Rebuild the stream url, because it may contain special characters.
 	if strings.Contains(input.Target, "://") {
+		// Validate the protocol to prevent SSRF or local file access.
+		if err := ValidateServerURL(input.Target); err != nil {
+			return errors.Wrapf(err, "validate %v", input.Target)
+		}
+
 		if u, err := RebuildStreamURL(input.Target); err != nil {
 			return errors.Wrapf(err, "rebuild %v", input.Target)
 		} else {
