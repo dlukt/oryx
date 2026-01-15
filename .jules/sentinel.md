@@ -36,3 +36,11 @@
 **Vulnerability:** The `Authenticate` function in `platform/utils.go` used `jwt.Parse` without verifying the signing method (`token.Method`).
 **Learning:** This is a classic JWT vulnerability (CWE-327). Even if we use a symmetric key (`apiSecret`) and expect `HS256`, failure to explicitly check `token.Method` in the keyfunc allows attackers to potentially use the `none` algorithm (if supported/enabled by the library or configuration) or perform algorithm confusion attacks (e.g. changing RS256 to HS256 if we were using RSA keys). Although this project uses `HS256`, the lack of check is a violation of secure coding practices for JWTs and could be exploited if the library behavior changes or if future refactoring introduces asymmetric keys.
 **Prevention:** Always verify `token.Method` inside the `jwt.Parse` callback function. Ensure it matches the expected signing method (e.g., `*jwt.SigningMethodHMAC`).
+
+## 2026-10-24 - SSRF and Arbitrary File Read in Virtual Live and Camera Live Services
+
+**Vulnerability:** The `platform/virtual-live-stream.go` and `platform/camera-live-stream.go` modules allowed `FFprobeSourceTypeStream` inputs without protocol validation, similar to the `dubbing` service issue. This allowed attackers to supply `file://` or other dangerous protocols to `ffprobe`.
+
+**Learning:** Vulnerabilities often repeat across similar modules. When fixing a vulnerability in one place (e.g., `dubbing.go`), always check for similar patterns in other parts of the codebase (`virtual-live-stream.go`, `camera-live-stream.go`).
+
+**Prevention:** Applied `ValidateServerURL` to `virtual-live-stream.go` and `camera-live-stream.go` to strictly allowlist protocols, ensuring only `rtmp://`, `rtmps://`, `srt://`, and `rtsp://` are processed.
