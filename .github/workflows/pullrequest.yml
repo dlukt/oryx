@@ -1,4 +1,4 @@
-name: Test Dev for PullRequest
+name: Test Dev
 
 on:
   pull_request:
