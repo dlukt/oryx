@@ -12,7 +12,8 @@ import (
 	"io"
 	"io/ioutil"
 	"math"
-	"math/rand"
+	"crypto/rand"
+	"encoding/hex"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -518,13 +519,19 @@ func InitRdb() error {
 func createToken(ctx context.Context, apiSecret string) (expireAt, createAt time.Time, token string, err error) {
 	createAt, expireAt = time.Now(), time.Now().Add(365*24*time.Hour)
 
+	// Generate a random nonce.
+	nonceObj := make([]byte, 8)
+	if _, err := rand.Read(nonceObj); err != nil {
+		return expireAt, createAt, "", errors.Wrapf(err, "create nonce")
+	}
+
 	claims := struct {
 		Version string `json:"v"`
 		Nonce   string `json:"nonce"`
 		jwt.RegisteredClaims
 	}{
 		Version: "1.0",
-		Nonce:   fmt.Sprintf("%x", rand.Uint64()),
+		Nonce:   hex.EncodeToString(nonceObj),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expireAt),
 			IssuedAt:  jwt.NewNumericDate(createAt),

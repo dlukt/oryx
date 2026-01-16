@@ -10,7 +10,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
+	"crypto/rand"
+	"encoding/hex"
 	"net/http"
 	"net/url"
 	"os"
@@ -384,7 +385,12 @@ func handleHooksService(ctx context.Context, handler *http.ServeMux) error {
 			} else if bucketName = bucket; bucketName == "" {
 				// Add nonce to bucket name, to avoid conflict on different region as bellow:
 				//    The requested bucket has already existed in other region.
-				nonce := fmt.Sprintf("%x", rand.Int63())[:4]
+				// 2 bytes = 4 hex chars.
+				b := make([]byte, 2)
+				if _, err := rand.Read(b); err != nil {
+					return errors.Wrapf(err, "create nonce")
+				}
+				nonce := hex.EncodeToString(b)
 				bucketName = fmt.Sprintf("srs-lighthouse-%v-%v", nonce, appID)
 				createBucket = true
 			}
@@ -499,7 +505,12 @@ func handleHooksService(ctx context.Context, handler *http.ServeMux) error {
 			} else if vodAppID = service; vodAppID == "" || vodAppID == "ok" {
 				// Add nonce to bucket name, to avoid conflict on different region as bellow:
 				//    The requested bucket has already existed in other region.
-				nonce := fmt.Sprintf("%x", rand.Int63())[:4]
+				// 2 bytes = 4 hex chars.
+				b := make([]byte, 2)
+				if _, err := rand.Read(b); err != nil {
+					return errors.Wrapf(err, "create nonce")
+				}
+				nonce := hex.EncodeToString(b)
 				vodAppName = fmt.Sprintf("srs-lighthouse-%v", nonce)
 				// For previous platform, the service is set to string ok, so we also create an application.
 				vodAppID = ""
