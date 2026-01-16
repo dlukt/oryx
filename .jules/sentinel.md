@@ -44,3 +44,8 @@
 **Learning:** Vulnerabilities often repeat across similar modules. When fixing a vulnerability in one place (e.g., `dubbing.go`), always check for similar patterns in other parts of the codebase (`virtual-live-stream.go`, `camera-live-stream.go`).
 
 **Prevention:** Applied `ValidateServerURL` to `virtual-live-stream.go` and `camera-live-stream.go` to strictly allowlist protocols, ensuring only `rtmp://`, `rtmps://`, `srt://`, and `rtsp://` are processed.
+
+## 2026-10-25 - [Weak RNG in Authentication]
+**Vulnerability:** Usage of `math/rand` for generating JWT nonces and bucket name suffixes. `math/rand` is not cryptographically secure and was likely unseeded, making nonces predictable.
+**Learning:** Default unseeded `math/rand` in Go produces deterministic sequences. Security-sensitive values must always use `crypto/rand`.
+**Prevention:** Use `crypto/rand` for any security-related randomness. Audit codebase for `math/rand` usage.
