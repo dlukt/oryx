@@ -49,9 +49,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
           cache-dependency-path: |
-            ui/package-lock.json
+            ui/pnpm-lock.yaml
+      - name: Install pnpm
+        run: npm install -g pnpm
       - name: Setup the Go
         uses: actions/setup-go@v3
         with:
