@@ -117,6 +117,7 @@ function FilePicker({accept, multiple, disabled, onChange}) {
   const {t} = useTranslation();
   const [filesToUpload, setFilesToUpload] = React.useState([]);
   const [hover, setHover] = React.useState(false);
+  const [focused, setFocused] = React.useState(false);
 
   const onUploadFile = React.useCallback((e) => {
     const files = [];
@@ -125,14 +126,16 @@ function FilePicker({accept, multiple, disabled, onChange}) {
     onChange && onChange(e);
   }, [setFilesToUpload, onChange]);
 
-  const filePickerId = `file-picker-${Math.random().toString(16).slice(-6)}`;
+  const filePickerId = React.useId();
   return <>
     <label htmlFor={filePickerId} style={{
       cursor: 'pointer',
       padding: '7px 12px 7px 12px',
       backgroundColor: hover ? '#d9d9d9' : '#e9e9e9',
       borderBottomLeftRadius: '5px',
-      borderTopLeftRadius: '5px'
+      borderTopLeftRadius: '5px',
+      outline: focused ? '2px solid #0d6efd' : 'none',
+      zIndex: focused ? 1 : 'auto',
     }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {t('fp.label')}
     </label>
@@ -142,12 +145,33 @@ function FilePicker({accept, multiple, disabled, onChange}) {
       backgroundColor: '#fefefe',
       border: '1px solid #e0e0e0',
       borderBottomRightRadius: '5px',
-      borderTopRightRadius: '5px'
+      borderTopRightRadius: '5px',
+      outline: focused ? '2px solid #0d6efd' : 'none',
+      zIndex: focused ? 1 : 'auto',
     }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {filesToUpload?.length ? filesToUpload.map(f => f.name).join(', ') : t('fp.nofile')}
     </label>
-    <Form.Control style={{display: 'none'}} id={filePickerId} type="file" accept={accept}
-                  multiple={multiple} disabled={disabled} onChange={onUploadFile}/>
+    <Form.Control
+      style={{
+        position: 'absolute',
+        width: '1px',
+        height: '1px',
+        padding: 0,
+        margin: '-1px',
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        border: 0,
+      }}
+      id={filePickerId}
+      type="file"
+      accept={accept}
+      multiple={multiple}
+      disabled={disabled}
+      onChange={onUploadFile}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+    />
   </>;
 }
 
