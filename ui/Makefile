@@ -6,23 +6,23 @@ default: build
 build: npm build build-cn build-en
 
 npm: lint
-	npm install
+	pnpm install
 
 # Don't run lint in GitHub Actions, because it crashes the build.
 # See https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
 lint:
-	@if [ -z "$(GITHUB_ACTION)" ] && [ -z "$(SRS_NO_LINT)" ]; then npm run lint; fi
+	@if [ -z "$(GITHUB_ACTION)" ] && [ -z "$(SRS_NO_LINT)" ]; then pnpm run lint; fi
 
 test: lint
-	npm run test
+	pnpm run test
 
 build: build-cn npm
 
 build-cn: npm
-	env PUBLIC_URL=/mgmt REACT_APP_LOCALE=zh BUILD_PATH=build/zh npm run build
+	env PUBLIC_URL=/mgmt REACT_APP_LOCALE=zh BUILD_PATH=build/zh pnpm run build
 
 build-en: npm
-	env PUBLIC_URL=/mgmt REACT_APP_LOCALE=en BUILD_PATH=build/en npm run build
+	env PUBLIC_URL=/mgmt REACT_APP_LOCALE=en BUILD_PATH=build/en pnpm run build
 
 clean:
 	rm -rf ui/build
