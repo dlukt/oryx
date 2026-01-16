@@ -45,13 +45,17 @@ jobs:
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
             https://github.com/ossrs/srs/raw/develop/trunk/doc/source.200kbps.768x320.flv
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup the npm node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
           cache-dependency-path: |
-            ui/package-lock.json
+            ui/pnpm-lock.yaml
       - name: Setup the Go
         uses: actions/setup-go@v3
         with:

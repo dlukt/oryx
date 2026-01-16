@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ScenarioDubbing from './ScenarioDubbing';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
@@ -99,15 +99,13 @@ describe('ScenarioDubbing Component', () => {
       return Promise.resolve({ data: { data: {} } });
     });
 
-    await act(async () => {
-      render(
-        <MemoryRouter initialEntries={[`/dubbing?dubbingId=${dubbingId}`]}>
-            <Routes>
-                <Route path="/dubbing" element={<ScenarioDubbing />} />
-            </Routes>
-        </MemoryRouter>
-      );
-    });
+    render(
+      <MemoryRouter initialEntries={[`/dubbing?dubbingId=${dubbingId}`]}>
+          <Routes>
+              <Route path="/dubbing" element={<ScenarioDubbing />} />
+          </Routes>
+      </MemoryRouter>
+    );
 
     // Verify editor is rendered
     await waitFor(() => {
