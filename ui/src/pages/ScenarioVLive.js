@@ -129,7 +129,7 @@ function ScenarioVLiveImpl({defaultActiveKey, defaultSecrets}) {
       }, {
         headers: Token.loadBearerHeader(),
       }).then(res => {
-        setVLives(res.data.data.map((e, i) => {
+        const newVLives = res.data.data.map((e, i) => {
           const item = {
             ...e,
             name: {
@@ -147,7 +147,16 @@ function ScenarioVLiveImpl({defaultActiveKey, defaultSecrets}) {
           const sources = item.files?.filter(e => e?.uuid === item?.source);
           item.sourceObj = sources?.length ? sources[0] : null;
           return item;
-        }));
+        });
+
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled VLive data hasn't changed.
+        setVLives(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newVLives)) {
+            return prev;
+          }
+          return newVLives;
+        });
         console.log(`VLive: Query streams ${JSON.stringify(res.data.data)}`);
       }).catch(handleError);
     };
