@@ -34,6 +34,8 @@ ADD Makefile /g/Makefile
 # For node to use more memory to fix: JavaScript heap out of memory
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
+RUN npm install -g pnpm
+
 # By default, make all, including platform and ui, but it will take a long time,
 # so there is a MAKEARGS to build without UI, see platform.yml.
 WORKDIR /g
