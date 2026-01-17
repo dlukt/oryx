@@ -128,7 +128,7 @@ function ScenarioCameraImpl({defaultActiveKey, defaultSecrets}) {
       }, {
         headers: Token.loadBearerHeader(),
       }).then(res => {
-        setCameras(res.data.data.map((e, i) => {
+        const newCameras = res.data.data.map((e, i) => {
           const item = {
             ...e,
             name: {
@@ -146,7 +146,16 @@ function ScenarioCameraImpl({defaultActiveKey, defaultSecrets}) {
           const sources = item.files?.filter(e => e?.uuid === item?.source);
           item.sourceObj = sources?.length ? sources[0] : null;
           return item;
-        }));
+        });
+
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled camera data hasn't changed.
+        setCameras(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newCameras)) {
+            return prev;
+          }
+          return newCameras;
+        });
         console.log(`Camera: Query streams ${JSON.stringify(res.data.data)}`);
       }).catch(handleError);
     };
