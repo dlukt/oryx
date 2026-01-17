@@ -23,6 +23,9 @@ COPY --from=node /usr/local/lib /usr/local/lib
 # For SRS server, always use the latest release version.
 COPY --from=srs /usr/local/srs /usr/local/srs
 
+# Install pnpm globally for UI build
+RUN npm install -g pnpm
+
 ADD releases /g/releases
 ADD mgmt /g/mgmt
 ADD platform /g/platform
