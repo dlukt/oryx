@@ -49,3 +49,11 @@
 **Vulnerability:** Usage of `math/rand` for generating JWT nonces and bucket name suffixes. `math/rand` is not cryptographically secure and was likely unseeded, making nonces predictable.
 **Learning:** Default unseeded `math/rand` in Go produces deterministic sequences. Security-sensitive values must always use `crypto/rand`.
 **Prevention:** Use `crypto/rand` for any security-related randomness. Audit codebase for `math/rand` usage.
+
+## 2026-01-17 - Arbitrary File Read in AI Talk Service
+
+**Vulnerability:** The `/terraform/v1/ai-talk/stage/hello-voices/` endpoint served files from a directory using user-supplied filenames without proper validation. Although `path.Join` and `ServeMux` mitigate simple `../` traversal in some cases, the endpoint allowed accessing any file in the configuration directory (e.g., `nginx.conf`) by specifying its name, exposing sensitive configuration.
+
+**Learning:** When serving files based on user input, never rely solely on path joining or framework cleaning. Always validate the filename against a strict allowlist of expected files, especially if the directory contains sensitive information mixed with public resources.
+
+**Prevention:** Implemented a strict allowlist in `platform/ai-talk.go` to only serve `hello-chinese.aac` and `hello-english.aac`.
