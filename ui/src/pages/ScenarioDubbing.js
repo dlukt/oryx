@@ -172,21 +172,21 @@ function ScenarioDubbingList({setDubbingId}) {
               return <tr key={project.uuid}>
                 <td>{index}</td>
                 <td>
-                  <a href="#!" onClick={(e) => {
+                  <Button variant="link" className="p-0 text-decoration-none" onClick={(e) => {
                     e.preventDefault();
                     manageProject(project);
-                  }}>{project.uuid}</a>
+                  }}>{project.uuid}</Button>
                 </td>
                 <td>{project.title}</td>
                 <td>{project.filetype}</td>
                 <td>{project.filepath}</td>
                 <td>{project.created_at}</td>
                 <td>
-                  <a href="#!" onClick={(e) => {
+                  <Button variant="link" className="p-0 text-decoration-none" onClick={(e) => {
                     e.preventDefault();
                     manageProject(project);
-                  }}>{t('helper.manage')}</a> &nbsp;
-                  <PopoverConfirm placement='top' trigger={ <a href='#!'>{t('helper.delete')}</a> } onClick={() => removeProject(project.uuid)}>
+                  }}>{t('helper.manage')}</Button> &nbsp;
+                  <PopoverConfirm placement='top' trigger={ <Button variant="link" className="p-0 text-decoration-none">{t('helper.delete')}</Button> } onClick={() => removeProject(project.uuid)}>
                     <p>{t('dubb.create.delete')}</p>
                   </PopoverConfirm>
                 </td>
