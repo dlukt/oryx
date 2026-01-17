@@ -2519,11 +2519,14 @@ func makeHelloVoicesHandler(ctx context.Context) func(http.ResponseWriter, *http
 			}
 
 			// Only allow specific files to prevent arbitrary file read.
-			allowedFiles := map[string]bool{
-				"hello-chinese.aac": true,
-				"hello-english.aac": true,
+			// We use a map to select a trusted string literal based on the input,
+			// breaking the data flow from user input to file system operations.
+			allowedFiles := map[string]string{
+				"hello-chinese.aac": "hello-chinese.aac",
+				"hello-english.aac": "hello-english.aac",
 			}
-			if !allowedFiles[filename] {
+			targetFile, ok := allowedFiles[filename]
+			if !ok {
 				return errors.Errorf("invalid file %v", filename)
 			}
 
@@ -2535,12 +2538,12 @@ func makeHelloVoicesHandler(ctx context.Context) func(http.ResponseWriter, *http
 				}
 			}
 
-			ext := strings.Trim(path.Ext(filename), ".")
+			ext := strings.Trim(path.Ext(targetFile), ".")
 			contentType := fmt.Sprintf("audio/%v", ext)
-			logger.Tf(ctx, "Serve example file=%v, ext=%v, contentType=%v", filename, ext, contentType)
+			logger.Tf(ctx, "Serve example file=%v, ext=%v, contentType=%v", targetFile, ext, contentType)
 
 			w.Header().Set("Content-Type", contentType)
-			http.ServeFile(w, r, path.Join(aiTalkExampleDir, filename))
+			http.ServeFile(w, r, path.Join(aiTalkExampleDir, targetFile))
 			return nil
 		}(); err != nil {
 			ohttp.WriteError(ctx, w, r, err)
