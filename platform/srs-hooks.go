@@ -1,17 +1,15 @@
-//
 // Copyright (c) 2022-2024 Winlin
 //
 // SPDX-License-Identifier: MIT
-//
 package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"crypto/rand"
-	"encoding/hex"
 	"net/http"
 	"net/url"
 	"os"

@@ -1,8 +1,6 @@
-//
 // Copyright (c) 2022-2024 Winlin
 //
 // SPDX-License-Identifier: MIT
-//
 package main
 
 // General error code for Oryx, it uses 100~999 for all errors.

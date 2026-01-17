@@ -1961,32 +1961,7 @@ func handleAITalkService(ctx context.Context, handler *http.ServeMux) error {
 
 	ep = "/terraform/v1/ai-talk/stage/hello-voices/"
 	logger.Tf(ctx, "Handle %v", ep)
-	handler.HandleFunc(ep, func(w http.ResponseWriter, r *http.Request) {
-		if err := func() error {
-			filename := r.URL.Path[len("/terraform/v1/ai-talk/stage/hello-voices/"):]
-			if !strings.Contains(filename, ".") {
-				filename = fmt.Sprintf("%v.aac", filename)
-			}
-
-			// If there is an optional stage id, we will use the logging context of stage.
-			q := r.URL.Query()
-			if sid := q.Get("sid"); sid != "" {
-				if stage := talkServer.QueryStage(sid); stage != nil {
-					ctx = stage.loggingCtx
-				}
-			}
-
-			ext := strings.Trim(path.Ext(filename), ".")
-			contentType := fmt.Sprintf("audio/%v", ext)
-			logger.Tf(ctx, "Serve example file=%v, ext=%v, contentType=%v", filename, ext, contentType)
-
-			w.Header().Set("Content-Type", contentType)
-			http.ServeFile(w, r, path.Join(aiTalkExampleDir, filename))
-			return nil
-		}(); err != nil {
-			ohttp.WriteError(ctx, w, r, err)
-		}
-	})
+	handler.HandleFunc(ep, makeHelloVoicesHandler(ctx))
 
 	ep = "/terraform/v1/ai-talk/stage/verify"
 	logger.Tf(ctx, "Handle %v", ep)
@@ -2533,4 +2508,42 @@ func handleAITalkService(ctx context.Context, handler *http.ServeMux) error {
 	})
 
 	return nil
+}
+
+func makeHelloVoicesHandler(ctx context.Context) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := func() error {
+			filename := r.URL.Path[len("/terraform/v1/ai-talk/stage/hello-voices/"):]
+			if !strings.Contains(filename, ".") {
+				filename = fmt.Sprintf("%v.aac", filename)
+			}
+
+			// Only allow specific files to prevent arbitrary file read.
+			allowedFiles := map[string]bool{
+				"hello-chinese.aac": true,
+				"hello-english.aac": true,
+			}
+			if !allowedFiles[filename] {
+				return errors.Errorf("invalid file %v", filename)
+			}
+
+			// If there is an optional stage id, we will use the logging context of stage.
+			q := r.URL.Query()
+			if sid := q.Get("sid"); sid != "" {
+				if stage := talkServer.QueryStage(sid); stage != nil {
+					ctx = stage.loggingCtx
+				}
+			}
+
+			ext := strings.Trim(path.Ext(filename), ".")
+			contentType := fmt.Sprintf("audio/%v", ext)
+			logger.Tf(ctx, "Serve example file=%v, ext=%v, contentType=%v", filename, ext, contentType)
+
+			w.Header().Set("Content-Type", contentType)
+			http.ServeFile(w, r, path.Join(aiTalkExampleDir, filename))
+			return nil
+		}(); err != nil {
+			ohttp.WriteError(ctx, w, r, err)
+		}
+	}
 }
