@@ -9,3 +9,7 @@
 ## 2025-02-12 - Accessible File Inputs
 **Learning:** `display: none` on file inputs removes them from the accessibility tree, making them inaccessible to keyboard users.
 **Action:** Use a visually hidden pattern (e.g., `clip: rect(0 0 0 0)`) and track the input's focus state to apply a visible outline to the custom label.
+
+## 2025-02-12 - Semantic Link Buttons
+**Learning:** The application used `<a href="#!">` for actions that look like links but behave like buttons. This is an accessibility anti-pattern as it misleads screen readers and requires extra effort for keyboard support.
+**Action:** Replace `href="#!"` anchors with `<Button variant="link">`. Use utility classes like `p-0` and `text-decoration-none` to match the table cell styling if necessary.
