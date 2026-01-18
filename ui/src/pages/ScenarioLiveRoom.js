@@ -5,7 +5,15 @@
 //
 import React from "react";
 import {useSrsLanguage} from "../components/LanguageSwitch";
-import {Accordion, Button, Card, Form, Nav, Spinner, Table} from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Card,
+  Form,
+  Nav,
+  Spinner,
+  Table
+} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
 import {Clipboard, Locale, Token} from "../utils";

@@ -5,6 +5,8 @@
 //
 import React from "react";
 
+// A reusable icon button component that replaces non-semantic div buttons.
+// Ensures keyboard accessibility and proper semantics.
 export default function IconButton({onClick, title, children}) {
   return (
     <button
