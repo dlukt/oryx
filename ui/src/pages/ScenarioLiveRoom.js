@@ -16,6 +16,7 @@ import {SrsEnvContext} from "../components/SrsEnvContext";
 import * as Icon from "react-bootstrap-icons";
 import PopoverConfirm from "../components/PopoverConfirm";
 import {OpenAISecretSettings} from "../components/OpenAISettings";
+import IconButton from "../components/IconButton";
 
 export default function ScenarioLiveRoom() {
   const [searchParams] = useSearchParams();
@@ -201,23 +202,23 @@ function ScenarioLiveRoomList({setRoomId}) {
               return <tr key={room.uuid}>
                 <td>{index}</td>
                 <td>
-                  <a href="#!" onClick={(e) => {
+                  <Button variant="link" className="p-0 text-decoration-none align-baseline" onClick={(e) => {
                     e.preventDefault();
                     manageRoom(room);
-                  }}>{room.uuid}</a>
+                  }}>{room.uuid}</Button>
                 </td>
                 <td>{room.title}</td>
                 <td>{room.stream}</td>
                 <td>{room.created_at}</td>
                 <td>
-                  <a href="#!" onClick={(e) => {
+                  <Button variant="link" className="p-0 text-decoration-none align-baseline" onClick={(e) => {
                     e.preventDefault();
                     manageRoom(room);
-                  }}>{t('helper.manage')}</a> &nbsp;
-                  <PopoverConfirm placement='top' trigger={ <a href='#!'>{t('helper.delete')}</a> } onClick={() => removeRoom(room.uuid)}>
+                  }}>{t('helper.manage')}</Button> &nbsp;
+                  <PopoverConfirm placement='top' trigger={ <Button variant="link" className="p-0 text-decoration-none align-baseline">{t('helper.delete')}</Button> } onClick={() => removeRoom(room.uuid)}>
                     <p>{t('lr.list.delete')}</p>
                   </PopoverConfirm> &nbsp;
-                  <PopoverConfirm placement='top' trigger={ <a href='#!'>{t('helper.copy')}</a> } onClick={() => copyRoom(room)}>
+                  <PopoverConfirm placement='top' trigger={ <Button variant="link" className="p-0 text-decoration-none align-baseline">{t('helper.copy')}</Button> } onClick={() => copyRoom(room)}>
                     <p>{t('lr.list.copy')}</p>
                   </PopoverConfirm>
                 </td>
@@ -375,31 +376,31 @@ function LiveRoomStreamer({room}) {
       {streamType === 'rtmp' ? <Card.Body>
           <div>
             {t('live.obs.server')} <code>{rtmpServer}</code> &nbsp;
-            <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-              <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, rtmpServer)} />
-            </div>
+            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpServer)}>
+              <Icon.Clipboard size={20} />
+            </IconButton>
           </div>
           <div>
             {t('live.obs.key')} <code>{rtmpStreamKey}</code> &nbsp;
-            <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-              <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, rtmpStreamKey)} />
-            </div>
+            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpStreamKey)}>
+              <Icon.Clipboard size={20} />
+            </IconButton>
           </div>
           <div>
             {t('live.share.hls')}&nbsp;
             <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
             <code>{m3u8Url}</code> &nbsp;
-            <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-              <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-            </div>
+            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
+              <Icon.Clipboard size={20} />
+            </IconButton>
           </div>
         </Card.Body> :
         <Card.Body>
           <div>
             {t('live.obs.server')} <code>{srtPublishUrl}</code> &nbsp;
-            <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-              <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishUrl)} />
-            </div>
+            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
+              <Icon.Clipboard size={20} />
+            </IconButton>
           </div>
           <div>
             {t('live.obs.key')} <code>{t('live.obs.nokey')}</code>
@@ -408,9 +409,9 @@ function LiveRoomStreamer({room}) {
             {t('live.share.hls')}&nbsp;
             <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
             <code>{m3u8Url}</code> &nbsp;
-            <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-              <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-            </div>
+            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
+              <Icon.Clipboard size={20} />
+            </IconButton>
           </div>
         </Card.Body>}
     </Card>
