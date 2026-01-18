@@ -1,5 +1,13 @@
 # Sentinel's Journal
 
+## 2026-01-18 - Path Traversal in OCR Service
+
+**Vulnerability:** The `/terraform/v1/ai/ocr/image/` endpoint allowed path traversal because it used user-supplied filenames from the URL to construct file paths without sanitizing directory separators. An attacker could use `../` to access files outside the intended `ocr` directory (e.g., `../../secret.jpg`).
+
+**Learning:** `path.Join` cleans paths (resolving `..`) but does not enforce that the resulting path is within a specific root directory if the input contains enough `..` segments to traverse up. Always use `path.Base` to extract just the filename if the intent is to access a file in a specific flat directory, or explicitly validate that the resolved path starts with the expected root directory.
+
+**Prevention:** Updated `platform/ocr.go` to use `path.Base` on the input filename before using it to construct the file path, ensuring it only accesses files within the `ocr` directory. Confirmed `platform/transcript.go` already correctly uses `path.Base`.
+
 ## 2026-01-13 - Incomplete Validation Fix in Dubbing Service (Bypass)
 
 **Vulnerability:** The previous fix for SSRF in `platform/dubbing.go` applied `ValidateServerURL` only when the input contained `://`. Attackers could bypass this check by supplying a local file path (e.g., `/etc/passwd`) which does not contain `://` but is still accepted by `ffprobe` as a valid input, resulting in arbitrary file read.

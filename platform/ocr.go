@@ -515,7 +515,8 @@ func (v *OCRWorker) Handle(ctx context.Context, handler *http.ServeMux) error {
 			// Format is /image/:uuid.jpg
 			filename := r.URL.Path[len("/terraform/v1/ai/ocr/image/"):]
 			// Format is :uuid.jpg
-			uuid := filename[:len(filename)-len(path.Ext(filename))]
+			fileBase := path.Base(filename)
+			uuid := fileBase[:len(fileBase)-len(path.Ext(fileBase))]
 			if len(uuid) == 0 {
 				return errors.Errorf("invalid uuid %v from %v of %v", uuid, filename, r.URL.Path)
 			}
