@@ -71,7 +71,7 @@ function ScenarioRecordCosImpl({activeKey, defaultApplyAll, enabled}) {
         headers: Token.loadBearerHeader(),
       }).then(res => {
         console.log(`DVR: Files ok, ${JSON.stringify(res.data.data)}`);
-        setDvrFiles(res.data.data.map(file => {
+        const newDvrFiles = res.data.data.map(file => {
           if (file.progress) {
             const l = window.location;
             const schema = l.protocol.replace(':', '');
@@ -95,7 +95,16 @@ function ScenarioRecordCosImpl({activeKey, defaultApplyAll, enabled}) {
           return b.update - a.update;
         }).map((file, i) => {
           return {...file, i: i + 1};
-        }));
+        });
+
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled DVR data hasn't changed.
+        setDvrFiles(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newDvrFiles)) {
+            return prev;
+          }
+          return newDvrFiles;
+        });
       }).catch(handleError);
     };
 
