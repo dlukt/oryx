@@ -72,7 +72,7 @@ function ScenarioRecordVodImpl({activeKey, defaultApplyAll, enabled}) {
         headers: Token.loadBearerHeader(),
       }).then(res => {
         console.log(`VoD: Files ok, ${JSON.stringify(res.data.data)}`);
-        setVodFiles(res.data.data.map(file => {
+        const newVodFiles = res.data.data.map(file => {
           if (file.progress) {
             const l = window.location;
             const schema = l.protocol.replace(':', '');
@@ -98,7 +98,16 @@ function ScenarioRecordVodImpl({activeKey, defaultApplyAll, enabled}) {
           return b.update - a.update;
         }).map((file, i) => {
           return {...file, i: i + 1};
-        }));
+        });
+
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled VoD data hasn't changed.
+        setVodFiles(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newVodFiles)) {
+            return prev;
+          }
+          return newVodFiles;
+        });
       }).catch(handleError);
     };
 
