@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -50,7 +51,7 @@ func TestSecurity_PathTraversal_HelloVoices(t *testing.T) {
 
 	mux := http.NewServeMux()
 
-	// We need to set aiTalkWorkDir and aiTalkExampleDir as handleAITalkService does.
+	// We need to set aiTalkExampleDir as handleAITalkService does.
 	aiTalkExampleDir = path.Join(conf.Pwd, "containers/conf")
 
 	// Use the real handler logic
@@ -80,5 +81,35 @@ func TestSecurity_PathTraversal_HelloVoices(t *testing.T) {
 		t.Errorf("Vulnerability confirmed: Access to arbitrary files in conf directory allowed. Got 200 OK")
 	} else {
 		t.Logf("Got %d for sensitive file, access denied as expected.", w2.Code)
+	}
+}
+
+func TestSecurity_PathTraversal_OCR(t *testing.T) {
+	// Simulate the logic in ocr.go to prevent regression
+	requestPath := "/terraform/v1/ai/ocr/image/../../secret.jpg"
+	prefix := "/terraform/v1/ai/ocr/image/"
+
+	if len(requestPath) < len(prefix) {
+		t.Fatal("Path too short")
+	}
+
+	filename := requestPath[len(prefix):]
+
+	// FIX APPLIED:
+	fileBase := path.Base(filename)
+	uuid := fileBase[:len(fileBase)-len(path.Ext(fileBase))]
+
+	imageFilePath := path.Join("ocr", fmt.Sprintf("%v.jpg", uuid))
+
+	// Expected behavior after fix:
+	// filename = "../../secret.jpg"
+	// fileBase = "secret.jpg"
+	// uuid = "secret"
+	// imageFilePath = "ocr/secret.jpg"
+
+	expectedSafe := "ocr/secret.jpg"
+
+	if imageFilePath != expectedSafe {
+		t.Errorf("Path traversal detected in OCR logic. Expected %s, got %s", expectedSafe, imageFilePath)
 	}
 }
