@@ -119,6 +119,12 @@ func (v *CallbackWorker) Handle(ctx context.Context, handler *http.ServeMux) err
 				return errors.Wrapf(err, "authenticate")
 			}
 
+			if config.Target != "" {
+				if err := ValidateCallbackURL(config.Target); err != nil {
+					return errors.Wrapf(err, "validate target %v", config.Target)
+				}
+			}
+
 			if err := rdb.HSet(ctx, SRS_HOOKS, "target", config.Target).Err(); err != nil && err != redis.Nil {
 				return errors.Wrapf(err, "hset %v target %v", SRS_HOOKS, config.Target)
 			}
@@ -258,6 +264,11 @@ func (v *CallbackWorker) OnStreamMessage(ctx context.Context, action SrsAction, 
 		return nil
 	}
 
+	if err := ValidateCallbackURL(config.Target); err != nil {
+		logger.Wf(ctx, "Ignore invalid callback target %v, err %+v", config.Target, err)
+		return nil
+	}
+
 	req := &struct {
 		RequestID string `json:"request_id"`
 		// The callback parameters.
@@ -390,6 +401,11 @@ func (v *CallbackWorker) OnRecordMessage(ctx context.Context, action SrsAction, 
 	}()
 
 	if !config.All || config.Target == "" {
+		return nil
+	}
+
+	if err := ValidateCallbackURL(config.Target); err != nil {
+		logger.Wf(ctx, "Ignore invalid callback target %v, err %+v", config.Target, err)
 		return nil
 	}
 
@@ -533,6 +549,11 @@ func (v *CallbackWorker) OnOCR(ctx context.Context, action SrsAction, taskUUID s
 	}()
 
 	if !config.All || config.Target == "" {
+		return nil
+	}
+
+	if err := ValidateCallbackURL(config.Target); err != nil {
+		logger.Wf(ctx, "Ignore invalid callback target %v, err %+v", config.Target, err)
 		return nil
 	}
 

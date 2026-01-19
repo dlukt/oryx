@@ -1417,6 +1417,32 @@ func ValidateServerURL(server string) error {
 	return errors.Errorf("invalid server protocol %v", server)
 }
 
+// ValidateCallbackURL checks if the callback URL is valid to prevent SSRF.
+func ValidateCallbackURL(urlStr string) error {
+	u, err := url.Parse(urlStr)
+	if err != nil {
+		return errors.Wrapf(err, "parse url %v", urlStr)
+	}
+
+	if u.Scheme != "http" && u.Scheme != "https" {
+		return errors.Errorf("invalid scheme %v", u.Scheme)
+	}
+
+	host := strings.ToLower(u.Hostname())
+	if host == "localhost" || host == "127.0.0.1" || host == "::1" {
+		return errors.Errorf("invalid loopback host %v", host)
+	}
+
+	// Check for private IPs
+	if ip := net.ParseIP(host); ip != nil {
+		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
+			return errors.Errorf("invalid private ip %v", host)
+		}
+	}
+
+	return nil
+}
+
 // RebuildStreamURL rebuild the stream URL, escape username and password in URL.
 func RebuildStreamURL(rawURL string) (*url.URL, error) {
 	// If parse success, for example, no special chars in username and password, return the URL.
