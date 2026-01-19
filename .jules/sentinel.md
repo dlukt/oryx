@@ -65,3 +65,11 @@
 **Learning:** When serving files based on user input, never rely solely on path joining or framework cleaning. Always validate the filename against a strict allowlist of expected files, especially if the directory contains sensitive information mixed with public resources.
 
 **Prevention:** Implemented a strict allowlist in `platform/ai-talk.go` to only serve `hello-chinese.aac` and `hello-english.aac`.
+
+## 2026-01-20 - SSRF in Callback Webhooks
+
+**Vulnerability:** The `/terraform/v1/mgmt/hooks/apply` endpoint allowed users to configure a callback URL (`Target`) without validation. This allowed authenticated users to perform Server-Side Request Forgery (SSRF) attacks by setting the target to internal network addresses (e.g., `http://localhost:22` or private IPs), potentially accessing internal services.
+
+**Learning:** When dealing with user-configured webhooks or callbacks, always validate the destination URL to prevent SSRF. Block access to loopback (localhost), private IP ranges, and restrict protocols to `http` and `https`. Defense in depth requires validating both at configuration time and at usage time.
+
+**Prevention:** Added `ValidateCallbackURL` in `platform/utils.go` to block private/loopback IPs. Updated `platform/callback.go` to validate the `Target` URL both when it's configured via API and before making the HTTP request.

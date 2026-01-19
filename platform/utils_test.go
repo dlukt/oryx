@@ -183,6 +183,95 @@ func TestValidateServerURL(t *testing.T) {
 	}
 }
 
+func TestValidateCallbackURL(t *testing.T) {
+	tests := []struct {
+		name      string
+		url       string
+		shouldErr bool
+	}{
+		{
+			name:      "Valid http URL",
+			url:       "http://example.com/callback",
+			shouldErr: false,
+		},
+		{
+			name:      "Valid https URL",
+			url:       "https://example.com/callback",
+			shouldErr: false,
+		},
+		{
+			name:      "Valid public IP",
+			url:       "http://8.8.8.8/callback",
+			shouldErr: false,
+		},
+		{
+			name:      "Invalid localhost",
+			url:       "http://localhost/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid LocalHost mixed case",
+			url:       "http://LocalHost/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid 127.0.0.1",
+			url:       "http://127.0.0.1/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid ::1",
+			url:       "http://[::1]/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid Link Local 169.254.x.x",
+			url:       "http://169.254.169.254/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid private IP 10.x",
+			url:       "http://10.0.0.1/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid private IP 192.168.x",
+			url:       "http://192.168.1.1/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid private IP 172.16.x",
+			url:       "http://172.16.0.1/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid scheme",
+			url:       "ftp://example.com/callback",
+			shouldErr: true,
+		},
+		{
+			name:      "Invalid bad url",
+			url:       "://",
+			shouldErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateCallbackURL(tt.url)
+			if tt.shouldErr {
+				if err == nil {
+					t.Errorf("Expected error for url %v, but got none", tt.url)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected valid for url %v, but got error: %v", tt.url, err)
+				}
+			}
+		})
+	}
+}
+
 func TestUtils_ParseFFmpegLogs(t *testing.T) {
 	for _, e := range []struct {
 		log   string
