@@ -132,7 +132,12 @@ function ScenarioOCRImpl({activeKey, defaultEnabled, defaultConf, defaultUuid}) 
             size: Number(segment.size / 1024.0 / 1024),
           };
         });
-        setLiveQueue(queue);
+        setLiveQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`OCR: Query live queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -157,7 +162,12 @@ function ScenarioOCRImpl({activeKey, defaultEnabled, defaultConf, defaultUuid}) 
             eic: Number(segment.eic),
           };
         });
-        setOcrQueue(queue);
+        setOcrQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`OCR: Query ocr queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -183,7 +193,12 @@ function ScenarioOCRImpl({activeKey, defaultEnabled, defaultConf, defaultUuid}) 
             ocrc: Number(segment.ocrc),
           };
         });
-        setCallbackQueue(queue);
+        setCallbackQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`OCR: Query callback queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -210,7 +225,12 @@ function ScenarioOCRImpl({activeKey, defaultEnabled, defaultConf, defaultUuid}) 
             cbc: Number(segment.cbc),
           };
         });
-        setCleanupQueue(queue);
+        setCleanupQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         setLastObject(queue?.segments?.length > 0 ? queue.segments[queue.segments.length - 1] : null);
         console.log(`OCR: Query cleanup queue ${JSON.stringify(queue)}`);
       }).catch(handleError);

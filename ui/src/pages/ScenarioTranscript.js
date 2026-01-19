@@ -167,7 +167,12 @@ function ScenarioTranscriptImpl({activeKey, defaultEnabled, defaultConf, default
             size: Number(segment.size / 1024.0 / 1024),
           };
         });
-        setLiveQueue(queue);
+        setLiveQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`Transcript: Query live queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -192,7 +197,12 @@ function ScenarioTranscriptImpl({activeKey, defaultEnabled, defaultConf, default
             eac: Number(segment.eac),
           };
         });
-        setAsrQueue(queue);
+        setAsrQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`Transcript: Query asr queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -227,7 +237,12 @@ function ScenarioTranscriptImpl({activeKey, defaultEnabled, defaultConf, default
             allowClearSubtitle: (queue.segments.length <= 1 || index !== 0) && !segment.uca,
           };
         });
-        setFixQueue(queue);
+        setFixQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`Transcript: Query fix queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };
@@ -257,7 +272,12 @@ function ScenarioTranscriptImpl({activeKey, defaultEnabled, defaultConf, default
             asrsMaxWords: Math.max(...segment.asrs.map(asr => asr.text.split(' ').length)),
           };
         });
-        setOverlayQueue(queue);
+        setOverlayQueue(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(queue)) {
+            return prev;
+          }
+          return queue;
+        });
         console.log(`Transcript: Query overlay queue ${JSON.stringify(queue)}`);
       }).catch(handleError);
     };

@@ -128,7 +128,7 @@ function ScenarioForwardImpl({defaultActiveKey, defaultSecrets}) {
       }, {
         headers: Token.loadBearerHeader(),
       }).then(res => {
-        setForwards(res.data.data.map((e, i) => ({
+        const newForwards = res.data.data.map((e, i) => ({
           ...e,
           name: {
             wx: t('plat.wx.title'),
@@ -139,7 +139,13 @@ function ScenarioForwardImpl({defaultActiveKey, defaultSecrets}) {
           ready: e.ready ? moment(e.ready) : null,
           update: e.frame?.update ? moment(e.frame.update) : null,
           i,
-        })));
+        }));
+        setForwards(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(newForwards)) {
+            return prev;
+          }
+          return newForwards;
+        });
         console.log(`Forward: Query streams ${JSON.stringify(res.data.data)}`);
       }).catch(handleError);
     };
