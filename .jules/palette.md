@@ -13,3 +13,7 @@
 ## 2025-02-12 - Semantic Link Buttons
 **Learning:** The application used `<a href="#!">` for actions that look like links but behave like buttons. This is an accessibility anti-pattern as it misleads screen readers and requires extra effort for keyboard support.
 **Action:** Replace `href="#!"` anchors with `<Button variant="link">`. Use utility classes like `p-0` and `text-decoration-none` to match the table cell styling if necessary.
+
+## 2025-02-26 - Async Loading State Handling
+**Learning:** Relying on side-effects inside `new Promise` wrappers (without returning them) to manage loading states can cause `finally` blocks to execute prematurely, hiding loading indicators before the operation completes.
+**Action:** Use standard Promise chaining (`.then().catch().finally()`) or `async/await` with `try/catch/finally` to ensure `setLoading(false)` always runs after the async operation effectively completes.

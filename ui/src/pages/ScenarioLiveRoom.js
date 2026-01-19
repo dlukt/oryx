@@ -260,22 +260,17 @@ function ScenarioLiveRoomImpl({roomId, setRoomId}) {
 
   const updateRoom = React.useCallback((room) => {
     setRequesting(true);
-    try {
-      new Promise(resolve => {
-        axios.post('/terraform/v1/live/room/update', {
-          uuid: room.uuid, ...room,
-        }, {
-          headers: Token.loadBearerHeader(),
-        }).then(res => {
-          alert(t('helper.setOk'));
-          setRoom(res.data.data);
-          console.log(`Room: Update ok, uuid=${room.uuid}, data=${JSON.stringify(res.data.data)}`);
-          resolve();
-        }).catch(handleError);
-      });
-    } finally {
+    axios.post('/terraform/v1/live/room/update', {
+      uuid: room.uuid, ...room,
+    }, {
+      headers: Token.loadBearerHeader(),
+    }).then(res => {
+      alert(t('helper.setOk'));
+      setRoom(res.data.data);
+      console.log(`Room: Update ok, uuid=${room.uuid}, data=${JSON.stringify(res.data.data)}`);
+    }).catch(handleError).finally(() => {
       setRequesting(false);
-    }
+    });
   }, [t, handleError, setRequesting, setRoom]);
 
   if (!room) return <Spinner animation="border" variant="primary" />;
@@ -330,7 +325,8 @@ function LiveRoomSettings({room, requesting, updateRoom}) {
         <Form.Text> * {t('lr.create.name2')}</Form.Text>
         <Form.Control as="input" defaultValue={name} onChange={(e) => setName(e.target.value)} />
       </Form.Group>
-      <Button ariant="primary" type="submit" disabled={requesting} onClick={(e) => onUpdateRoom(e, room)}>
+      <Button variant="primary" type="submit" disabled={requesting} onClick={(e) => onUpdateRoom(e, room)}>
+        {requesting && <Spinner size="sm" animation="border" className="me-2" />}
         {t('helper.update')}
       </Button>
     </Form>
@@ -727,9 +723,11 @@ function LiveRoomAssistantUpdateButtons({requesting, onUpdateRoom, onDisableRoom
 
   return <>
     <Button variant="primary" type="button" disabled={requesting} onClick={onUpdateRoom}>
+      {requesting && <Spinner size="sm" animation="border" className="me-2" />}
       {t('lr.room.update')}
     </Button> &nbsp;
     <Button variant="primary" type="button" disabled={requesting} onClick={onDisableRoom}>
+      {requesting && <Spinner size="sm" animation="border" className="me-2" />}
       {t('lr.room.disable')}
     </Button>
   </>;
