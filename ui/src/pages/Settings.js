@@ -325,7 +325,15 @@ function SettingCallbackImpl({activeKey, defaultEnabled, defaultConf}) {
         const task = res.data.data;
         if (task?.req) task.req = JSON.parse(task.req);
         if (task?.res) task.res = JSON.parse(task.res);
-        setTask(task);
+
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled task data hasn't changed.
+        setTask(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(task)) {
+            return prev;
+          }
+          return task;
+        });
         console.log(`Hooks: Query task ${JSON.stringify(task)}`);
       }).catch(handleError);
     };

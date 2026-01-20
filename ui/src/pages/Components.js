@@ -34,8 +34,14 @@ function ComponentsImpl() {
       }).then(res => {
         const status = res.data.data;
 
-        // Normally state.
-        setStatus(status);
+        // Optimize: Use functional update and deep comparison to avoid unnecessary re-renders
+        // when the polled status data hasn't changed.
+        setStatus(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(status)) {
+            return prev;
+          }
+          return status;
+        });
 
         console.log(`${moment().format()}: Status: Query ok, status=${JSON.stringify(status)}`);
       }).catch(e => {
