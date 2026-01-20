@@ -440,7 +440,10 @@ func (v *VLiveWorker) Handle(ctx context.Context, handler *http.ServeMux) error 
 				return errors.Wrapf(err, "abs %v", qFile)
 			}
 
-			if !strings.HasPrefix(fileAbsPath, serverDataDirectory) && !strings.HasPrefix(qFile, dirUploadPath) {
+			// Validate the path to prevent directory traversal.
+			cleaned := filepath.Clean(qFile)
+			isUpload := cleaned == dirUploadPath || strings.HasPrefix(cleaned, dirUploadPath+string(filepath.Separator))
+			if !strings.HasPrefix(fileAbsPath, serverDataDirectory) && !isUpload {
 				return errors.Errorf("invalid file %v, should in %v", fileAbsPath, serverDataDirectory)
 			}
 
@@ -664,7 +667,9 @@ func (v *VLiveWorker) Handle(ctx context.Context, handler *http.ServeMux) error 
 					if _, err := os.Stat(f.Target); err != nil {
 						return errors.Wrapf(err, "no file %v", f.Target)
 					}
-					if !strings.HasPrefix(f.Target, dirUploadPath) {
+					// Validate the path to prevent directory traversal.
+					cleaned := filepath.Clean(f.Target)
+					if cleaned != dirUploadPath && !strings.HasPrefix(cleaned, dirUploadPath+string(filepath.Separator)) {
 						return errors.Errorf("invalid target %v", f.Target)
 					}
 				}
