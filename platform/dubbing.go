@@ -1027,7 +1027,9 @@ func handleDubbingService(ctx context.Context, handler *http.ServeMux) error {
 					if _, err := os.Stat(f.Target); err != nil {
 						return errors.Wrapf(err, "no file %v", f.Target)
 					}
-					if !strings.HasPrefix(f.Target, dirUploadPath) {
+					// Validate the path to prevent directory traversal.
+					cleaned := filepath.Clean(f.Target)
+					if cleaned != dirUploadPath && !strings.HasPrefix(cleaned, dirUploadPath+string(filepath.Separator)) {
 						return errors.Errorf("invalid target %v", f.Target)
 					}
 				}
