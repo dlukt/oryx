@@ -9,6 +9,7 @@ import {TutorialsButton, useTutorials} from "../components/TutorialsButton";
 import SrsQRCode from "../components/SrsQRCode";
 import * as Icon from "react-bootstrap-icons";
 import {useSrsLanguage} from "../components/LanguageSwitch";
+import IconButton from "../components/IconButton";
 
 export default function ScenarioSrt(props) {
   const language = useSrsLanguage();
@@ -112,30 +113,30 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>Type：<code>Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, hostname)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, hostname)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPort)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPort)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Latency：<code>20</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '20')} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '20')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Stream ID：<code>{srtPublishStreamId}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='更换流名称'>
-                    <Icon.ArrowRepeat size={20} onClick={updateStreamName}/>
-                  </div> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishStreamId)} />
-                  </div>
+                  <IconButton title='更换流名称' onClick={updateStreamName}>
+                    <Icon.ArrowRepeat size={20} />
+                  </IconButton> &nbsp;
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishStreamId)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
               </ol>
             </li>
@@ -151,27 +152,27 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>Stream Type(码流类型)：<code>SRT Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, hostname)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, hostname)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPort)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPort)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Latency(延迟)：<code>20</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '20')} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '20')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Stream ID(流ID)：<code>{srtPlayStreamId}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPlayStreamId)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayStreamId)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>注意：若无法播放，请取消勾选<code>Use Hardware Decoder(使用硬件解码器)</code></li>
               </ol>
@@ -183,15 +184,15 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>可以用FFplay播放，参考下面的<code>ffplay播放</code>部分</li>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, flvUrl)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -237,12 +238,12 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>服务：<code>自定义</code></li>
                 <li>
                   推流地址（服务器）：<br/><code>{srtPublishUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='更换流名称'>
-                    <Icon.ArrowRepeat size={20} onClick={updateStreamName}/>
-                  </div> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishUrl)} />
-                  </div>
+                  <IconButton title='更换流名称' onClick={updateStreamName}>
+                    <Icon.ArrowRepeat size={20} />
+                  </IconButton> &nbsp;
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>推流密钥（串流密钥）：<code>无，注意请不要填任何字符串</code></li>
               </ol>
@@ -255,9 +256,9 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>码率控制：<code>CBR</code></li>
                 <li>
                   关键帧间隔： <code>3</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '3')} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '3')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>CPU使用预设：<code>veryfast</code></li>
                 <li>配置（Profile）：<code>baseline</code></li>
@@ -270,24 +271,24 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
           <ol>
             <li>
               SRT流播放地址：<br/><code>{srtPlayUrl}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPlayUrl)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>下载<a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>ffplay</a>，FFmpeg自带的低延迟播放器</li>
             <li>
               Windows，执行命令：<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayWindows)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>
               Mac或Linux，执行命令：<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayMac)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayMac)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>SRT流画面出来较慢，请稍安勿躁</li>
             <li>
@@ -295,15 +296,15 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
               <ul>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, flvUrl)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -349,12 +350,12 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>类型：<code>自定义推流</code></li>
                 <li>
                   推流地址：<br/><code>{srtPublishUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='更换流名称'>
-                    <Icon.ArrowRepeat size={20} onClick={updateStreamName}/>
-                  </div> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishUrl)} />
-                  </div>
+                  <IconButton title='更换流名称' onClick={updateStreamName}>
+                    <Icon.ArrowRepeat size={20} />
+                  </IconButton> &nbsp;
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                   <br/>
                   <SrsQRCode url={srtPublishUrl} />
                 </li>
@@ -370,25 +371,25 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
           <ol>
             <li>
               SRT流播放地址：<br/><code>{srtPlayUrl}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPlayUrl)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <SrsQRCode url={srtPlayUrl} />
             <li>下载<a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>ffplay</a>，FFmpeg自带的低延迟播放器</li>
             <li>
               Windows，执行命令：<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayWindows)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>
               Mac或Linux，执行命令：<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayMac)} />
-              </div>
+              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayMac)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>SRT流画面出来较慢，请稍安勿躁</li>
             <li>
@@ -396,15 +397,15 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
               <ul>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, flvUrl)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='拷贝'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-                  </div>
+                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -486,30 +487,30 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Type: <code>Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, hostname)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, hostname)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPort)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPort)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Latency：<code>20</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '20')} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '20')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Stream ID：<code>{srtPublishStreamId}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Change'>
-                    <Icon.ArrowRepeat size={20} onClick={updateStreamName}/>
-                  </div> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishStreamId)} />
-                  </div>
+                  <IconButton title='Change' onClick={updateStreamName}>
+                    <Icon.ArrowRepeat size={20} />
+                  </IconButton> &nbsp;
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPublishStreamId)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
               </ol>
             </li>
@@ -525,27 +526,27 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Stream Type: <code>SRT Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, hostname)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, hostname)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPort)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPort)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Latency(延迟)：<code>20</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '20')} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '20')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   Stream ID(流ID)：<code>{srtPlayStreamId}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPlayStreamId)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPlayStreamId)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>Note: If play failed, uncheck the <code>Use Hardware Decoder</code> and try</li>
               </ol>
@@ -557,16 +558,16 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>For ffplay, please read other section</li>
                 <li>
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV</a> <code>{flvUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, flvUrl)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, flvUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   HLS by <a href={hlsPlayer} target='_blank' rel='noreferrer'>H5</a> &nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, m3u8Url)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>WebRTC by <a href={rtcPlayer} target='_blank' rel='noreferrer'>H5</a></li>
               </ul>
@@ -606,12 +607,12 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Service: <code>Custom</code></li>
                 <li>
                   Server: <br/><code>{srtPublishUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Change'>
-                    <Icon.ArrowRepeat size={20} onClick={updateStreamName}/>
-                  </div> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPublishUrl)} />
-                  </div>
+                  <IconButton title='Change' onClick={updateStreamName}>
+                    <Icon.ArrowRepeat size={20} />
+                  </IconButton> &nbsp;
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>Stream Key: <code>Empty. Please keep it empty.</code></li>
               </ol>
@@ -624,9 +625,9 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Rate Control: <code>CBR</code></li>
                 <li>
                   Keyframe Interval: <code>3</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, '3')} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '3')}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>CPU Usage Preset: <code>veryfast</code></li>
                 <li>Profile: <code>baseline</code></li>
@@ -639,24 +640,24 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
           <ol>
             <li>
               SRT URL: <br/><code>{srtPlayUrl}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, srtPlayUrl)} />
-              </div>
+              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>Download ffplay from <a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>here</a>, a low latency player by FFmpeg</li>
             <li>
               For Windows:<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayWindows)} />
-              </div>
+              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>
               For Mac or Linux:<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, ffplayMac)} />
-              </div>
+              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, ffplayMac)}>
+                <Icon.Clipboard size={20} />
+              </IconButton>
             </li>
             <li>It takes a while to render the SRT stream, please wait.</li>
             <li>
@@ -665,16 +666,16 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>For ffplay, please read other section</li>
                 <li>
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV</a> <code>{flvUrl}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, flvUrl)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, flvUrl)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>
                   HLS by <a href={hlsPlayer} target='_blank' rel='noreferrer'>H5</a> &nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <div role='button' style={{display: 'inline-block'}} title='Copy'>
-                    <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, m3u8Url)} />
-                  </div>
+                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, m3u8Url)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </li>
                 <li>WebRTC by <a href={rtcPlayer} target='_blank' rel='noreferrer'>H5</a></li>
               </ul>
@@ -686,4 +687,3 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
     </Accordion>
   );
 }
-
