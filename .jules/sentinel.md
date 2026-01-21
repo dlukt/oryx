@@ -73,3 +73,8 @@
 **Learning:** When dealing with user-configured webhooks or callbacks, always validate the destination URL to prevent SSRF. Block access to loopback (localhost), private IP ranges, and restrict protocols to `http` and `https`. Defense in depth requires validating both at configuration time and at usage time.
 
 **Prevention:** Added `ValidateCallbackURL` in `platform/utils.go` to block private/loopback IPs. Updated `platform/callback.go` to validate the `Target` URL both when it's configured via API and before making the HTTP request.
+
+## 2026-01-21 - [MITM Vulnerability in Webhook Callbacks]
+**Vulnerability:** The `CallbackWorker` in `platform/callback.go` explicitly disabled SSL certificate verification (`InsecureSkipVerify: true`) for HTTPS callbacks and lacked a timeout for HTTP requests. This allowed Man-in-the-Middle (MITM) attacks on callback webhooks (potentially leaking tokens) and exposed the worker to Denial of Service (DoS) via hanging requests.
+**Learning:** Never disable TLS verification in production code "just to make it work". It completely undermines the security of HTTPS. Also, `http.DefaultClient` has no timeout, which is dangerous for production systems interacting with untrusted external services.
+**Prevention:** Removed `InsecureSkipVerify: true` and replaced the HTTP client instantiation with a custom client enforcing a 30-second timeout in `platform/callback.go` (covering `OnStreamMessage`, `OnRecordMessage`, and `OnOCR`).
