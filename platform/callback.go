@@ -6,14 +6,12 @@ package main
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -324,19 +322,11 @@ func (v *CallbackWorker) OnStreamMessage(ctx context.Context, action SrsAction, 
 
 		req.Header.Set("Content-Type", "application/json")
 
+		// We must use a timeout for the http client, to avoid hanging.
+		// And we must verify the certificate for HTTPS, to avoid MITM.
+		client := &http.Client{Timeout: 30 * time.Second}
 		var res *http.Response
-		if strings.HasPrefix(config.Target, "https://") {
-			client := &http.Client{
-				Transport: &http.Transport{
-					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: true,
-					},
-				},
-			}
-			res, err = client.Do(req)
-		} else {
-			res, err = http.DefaultClient.Do(req)
-		}
+		res, err = client.Do(req)
 		if err != nil {
 			return errors.Wrapf(err, "http post")
 		}
@@ -475,19 +465,11 @@ func (v *CallbackWorker) OnRecordMessage(ctx context.Context, action SrsAction, 
 
 		req.Header.Set("Content-Type", "application/json")
 
+		// We must use a timeout for the http client, to avoid hanging.
+		// And we must verify the certificate for HTTPS, to avoid MITM.
+		client := &http.Client{Timeout: 30 * time.Second}
 		var res *http.Response
-		if strings.HasPrefix(config.Target, "https://") {
-			client := &http.Client{
-				Transport: &http.Transport{
-					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: true,
-					},
-				},
-			}
-			res, err = client.Do(req)
-		} else {
-			res, err = http.DefaultClient.Do(req)
-		}
+		res, err = client.Do(req)
 		if err != nil {
 			return errors.Wrapf(err, "http post")
 		}
@@ -620,19 +602,11 @@ func (v *CallbackWorker) OnOCR(ctx context.Context, action SrsAction, taskUUID s
 
 		req.Header.Set("Content-Type", "application/json")
 
+		// We must use a timeout for the http client, to avoid hanging.
+		// And we must verify the certificate for HTTPS, to avoid MITM.
+		client := &http.Client{Timeout: 30 * time.Second}
 		var res *http.Response
-		if strings.HasPrefix(config.Target, "https://") {
-			client := &http.Client{
-				Transport: &http.Transport{
-					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: true,
-					},
-				},
-			}
-			res, err = client.Do(req)
-		} else {
-			res, err = http.DefaultClient.Do(req)
-		}
+		res, err = client.Do(req)
 		if err != nil {
 			return errors.Wrapf(err, "http post")
 		}
