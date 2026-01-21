@@ -17,3 +17,7 @@
 ## 2025-02-26 - Async Loading State Handling
 **Learning:** Relying on side-effects inside `new Promise` wrappers (without returning them) to manage loading states can cause `finally` blocks to execute prematurely, hiding loading indicators before the operation completes.
 **Action:** Use standard Promise chaining (`.then().catch().finally()`) or `async/await` with `try/catch/finally` to ensure `setLoading(false)` always runs after the async operation effectively completes.
+
+## 2026-01-21 - IconButton Flexibility
+**Learning:** The `IconButton` component was too rigid, lacking `className` support, which prevented its use in existing layouts that relied on utility classes for positioning or cursor styles (e.g., `ai-dubbing-command`).
+**Action:** Update reusable components to accept and merge `className` props to enable wider adoption without style regression.
