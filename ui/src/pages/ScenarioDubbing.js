@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 import {SrsErrorBoundary} from "../components/SrsErrorBoundary";
 import ChooseVideoSource from "../components/VideoSourceSelector";
 import * as Icon from "react-bootstrap-icons";
+import IconButton from "../components/IconButton";
 
 export default function ScenarioDubbing() {
   const [searchParams] = useSearchParams();
@@ -790,14 +791,14 @@ function DubbingUISubtitles({task, playerRef, isFullscreen, showHeader, showASR,
                   return <div key={s.uuid}>
                     <Row>
                       <Col xs={isFullscreen ? 2 : 1} className={g === activeGroup ? 'ai-dubbing-playing' : ''}>
-                        <label className='ai-dubbing-command' onClick={(e) => playSegment(e, s)}>
+                        <IconButton className='ai-dubbing-command' onClick={(e) => playSegment(e, s)} title={t('dubb.studio.playSegment')}>
                           <small className="text-secondary">
                             #{s.id}: {Number(s.end - s.start).toFixed(1)}s
                           </small> &nbsp;
-                        </label>
-                        <Icon.Soundwave
-                          className='ai-dubbing-command' size={16}
-                          onClick={(e) => replaySegment(e, s)}/>
+                        </IconButton>
+                        <IconButton className='ai-dubbing-command' onClick={(e) => replaySegment(e, s)} title={t('dubb.studio.replaySegment')}>
+                          <Icon.Soundwave size={16} />
+                        </IconButton>
                       </Col>
                       <Col>
                         {s.text}

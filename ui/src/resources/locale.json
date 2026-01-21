@@ -662,7 +662,10 @@
           "rephrase": "改进翻译",
           "download": "下载翻译视频",
           "disabled": "无法下载视频，请确认TTS完成，并调整所有红色背景的片段",
-          "link": "https://ossrs.net/lts/zh-cn/blog/dubbing-translating#step-5-start-dubbing-and-download-translated-video"
+          "link": "https://ossrs.net/lts/zh-cn/blog/dubbing-translating#step-5-start-dubbing-and-download-translated-video",
+          "playSegment": "播放片段",
+          "replaySegment": "重播片段",
+          "playAudio": "播放音频"
         }
       },
       "ocr": {
@@ -719,7 +722,10 @@
           "mpre": "Merge previous",
           "start": "Start Dubbing",
           "source": "Video Source Processing",
-          "title": "Dubbing Studio"
+          "title": "Dubbing Studio",
+          "playSegment": "Play Segment",
+          "replaySegment": "Replay Segment",
+          "playAudio": "Play Audio"
         },
         "setting": {
           "rephrase2": "Enable Rephrasing Translation",
