@@ -7,14 +7,20 @@ on:
   # See https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
   workflow_dispatch:
 
+# Only one online test at a time  
+concurrency:
+  group: test-online-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   envs:
     name: envs
+    timeout-minutes: 5
     steps:
       ##################################################################################################################
       # Git checkout
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # The github.ref is, for example, refs/tags/v5.0.145 or refs/tags/v5.0-r8
       # Generate variables like:
       #   SRS_TAG=v1.0.52
@@ -37,12 +43,13 @@ jobs:
     runs-on: ubuntu-latest
 
   build-image:
+    timeout-minutes: 15
     name: Build Image
     needs:
       - envs
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build image for platform
         run: |
           docker build -t platform:latest -f Dockerfile .
@@ -56,6 +63,7 @@ jobs:
     runs-on: ubuntu-latest
 
   create-vm-domain:
+    timeout-minutes: 30
     name: Create VM Domain
     needs:
       - envs
@@ -103,7 +111,7 @@ jobs:
           echo "Never dispose:"
           echo "  for((;;)); do ssh root@$SRS_DROPLET_EIP touch ctrl-debugging ctrl-reset; sleep 3; done"
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -178,6 +186,7 @@ jobs:
     runs-on: ubuntu-latest
 
   run-test:
+    timeout-minutes: 60
     name: Run Test
     needs:
       - envs
@@ -203,7 +212,7 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: platform-cache
@@ -355,6 +364,7 @@ jobs:
     runs-on: ubuntu-latest
 
   dispose-waiting:
+    timeout-minutes: 70
     name: Dispose Waiting
     if: always()
     needs:
@@ -419,6 +429,7 @@ jobs:
     runs-on: ubuntu-latest
 
   dispose-final:
+    timeout-minutes: 10
     name: Dispose Final
     if: always()
     needs:
@@ -457,6 +468,7 @@ jobs:
 
   # Final test result, fail if any jobs failed.
   test-online-final:
+    timeout-minutes: 5
     name: test-online-final
     needs:
       - envs
