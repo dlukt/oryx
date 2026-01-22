@@ -7,14 +7,20 @@ on:
       - main
       - release/*
 
+# Cancel in-progress runs for the same workflow and branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   envs:
     name: envs
+    timeout-minutes: 5
     steps:
       ##################################################################################################################
       # Git checkout
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # The github.ref is, for example, refs/tags/v5.0.145 or refs/tags/v5.0-r8
       # Generate variables like:
       #   SRS_TAG=v1.0.52
@@ -36,11 +42,12 @@ jobs:
   run-test:
     name: Run UTest
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs:
       - envs
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -50,14 +57,14 @@ jobs:
         with:
           version: 8
       - name: Setup the npm node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'pnpm'
           cache-dependency-path: |
             ui/pnpm-lock.yaml
       - name: Setup the Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: '>=1.16.0'
       - name: Install tools
@@ -72,11 +79,12 @@ jobs:
   build-platform-image:
     name: Build platform image
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs:
       - envs
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build image for platform
         run: |
           docker build -t platform:latest -f Dockerfile .
@@ -90,12 +98,13 @@ jobs:
 
   test-zh-image:
     name: Test ZH image
+    timeout-minutes: 40
     needs:
       - envs
       - build-platform-image
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -126,7 +135,7 @@ jobs:
           echo "Wait for service ready." &&
           make -j -C test &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=true -init-self-signed-cert=true \
               -check-api-secret=true -test.run TestSystem_Empty &&
           
@@ -135,19 +144,19 @@ jobs:
           
           echo "Test HTTP service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Test HTTPS service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint https://localhost:2443 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint https://localhost:2443 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Run media test with retry" &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -test.run WithStream
           ret=$?; echo "Test result: $ret"
@@ -162,12 +171,13 @@ jobs:
 
   test-en-image:
     name: Test EN image
+    timeout-minutes: 40
     needs:
       - envs
       - build-platform-image
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -198,7 +208,7 @@ jobs:
           echo "Wait for service ready." &&
           make -j -C test &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=true -init-self-signed-cert=true \
               -check-api-secret=true -test.run TestSystem_Empty &&
           
@@ -207,19 +217,19 @@ jobs:
           
           echo "Test HTTP service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Test HTTPS service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint https://localhost:2443 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint https://localhost:2443 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Run media test with retry" &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -test.run WithStream
           ret=$?; echo "Test result: $ret"
@@ -235,6 +245,7 @@ jobs:
   test-zh-installer:
     name: Test ZH installer
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     needs:
       - envs
       - build-platform-image
@@ -244,7 +255,7 @@ jobs:
           echo "SRS_TAG=${{ needs.envs.outputs.SRS_TAG }}" >> $GITHUB_ENV
           echo "SRS_MAJOR=${{ needs.envs.outputs.SRS_MAJOR }}" >> $GITHUB_ENV
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -288,7 +299,7 @@ jobs:
           echo "Wait for service ready." &&
           make -j -C test &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=true -init-self-signed-cert=true \
               -check-api-secret=true -test.run TestSystem_Empty &&
           
@@ -297,19 +308,19 @@ jobs:
           
           echo "Test HTTP service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Test HTTPS service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint https://localhost:2443 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint https://localhost:2443 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Run media test with retry" &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -test.run WithStream
           ret=$?; echo "Test result: $ret"
@@ -324,6 +335,7 @@ jobs:
   test-en-installer:
     name: Test EN installer
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     needs:
       - envs
       - build-platform-image
@@ -333,7 +345,7 @@ jobs:
           echo "SRS_TAG=${{ needs.envs.outputs.SRS_TAG }}" >> $GITHUB_ENV
           echo "SRS_MAJOR=${{ needs.envs.outputs.SRS_MAJOR }}" >> $GITHUB_ENV
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download test file
         run: |
           curl --location --output test/source.200kbps.768x320.flv \
@@ -377,7 +389,7 @@ jobs:
           echo "Wait for service ready." &&
           make -j -C test &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=true -init-self-signed-cert=true \
               -check-api-secret=true -test.run TestSystem_Empty &&
           
@@ -386,19 +398,19 @@ jobs:
           
           echo "Test HTTP service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Test HTTPS service." &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint https://localhost:2443 \
+          ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint https://localhost:2443 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -no-media-test &&
           
           echo "Run media test with retry" &&
           bash scripts/tools/secret.sh --output test/.env &&
-          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=1h -test.failfast -test.v -endpoint http://localhost:2022 \
+          ./scripts/tools/failed-retry.sh 3 ./test/oryx.test -test.timeout=30m -test.failfast -test.v -endpoint http://localhost:2022 \
               -srs-log=true -wait-ready=true -init-password=false -init-self-signed-cert=false \
               -check-api-secret=true -test.run WithStream
           ret=$?; echo "Test result: $ret"
@@ -413,6 +425,7 @@ jobs:
   test-pr-final:
     name: test-pr-final
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs:
       - run-test
       - test-zh-image
