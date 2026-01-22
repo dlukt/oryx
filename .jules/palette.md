@@ -21,3 +21,7 @@
 ## 2026-01-21 - IconButton Flexibility
 **Learning:** The `IconButton` component was too rigid, lacking `className` support, which prevented its use in existing layouts that relied on utility classes for positioning or cursor styles (e.g., `ai-dubbing-command`).
 **Action:** Update reusable components to accept and merge `className` props to enable wider adoption without style regression.
+
+## 2026-02-05 - Actionable Identifiers
+**Learning:** Identifiers like UUIDs in list views are often used for API debugging or configuration. Making them purely navigational links frustrates users who need to copy them.
+**Action:** Always provide a dedicated 'Copy' action next to long identifiers or non-selectable link text in data tables.
