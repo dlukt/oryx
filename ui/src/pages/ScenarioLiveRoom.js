@@ -116,6 +116,16 @@ function ScenarioLiveRoomList({setRoomId}) {
     });
   }, [handleError, t]);
 
+  const copyToClipboard = React.useCallback((e, text) => {
+    e.preventDefault();
+
+    Clipboard.copy(text).then(() => {
+      alert(t('helper.copyOk'));
+    }).catch((err) => {
+      alert(`${t('helper.copyFail')} ${err}`);
+    });
+  }, [t]);
+
   React.useEffect(() => {
     const refreshLiveRoomsTask = () => {
       axios.post('/terraform/v1/live/room/list', {
@@ -214,6 +224,10 @@ function ScenarioLiveRoomList({setRoomId}) {
                     e.preventDefault();
                     manageRoom(room);
                   }}>{room.uuid}</Button>
+                  &nbsp;
+                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, room.uuid)}>
+                    <Icon.Clipboard size={20} />
+                  </IconButton>
                 </td>
                 <td>{room.title}</td>
                 <td>{room.stream}</td>
@@ -323,7 +337,7 @@ function LiveRoomSettings({room, requesting, updateRoom}) {
       <Form.Group className="mb-3">
         <Form.Label>{t('lr.create.name')}</Form.Label>
         <Form.Text> * {t('lr.create.name2')}</Form.Text>
-        <Form.Control as="input" defaultValue={name} onChange={(e) => setName(e.target.value)} />
+        <Form.Control type="text" defaultValue={name} onChange={(e) => setName(e.target.value)} />
       </Form.Group>
       <Button variant="primary" type="submit" disabled={requesting} onClick={(e) => onUpdateRoom(e, room)}>
         {requesting && <Spinner size="sm" animation="border" className="me-2" />}
@@ -565,7 +579,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.name')}</Form.Label>
             <Form.Text> * {t('lr.room.name2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiName} onChange={(e) => setAiName(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiName} onChange={(e) => setAiName(e.target.value)} />
           </Form.Group>
           <LiveRoomAssistantUpdateButtons {...{requesting, onUpdateRoom, onDisableRoom}} />
         </Card.Body>}
@@ -621,22 +635,22 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.model')}</Form.Label>
             <Form.Text> * {t('lr.room.model2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiChatModel} onChange={(e) => setAiChatModel(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiChatModel} onChange={(e) => setAiChatModel(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.prompt')}</Form.Label>
             <Form.Text> * {t('lr.room.prompt2')}</Form.Text>
-            <Form.Control as="textarea" type='text' rows={7}  defaultValue={aiChatPrompt} onChange={(e) => setAiChatPrompt(e.target.value)} />
+            <Form.Control as="textarea" rows={7}  defaultValue={aiChatPrompt} onChange={(e) => setAiChatPrompt(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.window')}</Form.Label>
             <Form.Text> * {t('lr.room.window2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiChatMaxWindow} onChange={(e) => setAiChatMaxWindow(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiChatMaxWindow} onChange={(e) => setAiChatMaxWindow(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.words')}</Form.Label>
             <Form.Text> * {t('lr.room.words2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiChatMaxWords} onChange={(e) => setAiChatMaxWords(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiChatMaxWords} onChange={(e) => setAiChatMaxWords(e.target.value)} />
           </Form.Group>
           <LiveRoomAssistantUpdateButtons {...{requesting, onUpdateRoom, onDisableRoom}} />
         </Card.Body>}
@@ -649,22 +663,22 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.model')}</Form.Label>
             <Form.Text> * {t('lr.room.model2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiPostModel} onChange={(e) => setAiPostModel(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiPostModel} onChange={(e) => setAiPostModel(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.prompt')}</Form.Label>
             <Form.Text> * {t('lr.room.prompt2')}</Form.Text>
-            <Form.Control as="textarea" type='text' rows={7}  defaultValue={aiPostPrompt} onChange={(e) => setAiPostPrompt(e.target.value)} />
+            <Form.Control as="textarea" rows={7}  defaultValue={aiPostPrompt} onChange={(e) => setAiPostPrompt(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.window')}</Form.Label>
             <Form.Text> * {t('lr.room.window2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiPostMaxWindow} onChange={(e) => setAiPostMaxWindow(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiPostMaxWindow} onChange={(e) => setAiPostMaxWindow(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.words')}</Form.Label>
             <Form.Text> * {t('lr.room.words2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={aiPostMaxWords} onChange={(e) => setAiPostMaxWords(e.target.value)} />
+            <Form.Control type="text" defaultValue={aiPostMaxWords} onChange={(e) => setAiPostMaxWords(e.target.value)} />
           </Form.Group>
           <LiveRoomAssistantUpdateButtons {...{requesting, onUpdateRoom, onDisableRoom}} />
         </Card.Body>}
@@ -680,7 +694,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           <Form.Group className="mb-3">
             <Form.Label>{t('lr.room.uname')}</Form.Label>
             <Form.Text> * {t('lr.room.uname2')}</Form.Text>
-            <Form.Control as="input" type='input' defaultValue={userName} onChange={(e) => {
+            <Form.Control type="text" defaultValue={userName} onChange={(e) => {
               e.preventDefault();
               setUserName(e.target.value);
             }} />
@@ -691,7 +705,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
               {t('helper.eg')} <code>en, zh, fr, de, ja, ru </code>, ... &nbsp;
               {t('helper.see')} <a href='https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes' target='_blank' rel='noreferrer'>ISO-639-1</a>.
             </Form.Text>
-            <Form.Control as="input" defaultValue={userLanguage} onChange={(e) => {
+            <Form.Control type="text" defaultValue={userLanguage} onChange={(e) => {
               e.preventDefault();
               setUserLanguage(e.target.value);
             }} />
