@@ -1438,6 +1438,18 @@ func ValidateCallbackURL(urlStr string) error {
 		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
 			return errors.Errorf("invalid private ip %v", host)
 		}
+	} else {
+		// Resolve the host to IPs to check for private ranges.
+		ips, err := net.LookupIP(host)
+		if err != nil {
+			return errors.Wrapf(err, "lookup host %v", host)
+		}
+
+		for _, ip := range ips {
+			if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
+				return errors.Errorf("invalid private ip %v from host %v", ip, host)
+			}
+		}
 	}
 
 	return nil

@@ -78,3 +78,11 @@
 **Vulnerability:** The `CallbackWorker` in `platform/callback.go` explicitly disabled SSL certificate verification (`InsecureSkipVerify: true`) for HTTPS callbacks and lacked a timeout for HTTP requests. This allowed Man-in-the-Middle (MITM) attacks on callback webhooks (potentially leaking tokens) and exposed the worker to Denial of Service (DoS) via hanging requests.
 **Learning:** Never disable TLS verification in production code "just to make it work". It completely undermines the security of HTTPS. Also, `http.DefaultClient` has no timeout, which is dangerous for production systems interacting with untrusted external services.
 **Prevention:** Removed `InsecureSkipVerify: true` and replaced the HTTP client instantiation with a custom client enforcing a 30-second timeout in `platform/callback.go` (covering `OnStreamMessage`, `OnRecordMessage`, and `OnOCR`).
+
+## 2026-01-22 - Incomplete SSRF Protection in Webhooks
+
+**Vulnerability:** The `ValidateCallbackURL` function only checked for private IPs if the input was an IP literal. It failed to resolve hostnames, allowing attackers to use domains pointing to private IPs (e.g., `localtest.me` or `ip6-localhost`) to bypass SSRF protections and access internal services.
+
+**Learning:** When validating IP-based restrictions, always resolve hostnames to IPs and check all returned addresses. Relying on `net.ParseIP` alone is insufficient because it returns `nil` for hostnames, bypassing checks that depend on it.
+
+**Prevention:** Updated `ValidateCallbackURL` to use `net.LookupIP` when `net.ParseIP` returns nil, ensuring that the resolved IPs of any hostname are also checked against private/loopback ranges.

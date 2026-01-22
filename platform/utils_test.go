@@ -254,6 +254,11 @@ func TestValidateCallbackURL(t *testing.T) {
 			url:       "://",
 			shouldErr: true,
 		},
+		{
+			name:      "Invalid ip6-localhost",
+			url:       "http://ip6-localhost/callback",
+			shouldErr: true,
+		},
 	}
 
 	for _, tt := range tests {
