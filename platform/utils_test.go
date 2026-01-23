@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"strings"
 	"testing"
@@ -74,6 +75,46 @@ func TestAuthenticate_SigningMethod(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestIsSafeIP(t *testing.T) {
+	tests := []struct {
+		name      string
+		ip        string
+		shouldErr bool
+	}{
+		{name: "Public IP 8.8.8.8", ip: "8.8.8.8", shouldErr: false},
+		{name: "Loopback 127.0.0.1", ip: "127.0.0.1", shouldErr: true},
+		{name: "Private 10.0.0.1", ip: "10.0.0.1", shouldErr: true},
+		{name: "Private 192.168.1.1", ip: "192.168.1.1", shouldErr: true},
+		{name: "Unspecified 0.0.0.0", ip: "0.0.0.0", shouldErr: true},
+		{name: "IPv6 Loopback ::1", ip: "::1", shouldErr: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ip := net.ParseIP(tt.ip)
+			err := IsSafeIP(ip)
+			if tt.shouldErr && err == nil {
+				t.Errorf("Expected error for %v, but got none", tt.ip)
+			}
+			if !tt.shouldErr && err != nil {
+				t.Errorf("Expected success for %v, but got error: %v", tt.ip, err)
+			}
+		})
+	}
+}
+
+func TestNewSafeHTTPClient_BlockPrivate(t *testing.T) {
+	// Attempt to request a private IP.
+	client := NewSafeHTTPClient(1 * time.Second)
+	// 127.0.0.1 is loopback, should be blocked.
+	_, err := client.Get("http://127.0.0.1:8080")
+	if err == nil {
+		t.Error("Expected error for private IP, but got none")
+	} else if !strings.Contains(err.Error(), "invalid private ip") {
+		t.Errorf("Expected 'invalid private ip' error, got: %v", err)
 	}
 }
 

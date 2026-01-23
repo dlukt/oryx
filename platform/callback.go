@@ -324,7 +324,7 @@ func (v *CallbackWorker) OnStreamMessage(ctx context.Context, action SrsAction, 
 
 		// We must use a timeout for the http client, to avoid hanging.
 		// And we must verify the certificate for HTTPS, to avoid MITM.
-		client := &http.Client{Timeout: 30 * time.Second}
+		client := NewSafeHTTPClient(30 * time.Second)
 		var res *http.Response
 		res, err = client.Do(req)
 		if err != nil {
@@ -467,7 +467,7 @@ func (v *CallbackWorker) OnRecordMessage(ctx context.Context, action SrsAction, 
 
 		// We must use a timeout for the http client, to avoid hanging.
 		// And we must verify the certificate for HTTPS, to avoid MITM.
-		client := &http.Client{Timeout: 30 * time.Second}
+		client := NewSafeHTTPClient(30 * time.Second)
 		var res *http.Response
 		res, err = client.Do(req)
 		if err != nil {
@@ -604,7 +604,7 @@ func (v *CallbackWorker) OnOCR(ctx context.Context, action SrsAction, taskUUID s
 
 		// We must use a timeout for the http client, to avoid hanging.
 		// And we must verify the certificate for HTTPS, to avoid MITM.
-		client := &http.Client{Timeout: 30 * time.Second}
+		client := NewSafeHTTPClient(30 * time.Second)
 		var res *http.Response
 		res, err = client.Do(req)
 		if err != nil {
