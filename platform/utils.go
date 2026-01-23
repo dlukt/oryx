@@ -940,24 +940,24 @@ func buildVodM3u8(
 		duration += file.Duration
 	}
 
-	m3u8 := []string{
-		"#EXTM3U",
-		"#EXT-X-VERSION:3",
-		"#EXT-X-ALLOW-CACHE:YES",
-		"#EXT-X-PLAYLIST-TYPE:VOD",
-		fmt.Sprintf("#EXT-X-TARGETDURATION:%v", math.Ceil(duration)),
-		"#EXT-X-MEDIA-SEQUENCE:0",
-	}
+	var sb strings.Builder
+	sb.WriteString("#EXTM3U\n")
+	sb.WriteString("#EXT-X-VERSION:3\n")
+	sb.WriteString("#EXT-X-ALLOW-CACHE:YES\n")
+	sb.WriteString("#EXT-X-PLAYLIST-TYPE:VOD\n")
+	fmt.Fprintf(&sb, "#EXT-X-TARGETDURATION:%v\n", math.Ceil(duration))
+	sb.WriteString("#EXT-X-MEDIA-SEQUENCE:0\n")
+
 	for index, file := range metadata.Files {
 		// TODO: FIXME: Identify discontinuity by callback.
 		if index < len(metadata.Files)-2 {
 			next := metadata.Files[index+1]
 			if file.SeqNo+1 != next.SeqNo {
-				m3u8 = append(m3u8, "#EXT-X-DISCONTINUITY")
+				sb.WriteString("#EXT-X-DISCONTINUITY\n")
 			}
 		}
 
-		m3u8 = append(m3u8, fmt.Sprintf("#EXTINF:%.2f, no desc", file.Duration))
+		fmt.Fprintf(&sb, "#EXTINF:%.2f, no desc\n", file.Duration)
 
 		var tsURL string
 		if absUrl {
@@ -973,12 +973,13 @@ func buildVodM3u8(
 				tsURL = fmt.Sprintf("%v%v.ts", prefix, file.TsID)
 			}
 		}
-		m3u8 = append(m3u8, tsURL)
+		sb.WriteString(tsURL)
+		sb.WriteString("\n")
 	}
-	m3u8 = append(m3u8, "#EXT-X-ENDLIST")
+	sb.WriteString("#EXT-X-ENDLIST")
 
 	contentType = "application/vnd.apple.mpegurl"
-	m3u8Body = strings.Join(m3u8, "\n")
+	m3u8Body = sb.String()
 	return
 }
 
@@ -997,24 +998,24 @@ func buildVodM3u8ForLocal(
 		duration += file.Duration
 	}
 
-	m3u8 := []string{
-		"#EXTM3U",
-		"#EXT-X-VERSION:3",
-		"#EXT-X-ALLOW-CACHE:YES",
-		"#EXT-X-PLAYLIST-TYPE:VOD",
-		fmt.Sprintf("#EXT-X-TARGETDURATION:%v", math.Ceil(duration)),
-		"#EXT-X-MEDIA-SEQUENCE:0",
-	}
+	var sb strings.Builder
+	sb.WriteString("#EXTM3U\n")
+	sb.WriteString("#EXT-X-VERSION:3\n")
+	sb.WriteString("#EXT-X-ALLOW-CACHE:YES\n")
+	sb.WriteString("#EXT-X-PLAYLIST-TYPE:VOD\n")
+	fmt.Fprintf(&sb, "#EXT-X-TARGETDURATION:%v\n", math.Ceil(duration))
+	sb.WriteString("#EXT-X-MEDIA-SEQUENCE:0\n")
+
 	for index, file := range tsFiles {
 		// TODO: FIXME: Identify discontinuity by callback.
 		if index < len(tsFiles)-2 {
 			next := tsFiles[index+1]
 			if file.SeqNo+1 != next.SeqNo {
-				m3u8 = append(m3u8, "#EXT-X-DISCONTINUITY")
+				sb.WriteString("#EXT-X-DISCONTINUITY\n")
 			}
 		}
 
-		m3u8 = append(m3u8, fmt.Sprintf("#EXTINF:%.2f, no desc", file.Duration))
+		fmt.Fprintf(&sb, "#EXTINF:%.2f, no desc\n", file.Duration)
 
 		var tsURL string
 		if useKey {
@@ -1022,12 +1023,13 @@ func buildVodM3u8ForLocal(
 		} else {
 			tsURL = fmt.Sprintf("%v%v.ts", prefix, file.TsID)
 		}
-		m3u8 = append(m3u8, tsURL)
+		sb.WriteString(tsURL)
+		sb.WriteString("\n")
 	}
-	m3u8 = append(m3u8, "#EXT-X-ENDLIST")
+	sb.WriteString("#EXT-X-ENDLIST")
 
 	contentType = "application/vnd.apple.mpegurl"
-	m3u8Body = strings.Join(m3u8, "\n")
+	m3u8Body = sb.String()
 	return
 }
 
@@ -1048,22 +1050,22 @@ func buildLiveM3u8ForLocal(
 
 	first := tsFiles[0]
 
-	m3u8 := []string{
-		"#EXTM3U",
-		"#EXT-X-VERSION:3",
-		fmt.Sprintf("#EXT-X-MEDIA-SEQUENCE:%v", first.SeqNo),
-		fmt.Sprintf("#EXT-X-TARGETDURATION:%v", math.Ceil(duration)),
-	}
+	var sb strings.Builder
+	sb.WriteString("#EXTM3U\n")
+	sb.WriteString("#EXT-X-VERSION:3\n")
+	fmt.Fprintf(&sb, "#EXT-X-MEDIA-SEQUENCE:%v\n", first.SeqNo)
+	fmt.Fprintf(&sb, "#EXT-X-TARGETDURATION:%v\n", math.Ceil(duration))
+
 	for index, file := range tsFiles {
 		// TODO: FIXME: Identify discontinuity by callback.
 		if index < len(tsFiles)-2 {
 			next := tsFiles[index+1]
 			if file.SeqNo+1 != next.SeqNo {
-				m3u8 = append(m3u8, "#EXT-X-DISCONTINUITY")
+				sb.WriteString("#EXT-X-DISCONTINUITY\n")
 			}
 		}
 
-		m3u8 = append(m3u8, fmt.Sprintf("#EXTINF:%.2f, no desc", file.Duration))
+		fmt.Fprintf(&sb, "#EXTINF:%.2f, no desc\n", file.Duration)
 
 		var tsURL string
 		if useKey {
@@ -1071,11 +1073,12 @@ func buildLiveM3u8ForLocal(
 		} else {
 			tsURL = fmt.Sprintf("%v%v.ts", prefix, file.TsID)
 		}
-		m3u8 = append(m3u8, tsURL)
+		sb.WriteString(tsURL)
+		sb.WriteString("\n")
 	}
 
 	contentType = "application/vnd.apple.mpegurl"
-	m3u8Body = strings.Join(m3u8, "\n")
+	m3u8Body = sb.String()
 	return
 }
 
@@ -1083,18 +1086,17 @@ func buildLiveM3u8ForLocal(
 func buildLiveM3u8ForVariantCC(
 	ctx context.Context, bitrate int64, lang, stream, subtitles string,
 ) (contentType, m3u8Body string, err error) {
-	m3u8 := []string{
-		"#EXTM3U",
-		fmt.Sprintf(
-			`#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="Subtitle-%v",LANGUAGE="%v",DEFAULT=YES,AUTOSELECT=YES,FORCED=NO,URI="%v"`,
-			strings.ToUpper(lang), lang, subtitles,
-		),
-		fmt.Sprintf(`#EXT-X-STREAM-INF:BANDWIDTH=%v,SUBTITLES="subs"`, bitrate),
-		stream,
-	}
+	var sb strings.Builder
+	sb.WriteString("#EXTM3U\n")
+	fmt.Fprintf(&sb, `#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="Subtitle-%v",LANGUAGE="%v",DEFAULT=YES,AUTOSELECT=YES,FORCED=NO,URI="%v"`,
+		strings.ToUpper(lang), lang, subtitles)
+	sb.WriteString("\n")
+	fmt.Fprintf(&sb, `#EXT-X-STREAM-INF:BANDWIDTH=%v,SUBTITLES="subs"`, bitrate)
+	sb.WriteString("\n")
+	sb.WriteString(stream)
 
 	contentType = "application/vnd.apple.mpegurl"
-	m3u8Body = strings.Join(m3u8, "\n")
+	m3u8Body = sb.String()
 	return
 }
 
