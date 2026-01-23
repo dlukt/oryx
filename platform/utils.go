@@ -1417,6 +1417,60 @@ func ValidateServerURL(server string) error {
 	return errors.Errorf("invalid server protocol %v", server)
 }
 
+// IsSafeIP checks if the IP is safe to connect to (not loopback, private, etc).
+func IsSafeIP(ip net.IP) error {
+	if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
+		return errors.Errorf("invalid private ip %v", ip)
+	}
+	return nil
+}
+
+// NewSafeHTTPClient creates a HTTP client that validates the destination IP to prevent SSRF/DNS Rebinding.
+func NewSafeHTTPClient(timeout time.Duration) *http.Client {
+	return &http.Client{
+		Timeout: timeout,
+		Transport: &http.Transport{
+			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+				host, port, err := net.SplitHostPort(addr)
+				if err != nil {
+					return nil, err
+				}
+
+				// Resolve the host to IPs.
+				ips, err := net.LookupIP(host)
+				if err != nil {
+					return nil, err
+				}
+
+				// Check all resolved IPs.
+				var safeIP net.IP
+				for _, ip := range ips {
+					if err := IsSafeIP(ip); err != nil {
+						return nil, errors.Wrapf(err, "check ip %v", ip)
+					}
+					// Use the first IPv4 if available, or just the first one.
+					if safeIP == nil || safeIP.To4() != nil {
+						safeIP = ip
+					}
+				}
+
+				// Dial the safe IP directly.
+				// Note: We must join with brackets for IPv6.
+				targetAddr := net.JoinHostPort(safeIP.String(), port)
+				return (&net.Dialer{
+					Timeout:   30 * time.Second,
+					KeepAlive: 30 * time.Second,
+				}).DialContext(ctx, network, targetAddr)
+			},
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
+}
+
 // ValidateCallbackURL checks if the callback URL is valid to prevent SSRF.
 func ValidateCallbackURL(urlStr string) error {
 	u, err := url.Parse(urlStr)
@@ -1435,8 +1489,8 @@ func ValidateCallbackURL(urlStr string) error {
 
 	// Check for private IPs
 	if ip := net.ParseIP(host); ip != nil {
-		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
-			return errors.Errorf("invalid private ip %v", host)
+		if err := IsSafeIP(ip); err != nil {
+			return errors.Wrapf(err, "check ip %v", host)
 		}
 	} else {
 		// Resolve the host to IPs to check for private ranges.
@@ -1446,8 +1500,8 @@ func ValidateCallbackURL(urlStr string) error {
 		}
 
 		for _, ip := range ips {
-			if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() || ip.IsMulticast() {
-				return errors.Errorf("invalid private ip %v from host %v", ip, host)
+			if err := IsSafeIP(ip); err != nil {
+				return errors.Wrapf(err, "check ip %v from host %v", ip, host)
 			}
 		}
 	}
