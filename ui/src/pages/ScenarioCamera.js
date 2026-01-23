@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 //
 import React from "react";
-import {Accordion, Badge, Button, Col, Form, ListGroup, Row, Table} from "react-bootstrap";
+import {Accordion, Badge, Button, Col, Form, ListGroup, Row, Spinner, Table} from "react-bootstrap";
 import {Token} from "../utils";
 import axios from "axios";
 import moment from "moment";
@@ -285,6 +285,7 @@ function ScenarioCameraImpl({defaultActiveKey, defaultSecrets}) {
                     });
                   }}
                 >
+                  {submiting && <Spinner size="sm" animation="border" className="me-2" />}
                   {conf.enabled ? t('plat.com.stop') : t('plat.com.start')}
                 </Button> &nbsp;
                 <Form.Text> * {t('forward.tip')}</Form.Text>
@@ -460,7 +461,10 @@ function CameraStreamSelector({platform, cameraFiles, setCameraFiles}) {
             <Form.Control type="text" defaultValue={inputStream} placeholder={t('plat.tool.stream3')} onChange={e => setInputStream(e.target.value)} />
           </Col>
           <Col xs="auto">
-            <Button variant="primary" disabled={submiting} onClick={checkStreamUrl}>{t('helper.submit')}</Button>
+            <Button variant="primary" disabled={submiting} onClick={checkStreamUrl}>
+              {submiting && <Spinner size="sm" animation="border" className="me-2" />}
+              {t('helper.submit')}
+            </Button>
           </Col>
         </Row></> : <></>
       }
