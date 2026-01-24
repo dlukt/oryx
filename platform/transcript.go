@@ -23,7 +23,7 @@ import (
 	"github.com/ossrs/go-oryx-lib/logger"
 	// Use v8 because we use Go 1.16+, while v9 requires Go 1.18+
 	"github.com/go-redis/redis/v8"
-	"github.com/google/uuid"
+	uuidpkg "github.com/google/uuid"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -611,6 +611,9 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 			uuid := filename[:len(filename)-len("/index.m3u8")]
 			if len(uuid) == 0 {
 				return errors.Errorf("invalid uuid %v from %v of %v", uuid, filename, r.URL.Path)
+			}
+			if _, err := uuidpkg.Parse(uuid); err != nil {
+				return errors.Errorf("invalid uuid format %v from %v of %v: %v", uuid, filename, r.URL.Path, err)
 			}
 
 			segments := v.task.overlaySegments()
