@@ -961,7 +961,7 @@ func (v *TranscriptWorker) OnHlsTsMessageImpl(ctx context.Context, msg *SrsOnHls
 	}
 
 	// Copy the ts file to temporary cache dir.
-	tsid := fmt.Sprintf("%v-org-%v", msg.SeqNo, uuid.NewString())
+	tsid := fmt.Sprintf("%v-org-%v", msg.SeqNo, uuidpkg.NewString())
 	tsfile := path.Join("transcript", fmt.Sprintf("%v.ts", tsid))
 
 	// Always use execFile when params contains user inputs, see https://auth0.com/blog/preventing-command-injection-attacks-in-node-js-apps/
@@ -1498,7 +1498,7 @@ type TranscriptTask struct {
 func NewTranscriptTask() *TranscriptTask {
 	return &TranscriptTask{
 		// Generate a UUID for task.
-		UUID: uuid.NewString(),
+		UUID: uuidpkg.NewString(),
 		// The live queue for current task.
 		LiveQueue: NewTranscriptQueue(),
 		// The asr queue for current task.
@@ -1727,7 +1727,7 @@ func (v *TranscriptTask) DriveLiveQueue(ctx context.Context) error {
 
 	// Transcode to audio only mp4, mono, 16000HZ, 32kbps.
 	audioFile := &TsFile{
-		TsID:     fmt.Sprintf("%v-audio-%v", segment.TsFile.SeqNo, uuid.NewString()),
+		TsID:     fmt.Sprintf("%v-audio-%v", segment.TsFile.SeqNo, uuidpkg.NewString()),
 		URL:      segment.TsFile.URL,
 		SeqNo:    segment.TsFile.SeqNo,
 		Duration: segment.TsFile.Duration,
@@ -1947,7 +1947,7 @@ func (v *TranscriptTask) DriveFixQueue(ctx context.Context) error {
 
 	// Overlay the ASR text onto the video.
 	overlayFile := &TsFile{
-		TsID:     fmt.Sprintf("%v-overlay-%v", segment.TsFile.SeqNo, uuid.NewString()),
+		TsID:     fmt.Sprintf("%v-overlay-%v", segment.TsFile.SeqNo, uuidpkg.NewString()),
 		URL:      segment.TsFile.URL,
 		SeqNo:    segment.TsFile.SeqNo,
 		Duration: segment.TsFile.Duration,
@@ -2106,7 +2106,7 @@ func (v *TranscriptTask) reset(ctx context.Context) error {
 		}
 
 		// Regenerate new UUID.
-		v.UUID = uuid.NewString()
+		v.UUID = uuidpkg.NewString()
 
 		return nil
 	}(); err != nil {
