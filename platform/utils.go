@@ -5,6 +5,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/subtle"
@@ -1620,21 +1621,26 @@ func (w *whxpResponseModifier) Write(b []byte) (int, error) {
 	//  for example, 80, 443, 18000, etc, in such case, the sdp length will change.
 	if port := envRtcListen(); port != "8000" {
 		// Read line by line, replace " 8000 " with " {port} " if contains "candidate".
-		scan := bufio.NewScanner(strings.NewReader(string(b)))
+		// Optimization: Use bytes.Buffer to avoid string allocations.
+		var buf bytes.Buffer
+		buf.Grow(len(b) + 128)
 
-		var lines []string
+		scan := bufio.NewScanner(bytes.NewReader(b))
+		target := []byte("candidate")
+		oldBytes := []byte(" 8000 ")
+		newBytes := []byte(fmt.Sprintf(" %v ", port))
+		crlf := []byte("\r\n")
+
 		for scan.Scan() {
-			line := scan.Text()
-			if strings.Contains(line, "candidate") {
-				line = strings.ReplaceAll(line, " 8000 ", fmt.Sprintf(" %v ", port))
+			line := scan.Bytes()
+			if bytes.Contains(line, target) {
+				line = bytes.ReplaceAll(line, oldBytes, newBytes)
 			}
-			lines = append(lines, line)
+			buf.Write(line)
+			buf.Write(crlf)
 		}
 
-		// Join lines with "\r\n"
-		sdp := strings.Join(lines, "\r\n") + "\r\n"
-
-		return w.w.Write([]byte(sdp))
+		return w.w.Write(buf.Bytes())
 	}
 	return w.w.Write(b)
 }
