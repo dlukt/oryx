@@ -23,7 +23,7 @@ import (
 	"github.com/ossrs/go-oryx-lib/logger"
 	// Use v8 because we use Go 1.16+, while v9 requires Go 1.18+
 	"github.com/go-redis/redis/v8"
-	uuidpkg "github.com/google/uuid"
+	"github.com/google/uuid"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -108,7 +108,7 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 	handler.HandleFunc(ep, func(w http.ResponseWriter, r *http.Request) {
 		if err := func() error {
 			var token string
-			var uuid string
+			var taskUUID string
 			var config TranscriptConfig
 			if err := ParseBody(ctx, r.Body, &struct {
 				Token *string `json:"token"`
@@ -116,7 +116,7 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 				*TranscriptConfig
 			}{
 				Token: &token,
-				UUID:  &uuid, TranscriptConfig: &config,
+				UUID:  &taskUUID, TranscriptConfig: &config,
 			}); err != nil {
 				return errors.Wrapf(err, "parse body")
 			}
@@ -127,8 +127,8 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 			}
 
 			// Not required yet.
-			if uuid != v.task.UUID {
-				logger.Wf(ctx, "transcript ignore uuid mismatch, query=%v, task=%v", uuid, v.task.UUID)
+			if taskUUID != v.task.UUID {
+				logger.Wf(ctx, "transcript ignore uuid mismatch, query=%v, task=%v", taskUUID, v.task.UUID)
 			}
 
 			if err := config.Save(ctx); err != nil {
@@ -219,14 +219,14 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 	handler.HandleFunc(ep, func(w http.ResponseWriter, r *http.Request) {
 		if err := func() error {
 			var token string
-			var uuid, tsid string
+			var taskUUID, tsid string
 			if err := ParseBody(ctx, r.Body, &struct {
 				Token *string `json:"token"`
 				UUID  *string `json:"uuid"`
 				TSID  *string `json:"tsid"`
 			}{
 				Token: &token,
-				UUID:  &uuid, TSID: &tsid,
+				UUID:  &taskUUID, TSID: &tsid,
 			}); err != nil {
 				return errors.Wrapf(err, "parse body")
 			}
@@ -236,20 +236,20 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 				return errors.Wrapf(err, "authenticate")
 			}
 
-			if uuid != v.task.UUID {
-				return errors.Errorf("invalid uuid %v", uuid)
+			if taskUUID != v.task.UUID {
+				return errors.Errorf("invalid uuid %v", taskUUID)
 			}
 
 			if err := v.task.clearSubtitle(ctx, tsid); err != nil {
-				return errors.Wrapf(err, "clear subtitle task %v and tsid=%v", uuid, tsid)
+				return errors.Wrapf(err, "clear subtitle task %v and tsid=%v", taskUUID, tsid)
 			}
 
 			type ClearSubtitleResponse struct {
 				UUID string `json:"uuid"`
 			}
 
-			ohttp.WriteData(ctx, w, r, &ClearSubtitleResponse{uuid})
-			logger.Tf(ctx, "transcript clear subtitle ok, uuid=%v, token=%vB", uuid, len(token))
+			ohttp.WriteData(ctx, w, r, &ClearSubtitleResponse{taskUUID})
+			logger.Tf(ctx, "transcript clear subtitle ok, uuid=%v, token=%vB", taskUUID, len(token))
 			return nil
 		}(); err != nil {
 			ohttp.WriteError(ctx, w, r, err)
@@ -261,13 +261,13 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 	handler.HandleFunc(ep, func(w http.ResponseWriter, r *http.Request) {
 		if err := func() error {
 			var token string
-			var uuid string
+			var taskUUID string
 			if err := ParseBody(ctx, r.Body, &struct {
 				Token *string `json:"token"`
 				UUID  *string `json:"uuid"`
 			}{
 				Token: &token,
-				UUID:  &uuid,
+				UUID:  &taskUUID,
 			}); err != nil {
 				return errors.Wrapf(err, "parse body")
 			}
@@ -277,12 +277,12 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 				return errors.Wrapf(err, "authenticate")
 			}
 
-			if uuid != v.task.UUID {
-				return errors.Errorf("invalid uuid %v", uuid)
+			if taskUUID != v.task.UUID {
+				return errors.Errorf("invalid uuid %v", taskUUID)
 			}
 
 			if err := v.task.reset(ctx); err != nil {
-				return errors.Wrapf(err, "restart task %v", uuid)
+				return errors.Wrapf(err, "restart task %v", taskUUID)
 			}
 
 			type ResetResponse struct {
@@ -291,7 +291,7 @@ func (v *TranscriptWorker) Handle(ctx context.Context, handler *http.ServeMux) e
 			ohttp.WriteData(ctx, w, r, &ResetResponse{
 				UUID: v.task.UUID,
 			})
-			logger.Tf(ctx, "transcript reset ok, uuid=%v, new=%v, token=%vB", uuid, v.task.UUID, len(token))
+			logger.Tf(ctx, "transcript reset ok, uuid=%v, new=%v, token=%vB", taskUUID, v.task.UUID, len(token))
 			return nil
 		}(); err != nil {
 			ohttp.WriteError(ctx, w, r, err)
@@ -958,7 +958,7 @@ func (v *TranscriptWorker) OnHlsTsMessageImpl(ctx context.Context, msg *SrsOnHls
 	}
 
 	// Copy the ts file to temporary cache dir.
-	tsid := fmt.Sprintf("%v-org-%v", msg.SeqNo, uuidpkg.NewString())
+	tsid := fmt.Sprintf("%v-org-%v", msg.SeqNo, uuid.NewString())
 	tsfile := path.Join("transcript", fmt.Sprintf("%v.ts", tsid))
 
 	// Always use execFile when params contains user inputs, see https://auth0.com/blog/preventing-command-injection-attacks-in-node-js-apps/
@@ -1495,7 +1495,7 @@ type TranscriptTask struct {
 func NewTranscriptTask() *TranscriptTask {
 	return &TranscriptTask{
 		// Generate a UUID for task.
-		UUID: uuidpkg.NewString(),
+		UUID: uuid.NewString(),
 		// The live queue for current task.
 		LiveQueue: NewTranscriptQueue(),
 		// The asr queue for current task.
@@ -1724,7 +1724,7 @@ func (v *TranscriptTask) DriveLiveQueue(ctx context.Context) error {
 
 	// Transcode to audio only mp4, mono, 16000HZ, 32kbps.
 	audioFile := &TsFile{
-		TsID:     fmt.Sprintf("%v-audio-%v", segment.TsFile.SeqNo, uuidpkg.NewString()),
+		TsID:     fmt.Sprintf("%v-audio-%v", segment.TsFile.SeqNo, uuid.NewString()),
 		URL:      segment.TsFile.URL,
 		SeqNo:    segment.TsFile.SeqNo,
 		Duration: segment.TsFile.Duration,
@@ -1944,7 +1944,7 @@ func (v *TranscriptTask) DriveFixQueue(ctx context.Context) error {
 
 	// Overlay the ASR text onto the video.
 	overlayFile := &TsFile{
-		TsID:     fmt.Sprintf("%v-overlay-%v", segment.TsFile.SeqNo, uuidpkg.NewString()),
+		TsID:     fmt.Sprintf("%v-overlay-%v", segment.TsFile.SeqNo, uuid.NewString()),
 		URL:      segment.TsFile.URL,
 		SeqNo:    segment.TsFile.SeqNo,
 		Duration: segment.TsFile.Duration,
@@ -2103,7 +2103,7 @@ func (v *TranscriptTask) reset(ctx context.Context) error {
 		}
 
 		// Regenerate new UUID.
-		v.UUID = uuidpkg.NewString()
+		v.UUID = uuid.NewString()
 
 		return nil
 	}(); err != nil {
