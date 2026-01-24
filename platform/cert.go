@@ -14,7 +14,6 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
 	"math/big"
 	"os"
 	"os/exec"
@@ -184,12 +183,12 @@ func (v *CertManager) QueryCertificate() (string, string, error) {
 	keyFile := path.Join(conf.Pwd, "containers/data/config/nginx.key")
 	crtFile := path.Join(conf.Pwd, "containers/data/config/nginx.crt")
 
-	key, err := ioutil.ReadFile(keyFile)
+	key, err := os.ReadFile(keyFile)
 	if err != nil {
 		return "", "", errors.Wrapf(err, "read key %v", keyFile)
 	}
 
-	crt, err := ioutil.ReadFile(crtFile)
+	crt, err := os.ReadFile(crtFile)
 	if err != nil {
 		return "", "", errors.Wrapf(err, "read crt %v", crtFile)
 	}
@@ -209,11 +208,11 @@ func (v *CertManager) updateSslFiles(ctx context.Context, key, crt string) error
 		return errors.Wrapf(err, "rm -f %v %v", keyFile, crtFile)
 	}
 
-	if err := ioutil.WriteFile(keyFile, []byte(key), 0644); err != nil {
+	if err := os.WriteFile(keyFile, []byte(key), 0600); err != nil {
 		return errors.Wrapf(err, "write key %vB to %v", len(key), keyFile)
 	}
 
-	if err := ioutil.WriteFile(crtFile, []byte(crt), 0644); err != nil {
+	if err := os.WriteFile(crtFile, []byte(crt), 0644); err != nil {
 		return errors.Wrapf(err, "write crt %vB to %v", len(crt), crtFile)
 	}
 
