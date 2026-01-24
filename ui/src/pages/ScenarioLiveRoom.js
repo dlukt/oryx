@@ -51,6 +51,7 @@ function ScenarioLiveRoomList({setRoomId}) {
   const [name, setName] = React.useState('My Live Room');
   const [rooms, setRooms] = React.useState([]);
   const [refreshNow, setRefreshNow] = React.useState();
+  const controlId = React.useId();
 
   const createLiveRoom = React.useCallback((e) => {
     e.preventDefault();
@@ -190,7 +191,7 @@ function ScenarioLiveRoomList({setRoomId}) {
         <Accordion.Header>{t('lr.create.title')}</Accordion.Header>
         <Accordion.Body>
           <Form>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId={controlId}>
               <Form.Label>{t('lr.create.name')}</Form.Label>
               <Form.Text> * {t('lr.create.name2')}</Form.Text>
               <Form.Control as="input" defaultValue={name} onChange={(e) => setName(e.target.value)} />
@@ -324,6 +325,7 @@ function ScenarioLiveRoomImpl({roomId, setRoomId}) {
 function LiveRoomSettings({room, requesting, updateRoom}) {
   const {t} = useTranslation();
   const [name, setName] = React.useState(room.title);
+  const controlId = React.useId();
 
   const onUpdateRoom = React.useCallback((e, room) => {
     e.preventDefault();
@@ -334,7 +336,7 @@ function LiveRoomSettings({room, requesting, updateRoom}) {
 
   return (
     <Form>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" controlId={controlId}>
         <Form.Label>{t('lr.create.name')}</Form.Label>
         <Form.Text> * {t('lr.create.name2')}</Form.Text>
         <Form.Control type="text" defaultValue={name} onChange={(e) => setName(e.target.value)} />
@@ -466,6 +468,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
   const [userLanguage, setUserLanguage] = React.useState(room.aiAsrLanguage || language);
   const [aiPattern, setAiPattern] = React.useState('chat');
   const [assistantLink, setAssistantLink] = React.useState();
+  const baseId = React.useId();
 
   React.useEffect(() => {
     if (aiSecretKey) return;
@@ -576,7 +579,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           </Nav>
         </Card.Header>
         {configItem === 'basic' && <Card.Body>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-basic-name`}>
             <Form.Label>{t('lr.room.name')}</Form.Label>
             <Form.Text> * {t('lr.room.name2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiName} onChange={(e) => setAiName(e.target.value)} />
@@ -584,7 +587,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
           <LiveRoomAssistantUpdateButtons {...{requesting, onUpdateRoom, onDisableRoom}} />
         </Card.Body>}
         {configItem === 'provider' && <Card.Body>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-provider`}>
             <Form.Label>{t('lr.room.provider')}</Form.Label>
             <Form.Text> * {t('lr.room.provider2')}</Form.Text>
             <Form.Select defaultValue={aiProvider} onChange={(e) => setAiProvider(e.target.value)}>
@@ -602,11 +605,11 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
         </Card.Body>}
         {configItem === 'asr' && <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Group className="mb-3" controlId="formAiAsrEnabledCheckbox">
+            <Form.Group className="mb-3" controlId={`${baseId}-asr-enabled`}>
               <Form.Check type="checkbox" label={t('lr.room.asre')} defaultChecked={aiAsrEnabled} onClick={() => setAiAsrEnabled(!aiAsrEnabled)} />
             </Form.Group>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-asr-language`}>
             <Form.Label>{t('transcript.lang')}</Form.Label>
             <Form.Text> * {t('transcript.lang2')}. &nbsp;
               {t('helper.eg')} <code>en, zh, fr, de, ja, ru </code>, ... &nbsp;
@@ -615,7 +618,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
             </Form.Text>
             <Form.Control as="input" defaultValue={aiAsrLanguage} onChange={(e) => setAiAsrLanguage(e.target.value)}/>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-asr-prompt`}>
             <Form.Label>{t('lr.room.asrp')}</Form.Label>
             <Form.Text> * {t('lr.room.asrp2')}.</Form.Text>
             <Form.Select defaultValue={aiAsrPrompt} onChange={(e) => setAiAsrPrompt(e.target.value)}>
@@ -628,26 +631,26 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
         </Card.Body>}
         {configItem === 'chat' && <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Group className="mb-3" controlId="formAiChatEnabledCheckbox">
+            <Form.Group className="mb-3" controlId={`${baseId}-chat-enabled`}>
               <Form.Check type="checkbox" label={t('lr.room.chate')} defaultChecked={aiChatEnabled} onClick={() => setAiChatEnabled(!aiChatEnabled)} />
             </Form.Group>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-chat-model`}>
             <Form.Label>{t('lr.room.model')}</Form.Label>
             <Form.Text> * {t('lr.room.model2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiChatModel} onChange={(e) => setAiChatModel(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-chat-prompt`}>
             <Form.Label>{t('lr.room.prompt')}</Form.Label>
             <Form.Text> * {t('lr.room.prompt2')}</Form.Text>
             <Form.Control as="textarea" rows={7}  defaultValue={aiChatPrompt} onChange={(e) => setAiChatPrompt(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-chat-window`}>
             <Form.Label>{t('lr.room.window')}</Form.Label>
             <Form.Text> * {t('lr.room.window2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiChatMaxWindow} onChange={(e) => setAiChatMaxWindow(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-chat-words`}>
             <Form.Label>{t('lr.room.words')}</Form.Label>
             <Form.Text> * {t('lr.room.words2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiChatMaxWords} onChange={(e) => setAiChatMaxWords(e.target.value)} />
@@ -656,26 +659,26 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
         </Card.Body>}
         {configItem === 'post' && <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Group className="mb-3" controlId="formAiChatEnabledCheckbox">
+            <Form.Group className="mb-3" controlId={`${baseId}-post-enabled`}>
               <Form.Check type="checkbox" label={t('lr.room.chate')} defaultChecked={aiPostEnabled} onClick={() => setAiPostEnabled(!aiPostEnabled)} />
             </Form.Group>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-post-model`}>
             <Form.Label>{t('lr.room.model')}</Form.Label>
             <Form.Text> * {t('lr.room.model2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiPostModel} onChange={(e) => setAiPostModel(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-post-prompt`}>
             <Form.Label>{t('lr.room.prompt')}</Form.Label>
             <Form.Text> * {t('lr.room.prompt2')}</Form.Text>
             <Form.Control as="textarea" rows={7}  defaultValue={aiPostPrompt} onChange={(e) => setAiPostPrompt(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-post-window`}>
             <Form.Label>{t('lr.room.window')}</Form.Label>
             <Form.Text> * {t('lr.room.window2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiPostMaxWindow} onChange={(e) => setAiPostMaxWindow(e.target.value)} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-post-words`}>
             <Form.Label>{t('lr.room.words')}</Form.Label>
             <Form.Text> * {t('lr.room.words2')}</Form.Text>
             <Form.Control type="text" defaultValue={aiPostMaxWords} onChange={(e) => setAiPostMaxWords(e.target.value)} />
@@ -684,14 +687,14 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
         </Card.Body>}
         {configItem === 'tts' && <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Group className="mb-3" controlId="formAiTtsEnabledCheckbox">
+            <Form.Group className="mb-3" controlId={`${baseId}-tts-enabled`}>
               <Form.Check type="checkbox" label={t('lr.room.ttse')} defaultChecked={aiTtsEnabled} onClick={() => setAiTtsEnabled(!aiTtsEnabled)} />
             </Form.Group>
           </Form.Group>
           <LiveRoomAssistantUpdateButtons {...{requesting, onUpdateRoom, onDisableRoom}} />
         </Card.Body>}
         {configItem === 'assistant' && <Card.Body>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-assistant-name`}>
             <Form.Label>{t('lr.room.uname')}</Form.Label>
             <Form.Text> * {t('lr.room.uname2')}</Form.Text>
             <Form.Control type="text" defaultValue={userName} onChange={(e) => {
@@ -699,7 +702,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
               setUserName(e.target.value);
             }} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-assistant-language`}>
             <Form.Label>{t('transcript.lang')}</Form.Label>
             <Form.Text> * {t('transcript.lang3')}. &nbsp;
               {t('helper.eg')} <code>en, zh, fr, de, ja, ru </code>, ... &nbsp;
@@ -710,7 +713,7 @@ function LiveRoomAssistant({room, requesting, updateRoom}) {
               setUserLanguage(e.target.value);
             }} />
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId={`${baseId}-assistant-pattern`}>
             <Form.Label>{t('lr.room.pattern')}</Form.Label>
             <Form.Text> * {t('lr.room.pattern2')}.</Form.Text>
             <Form.Select defaultValue={aiPattern} onChange={(e) => setAiPattern(e.target.value)}>
