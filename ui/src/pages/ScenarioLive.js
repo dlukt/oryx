@@ -9,33 +9,23 @@ import {TutorialsButton, useTutorials} from "../components/TutorialsButton";
 import SrsQRCode from "../components/SrsQRCode";
 import * as Icon from 'react-bootstrap-icons';
 import {useSrsLanguage} from "../components/LanguageSwitch";
-import {Clipboard} from "../utils";
 import {useTranslation} from "react-i18next";
 import {useSearchParams} from "react-router-dom";
 import {SrsEnvContext} from "../components/SrsEnvContext";
 import IconButton from "../components/IconButton";
+import CopyButton from "../components/CopyButton";
 
 export default function ScenarioLiveStreams({urls}) {
   const [searchParams] = useSearchParams();
-  const {t} = useTranslation();
-  const copyToClipboard = React.useCallback((e, text) => {
-    e.preventDefault();
-
-    Clipboard.copy(text).then(() => {
-      alert(t('helper.copyOk'));
-    }).catch((err) => {
-      alert(`${t('helper.copyFail')} ${err}`);
-    });
-  }, [t]);
 
   React.useEffect(() => {
     console.log(`?allow-lo-rtc=true To allow publish WHIP by localhost. Default: false, Current: ${searchParams.get('allow-lo-rtc')}`);
   }, [searchParams]);
 
-  return <ScenarioLiveImpl {...{urls, copyToClipboard}} />;
+  return <ScenarioLiveImpl {...{urls}} />;
 }
 
-function ScenarioLiveImpl({copyToClipboard, urls}) {
+function ScenarioLiveImpl({urls}) {
   const language = useSrsLanguage();
   const [searchParams] = useSearchParams();
   const {t} = useTranslation();
@@ -147,18 +137,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>{t('live.obs.service')} <code>{t('live.obs.custom')}</code></li>
                 <li>
                   {t('live.obs.server')} <code>{rtmpServer}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpServer)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtmpServer} />
                 </li>
                 <li>
                   {t('live.obs.key')} <code>{rtmpStreamKey}</code> &nbsp;
                   <IconButton title={t('helper.switchStream')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpStreamKey)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtmpStreamKey} />
                 </li>
               </ul>
             </li>
@@ -170,18 +156,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{flvUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   {t('live.share.hls')}&nbsp;
                   <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                 {enableWhep &&
@@ -189,9 +171,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                     {t('live.share.rtc')}&nbsp;
                     <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                     <code>{whepUrl}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={whepUrl} />
                   </li>
                 }
               </ul>
@@ -202,23 +182,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.share.wpflv')} &nbsp;
                   <code>{flvUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wphls')} &nbsp;
                   <code>{m3u8UrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8UrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wprtc')} &nbsp;
                   <code>{rtcUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtcUrlShortCode} />
                 </li>
               </ul>
             </li>
@@ -245,9 +219,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-              <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffmpegPublishCli)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+              <CopyButton text={ffmpegPublishCli} />
             </li>
             <li>
               {t('live.ffmpeg.url')} <br/>
@@ -255,9 +227,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-              <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+              <CopyButton text={rtmpPublishUrl} />
               <br/>
               {language === 'zh' && <SrsQRCode url={rtmpPublishUrl} />}
             </li>
@@ -269,18 +239,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{flvUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   {t('live.share.hls')}&nbsp;
                   <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                 {enableWhep &&
@@ -288,9 +254,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                     {t('live.share.rtc')}&nbsp;
                     <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                     <code>{whepUrl}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={whepUrl} />
                   </li>
                 }
               </ul>
@@ -301,23 +265,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.share.wpflv')} &nbsp;
                   <code>{flvUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wphls')} &nbsp;
                   <code>{m3u8UrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8UrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wprtc')} &nbsp;
                   <code>{rtcUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtcUrlShortCode} />
                 </li>
               </ul>
             </li>
@@ -348,9 +306,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                   <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishUrl} />
                 </li>
                 <li>{t('live.obs.key')} <code>{t('live.obs.nokey')}</code></li>
               </ul>
@@ -360,9 +316,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <ul>
                 <li>
                   {t('live.srt.url')} <br/><code>{srtPlayUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPlayUrl} />
                 </li>
                 <li>
                   {t('live.srt.ffplay')} &nbsp;
@@ -371,16 +325,12 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.srt.win')}<br/>
                   <code>{ffplayWindows}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffplayWindows)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={ffplayWindows} />
                 </li>
                 <li>
                   {t('live.srt.mac')}<br/>
                   <code>{ffplayMac}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffplayMac)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={ffplayMac} />
                 </li>
                 <li>{t('live.srt.wait')}</li>
                 <li>
@@ -391,18 +341,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                       <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                       <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                       <code>{flvUrl}</code> &nbsp;
-                      <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                      <CopyButton text={flvUrl} />
                     </li>
                     <li>
                       {t('live.share.hls')}&nbsp;
                       <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                       <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                       <code>{m3u8Url}</code> &nbsp;
-                      <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                      <CopyButton text={m3u8Url} />
                     </li>
                     {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                     {enableWhep &&
@@ -410,9 +356,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                         {t('live.share.rtc')}&nbsp;
                         <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                         <code>{whepUrl}</code> &nbsp;
-                        <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                        <CopyButton text={whepUrl} />
                       </li>
                     }
                   </ul>
@@ -425,23 +369,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.share.wpflv')} &nbsp;
                   <code>{flvUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wphls')} &nbsp;
                   <code>{m3u8UrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8UrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wprtc')} &nbsp;
                   <code>{rtcUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtcUrlShortCode} />
                 </li>
               </ul>
             </li>
@@ -468,9 +406,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-              <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffmpegSrtCli)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+              <CopyButton text={ffmpegSrtCli} />
             </li>
             <li>
               {t('live.ffmpeg.url')} <br/>
@@ -478,9 +414,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-              <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+              <CopyButton text={srtPublishUrl} />
               <br/>
               {language === 'zh' && <SrsQRCode url={srtPublishUrl} />}
             </li>
@@ -489,9 +423,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
               <ul>
                 <li>
                   {t('live.srt.url')} <br/><code>{srtPlayUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPlayUrl} />
                 </li>
                 <li>
                   {t('live.srt.ffplay')} &nbsp;
@@ -500,16 +432,12 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.srt.win')}<br/>
                   <code>{ffplayWindows}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffplayWindows)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={ffplayWindows} />
                 </li>
                 <li>
                   {t('live.srt.mac')}<br/>
                   <code>{ffplayMac}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, ffplayMac)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={ffplayMac} />
                 </li>
                 <li>{t('live.srt.wait')}</li>
                 <li>
@@ -520,18 +448,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                       <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                       <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                       <code>{flvUrl}</code> &nbsp;
-                      <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                      <CopyButton text={flvUrl} />
                     </li>
                     <li>
                       {t('live.share.hls')}&nbsp;
                       <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                       <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                       <code>{m3u8Url}</code> &nbsp;
-                      <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                      <CopyButton text={m3u8Url} />
                     </li>
                     {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                     {enableWhep &&
@@ -539,9 +463,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                         {t('live.share.rtc')}&nbsp;
                         <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                         <code>{whepUrl}</code> &nbsp;
-                        <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                        <CopyButton text={whepUrl} />
                       </li>
                     }
                   </ul>
@@ -554,23 +476,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.share.wpflv')} &nbsp;
                   <code>{flvUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wphls')} &nbsp;
                   <code>{m3u8UrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8UrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wprtc')} &nbsp;
                   <code>{rtcUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtcUrlShortCode} />
                 </li>
               </ul>
             </li>
@@ -602,9 +518,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whipUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                <CopyButton text={whipUrl} />
                 <br/>
                 <code>{t('live.rtc.tip2')}</code>
               </li>
@@ -617,9 +531,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                     <IconButton title={t('helper.copy')} onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtc2UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={rtc2UrlShortCode} />
                   </li>
                 </ul>
               </li>
@@ -631,18 +543,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                     <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                     <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                     <code>{flvUrl}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={flvUrl} />
                   </li>
                   <li>
                     {t('live.share.hls')}&nbsp;
                     <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                     <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                     <code>{m3u8Url}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={m3u8Url} />
                   </li>
                   {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                   {enableWhep &&
@@ -650,9 +558,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                       {t('live.share.rtc')}&nbsp;
                       <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                       <code>{whepUrl}</code> &nbsp;
-                      <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                      <CopyButton text={whepUrl} />
                     </li>
                   }
                 </ul>
@@ -663,23 +569,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                   <li>
                     {t('live.share.wpflv')} &nbsp;
                     <code>{flvUrlShortCode}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={flvUrlShortCode} />
                   </li>
                   <li>
                     {t('live.share.wphls')} &nbsp;
                     <code>{m3u8UrlShortCode}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={m3u8UrlShortCode} />
                   </li>
                   <li>
                     {t('live.share.wprtc')} &nbsp;
                     <code>{rtcUrlShortCode}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={rtcUrlShortCode} />
                   </li>
                 </ul>
               </li>
@@ -707,9 +607,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>{t('live.obs.service')} <code>{t('live.obs.whip')}</code></li>
                 <li>
                   {t('live.obs.server')} <code>{whipUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whipUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={whipUrl} />
                 </li>
                 <li>{t('live.obs.bearer')} <code>{t('live.obs.nokey')}</code></li>
               </ul>
@@ -722,18 +620,14 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgFlvPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{flvUrl}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   {t('live.share.hls')}&nbsp;
                   <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
                   <a href={xgHlsPlayerUrl} target='_blank' rel='noreferrer'>{t('live.share.xg')}</a>&nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 {enableWhep || <li><code>{t('live.rtc.whep')}</code></li>}
                 {enableWhep &&
@@ -741,9 +635,7 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                     {t('live.share.rtc')}&nbsp;
                     <a href={rtcPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>&nbsp;
                     <code>{whepUrl}</code> &nbsp;
-                    <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, whepUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                    <CopyButton text={whepUrl} />
                   </li>
                 }
               </ul>
@@ -754,23 +646,17 @@ function ScenarioLiveImpl({copyToClipboard, urls}) {
                 <li>
                   {t('live.share.wpflv')} &nbsp;
                   <code>{flvUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, flvUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wphls')} &nbsp;
                   <code>{m3u8UrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8UrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8UrlShortCode} />
                 </li>
                 <li>
                   {t('live.share.wprtc')} &nbsp;
                   <code>{rtcUrlShortCode}</code> &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtcUrlShortCode)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={rtcUrlShortCode} />
                 </li>
               </ul>
             </li>
