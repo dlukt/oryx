@@ -41,9 +41,11 @@ export const Token = {
 
 export const Locale = {
   _cache: null,
+  _listeners: [],
   save: (data) => {
     Locale._cache = data;
     localStorage.setItem(ORYX_LOCALE, JSON.stringify(data));
+    Locale._listeners.forEach(cb => cb(data.lang));
   },
   load: () => {
     const info = localStorage.getItem(ORYX_LOCALE);
@@ -52,6 +54,12 @@ export const Locale = {
   },
   current: () => {
     return Locale._cache?.lang || process.env.REACT_APP_LOCALE || 'zh';
+  },
+  subscribe: (cb) => {
+    Locale._listeners.push(cb);
+    return () => {
+      Locale._listeners = Locale._listeners.filter(c => c !== cb);
+    };
   }
 };
 
