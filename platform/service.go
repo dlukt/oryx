@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -25,6 +26,8 @@ import (
 	// Use v8 because we use Go 1.16+, while v9 requires Go 1.18+
 	"github.com/go-redis/redis/v8"
 )
+
+var bvidRegex = regexp.MustCompile(`^[a-zA-Z0-9]+$`)
 
 // HttpService is a HTTP server for platform.
 type HttpService interface {
@@ -860,6 +863,10 @@ func handleMgmtBilibili(ctx context.Context, handler *http.ServeMux) {
 				return errors.New("no bvid")
 			}
 
+			if !bvidRegex.MatchString(bvid) {
+				return errors.Errorf("invalid bvid %v", bvid)
+			}
+
 			bilibiliObj := struct {
 				Update string                 `json:"update"`
 				Res    map[string]interface{} `json:"res"`
@@ -892,7 +899,8 @@ func handleMgmtBilibili(ctx context.Context, handler *http.ServeMux) {
 				bilibiliObj.Update = time.Now().Format(time.RFC3339)
 
 				bilibiliURL := fmt.Sprintf("https://api.bilibili.com/x/web-interface/view?bvid=%v", bvid)
-				res, err := http.Get(bilibiliURL)
+				client := NewSafeHTTPClient(10 * time.Second)
+				res, err := client.Get(bilibiliURL)
 				if err != nil {
 					return errors.Wrapf(err, "get %v", bilibiliURL)
 				}
