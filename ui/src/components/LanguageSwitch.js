@@ -83,24 +83,12 @@ export default function LanguageSwitch() {
 function useSrsLanguage() {
   const [language, setLanguage] = React.useState(Locale.current());
 
-  const ref = React.useRef({
-    language: Locale.current(),
-  });
   React.useEffect(() => {
-    if (ref.current.language !== language) ref.current.language = language;
-  }, [language]);
-
-  React.useEffect(() => {
-    const refreshLanguage = () => {
-      if (ref.current.language !== Locale.current()) {
-        console.log(`i18n language changed detect, previous=${ref.current.language}, current=${Locale.current()}`);
-        setLanguage(Locale.current());
-      }
-    };
-
-    refreshLanguage();
-    const timer = setInterval(() => refreshLanguage(), 300);
-    return () => clearInterval(timer);
+    const unsubscribe = Locale.subscribe((lang) => {
+      console.log(`i18n language changed event, current=${lang}`);
+      setLanguage(lang);
+    });
+    return unsubscribe;
   }, []);
 
   return language;
