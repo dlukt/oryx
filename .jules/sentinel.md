@@ -86,3 +86,16 @@
 **Learning:** When validating IP-based restrictions, always resolve hostnames to IPs and check all returned addresses. Relying on `net.ParseIP` alone is insufficient because it returns `nil` for hostnames, bypassing checks that depend on it.
 
 **Prevention:** Updated `ValidateCallbackURL` to use `net.LookupIP` when `net.ParseIP` returns nil, ensuring that the resolved IPs of any hostname are also checked against private/loopback ranges.
+
+## 2026-01-25 - SSRF and DoS in Bilibili API Handler
+
+**Vulnerability:** The `/terraform/v1/mgmt/bilibili` endpoint used `http.Get` directly with a user-supplied `bvid` to construct a URL. This had two issues:
+1.  **SSRF:** Although `http.Get` parses URLs, it uses the default resolver and client, which might be vulnerable to DNS rebinding or accessing private services if the environment allows it (though Bilibili API is public). The main risk was lack of control over destination IP.
+2.  **DoS:** `http.Get` uses `http.DefaultClient` which has no timeout. If the external Bilibili API was slow or unresponsive, the request could hang indefinitely, potentially leading to resource exhaustion.
+3.  **Input Validation:** The `bvid` was not validated, allowing potential parameter injection if not properly handled by `fmt.Sprintf` and URL parsing (though impact is low for this specific API).
+
+**Learning:** Always use a configured `http.Client` with a timeout when making external requests. Avoid `http.Get` in production code. Also, validate all user inputs against a strict allowlist (e.g., regex) before using them, even if they seem harmless. Use `NewSafeHTTPClient` where available to prevent SSRF via DNS rebinding.
+
+**Prevention:** Updated `handleMgmtBilibili` in `platform/service.go` to:
+1.  Validate `bvid` against `^[a-zA-Z0-9]+$` regex.
+2.  Use `NewSafeHTTPClient(10 * time.Second)` instead of `http.Get`, ensuring timeouts and safe IP resolution.
