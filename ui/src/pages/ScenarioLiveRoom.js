@@ -16,15 +16,14 @@ import {
 } from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
-import {Clipboard, Locale, Token} from "../utils";
+import {Locale, Token} from "../utils";
 import {useErrorBoundary} from "react-error-boundary";
 import {useSearchParams} from "react-router-dom";
 import {buildUrls} from "../components/UrlGenerator";
 import {SrsEnvContext} from "../components/SrsEnvContext";
-import * as Icon from "react-bootstrap-icons";
 import PopoverConfirm from "../components/PopoverConfirm";
 import {OpenAISecretSettings} from "../components/OpenAISettings";
-import IconButton from "../components/IconButton";
+import CopyButton from "../components/CopyButton";
 
 export default function ScenarioLiveRoom() {
   const [searchParams] = useSearchParams();
@@ -116,16 +115,6 @@ function ScenarioLiveRoomList({setRoomId}) {
       }).catch(handleError);
     });
   }, [handleError, t]);
-
-  const copyToClipboard = React.useCallback((e, text) => {
-    e.preventDefault();
-
-    Clipboard.copy(text).then(() => {
-      alert(t('helper.copyOk'));
-    }).catch((err) => {
-      alert(`${t('helper.copyFail')} ${err}`);
-    });
-  }, [t]);
 
   React.useEffect(() => {
     const refreshLiveRoomsTask = () => {
@@ -226,9 +215,7 @@ function ScenarioLiveRoomList({setRoomId}) {
                     manageRoom(room);
                   }}>{room.uuid}</Button>
                   &nbsp;
-                  <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, room.uuid)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={room.uuid} />
                 </td>
                 <td>{room.title}</td>
                 <td>{room.stream}</td>
@@ -356,16 +343,6 @@ function LiveRoomStreamer({room}) {
   const [urls, setUrls] = React.useState({});
   const [streamType, setStreamType] = React.useState('rtmp');
 
-  const copyToClipboard = React.useCallback((e, text) => {
-    e.preventDefault();
-
-    Clipboard.copy(text).then(() => {
-      alert(t('helper.copyOk'));
-    }).catch((err) => {
-      alert(`${t('helper.copyFail')} ${err}`);
-    });
-  }, [t]);
-
   const changeStreamType = React.useCallback((e, t) => {
     e.preventDefault();
     setStreamType(t);
@@ -396,31 +373,23 @@ function LiveRoomStreamer({room}) {
       {streamType === 'rtmp' ? <Card.Body>
           <div>
             {t('live.obs.server')} <code>{rtmpServer}</code> &nbsp;
-            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpServer)}>
-              <Icon.Clipboard size={20} />
-            </IconButton>
+            <CopyButton text={rtmpServer} />
           </div>
           <div>
             {t('live.obs.key')} <code>{rtmpStreamKey}</code> &nbsp;
-            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, rtmpStreamKey)}>
-              <Icon.Clipboard size={20} />
-            </IconButton>
+            <CopyButton text={rtmpStreamKey} />
           </div>
           <div>
             {t('live.share.hls')}&nbsp;
             <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
             <code>{m3u8Url}</code> &nbsp;
-            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-              <Icon.Clipboard size={20} />
-            </IconButton>
+            <CopyButton text={m3u8Url} />
           </div>
         </Card.Body> :
         <Card.Body>
           <div>
             {t('live.obs.server')} <code>{srtPublishUrl}</code> &nbsp;
-            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-              <Icon.Clipboard size={20} />
-            </IconButton>
+            <CopyButton text={srtPublishUrl} />
           </div>
           <div>
             {t('live.obs.key')} <code>{t('live.obs.nokey')}</code>
@@ -429,9 +398,7 @@ function LiveRoomStreamer({room}) {
             {t('live.share.hls')}&nbsp;
             <a href={hlsPlayer} target='_blank' rel='noreferrer'>{t('live.share.simple')}</a>,&nbsp;
             <code>{m3u8Url}</code> &nbsp;
-            <IconButton title={t('helper.copy')} onClick={(e) => copyToClipboard(e, m3u8Url)}>
-              <Icon.Clipboard size={20} />
-            </IconButton>
+            <CopyButton text={m3u8Url} />
           </div>
         </Card.Body>}
     </Card>
