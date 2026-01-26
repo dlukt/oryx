@@ -25,3 +25,7 @@
 ## 2026-02-05 - Actionable Identifiers
 **Learning:** Identifiers like UUIDs in list views are often used for API debugging or configuration. Making them purely navigational links frustrates users who need to copy them.
 **Action:** Always provide a dedicated 'Copy' action next to long identifiers or non-selectable link text in data tables.
+
+## 2026-02-26 - Standardizing Copy Actions
+**Learning:** Inconsistent implementation of "Copy" actions (text links vs custom divs vs buttons) leads to poor UX and accessibility. Icon-only buttons in data tables save space and provide a recognizable affordance.
+**Action:** Consistently use the `CopyButton` component for all copy-to-clipboard interactions, especially in data tables and status displays.
