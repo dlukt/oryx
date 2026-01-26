@@ -412,3 +412,10 @@ func TestAuthenticate_TimingAttack(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkParseFFmpegCycleLog(b *testing.B) {
+	log := "size=18859kB time=00:10:09.38 bitrate=253.5kbits/s speed=1x"
+	for i := 0; i < b.N; i++ {
+		_, _, _ = ParseFFmpegCycleLog(log)
+	}
+}
