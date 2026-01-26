@@ -99,3 +99,8 @@
 **Prevention:** Updated `handleMgmtBilibili` in `platform/service.go` to:
 1.  Validate `bvid` against `^[a-zA-Z0-9]+$` regex.
 2.  Use `NewSafeHTTPClient(10 * time.Second)` instead of `http.Get`, ensuring timeouts and safe IP resolution.
+
+## 2026-01-26 - DoS Protection for Internal Requests
+**Vulnerability:** The backend used `http.DefaultClient` for internal requests to SRS (at `127.0.0.1:1985`). `http.DefaultClient` has no timeout, so if the SRS process hangs, the management API request could hang indefinitely, leading to resource exhaustion (DoS).
+**Learning:** Even internal requests to localhost need timeouts. `NewSafeHTTPClient` cannot be used here because it blocks private IPs (including loopback) to prevent SSRF.
+**Prevention:** For internal requests where the destination is trusted (localhost), explicitly instantiate an `http.Client` with a timeout (e.g., `Timeout: 10 * time.Second`) instead of using `http.DefaultClient`.
