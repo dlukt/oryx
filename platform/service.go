@@ -1670,7 +1670,8 @@ func handleMgmtStreamsKickoff(ctx context.Context, handler *http.ServeMux) {
 					return 0, "", errors.Wrapf(err, "new request")
 				}
 
-				res, err := http.DefaultClient.Do(req.WithContext(ctx))
+				client := &http.Client{Timeout: 10 * time.Second}
+				res, err := client.Do(req.WithContext(ctx))
 				if err != nil {
 					return 0, "", errors.Wrapf(err, "do request")
 				}
