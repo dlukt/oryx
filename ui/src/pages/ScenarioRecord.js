@@ -5,16 +5,16 @@
 //
 import React from "react";
 import {Accordion, Form, Button, Table} from "react-bootstrap";
-import {Token, StreamURL, Clipboard} from "../utils";
+import {Token, StreamURL} from "../utils";
 import axios from "axios";
 import moment from "moment";
 import {useRecordStatus} from "../components/DvrStatus";
 import {useErrorBoundary} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {useSrsLanguage} from "../components/LanguageSwitch";
-import * as Icon from "react-bootstrap-icons";
 import PopoverConfirm from "../components/PopoverConfirm";
 import TutorialsText from "../components/TutorialsText";
+import CopyButton from "../components/CopyButton";
 import { minimatch } from "minimatch";
 
 export default function ScenarioRecord() {
@@ -193,16 +193,6 @@ function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultP
     }).catch(handleError);
   }, [refreshNow, handleError, setRefreshNow]);
 
-  const copyToClipboard = React.useCallback((e, text) => {
-    e.preventDefault();
-
-    Clipboard.copy(text).then(() => {
-      alert(t('helper.copyOk'));
-    }).catch((err) => {
-      alert(`${t('helper.copyFail')} ${err}`);
-    });
-  }, [t]);
-
   return (
     <Accordion defaultActiveKey={activeKeys}>
       <React.Fragment>
@@ -259,9 +249,7 @@ function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultP
         <Accordion.Header>{t('record.dir')}</Accordion.Header>
         <Accordion.Body>
           {t('record.dir2')} <code>{recordHome}</code> &nbsp;
-          <div role='button' style={{display: 'inline-block'}} title={t('helper.copy')}>
-            <Icon.Clipboard size={20} onClick={(e) => copyToClipboard(e, recordHome)} />
-          </div> &nbsp;
+          <CopyButton text={recordHome} title={t('helper.copy')} /> &nbsp;
           <TutorialsText prefixLine={true} title={t('record.dir3')}>
             {t('record.dir4')} <font color='red'>/data</font> {t('record.dir5')} &nbsp;
             <font color='red'>{t('record.dir6')}</font> {t('record.dir7')}
@@ -368,7 +356,7 @@ function ScenarioRecordImpl({activeKeys, defaultApplyAll, defaultGlobs, defaultP
                       <td>{`${file.duration.toFixed(1)}`} {t('helper.seconds')}</td>
                       <td>{`${file.size.toFixed(1)}`}MB</td>
                       <td>{file.nn}</td>
-                      <td><a href={file.location} onClick={(e) => copyToClipboard(e, file.location)} target='_blank' rel='noreferrer'>{t('helper.copy2')}</a></td>
+                      <td><CopyButton text={file.location} title={t('helper.copy2')} /></td>
                       <td>
                         <a href={file.preview} target='_blank' rel='noreferrer'>
                           {t('helper.preview')}
