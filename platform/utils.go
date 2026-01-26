@@ -2047,13 +2047,14 @@ const FFmpegAbnormalSlowSpeed = 0.5
 // If the speed of FFmpeg exceed this value for a long time, restart FFmpeg.
 const RestartFFmpegCountAbnormalSpeed = uint64(30)
 
+var ffmpegLogRegex = regexp.MustCompile(`time=(\S+)( .*)speed=(\S+)`)
+
 // ParseFFmpegCycleLog parse the FFmpeg cycle log, return the timestamp and speed. The log is mostly like:
 //
 //	size=18859kB time=00:10:09.38 bitrate=253.5kbits/s speed=1x
 //	frame=184 fps=9.7 q=28.0 size=364kB time=00:00:19.41 bitrate=153.7kbits/s dup=0 drop=235 speed=1.03x
 func ParseFFmpegCycleLog(line string) (timestamp, speed string, err error) {
-	re := regexp.MustCompile(`time=(\S+)( .*)speed=(\S+)`)
-	matches := re.FindStringSubmatch(line)
+	matches := ffmpegLogRegex.FindStringSubmatch(line)
 	if len(matches) != 4 {
 		err = errors.Errorf("parse %v failed, matches=%v", line, matches)
 		return
