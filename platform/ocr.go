@@ -1471,7 +1471,7 @@ func (v *OCRTask) DriveCleanupQueue(ctx context.Context) error {
 	}
 
 	// Ignore if not enough segments.
-	if v.CallbackQueue.count() <= maxCallbackSegments {
+	if v.CleanupQueue.count() <= maxCallbackSegments {
 		select {
 		case <-ctx.Done():
 		case <-time.After(1 * time.Second):
@@ -1480,11 +1480,11 @@ func (v *OCRTask) DriveCleanupQueue(ctx context.Context) error {
 	}
 
 	// Cleanup the old segments.
-	segment := v.CallbackQueue.first()
+	segment := v.CleanupQueue.first()
 	func() {
 		v.lock.Lock()
 		defer v.lock.Unlock()
-		v.CallbackQueue.dequeue(segment)
+		v.CleanupQueue.dequeue(segment)
 	}()
 	defer segment.Dispose()
 
