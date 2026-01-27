@@ -104,3 +104,11 @@
 **Vulnerability:** The backend used `http.DefaultClient` for internal requests to SRS (at `127.0.0.1:1985`). `http.DefaultClient` has no timeout, so if the SRS process hangs, the management API request could hang indefinitely, leading to resource exhaustion (DoS).
 **Learning:** Even internal requests to localhost need timeouts. `NewSafeHTTPClient` cannot be used here because it blocks private IPs (including loopback) to prevent SSRF.
 **Prevention:** For internal requests where the destination is trusted (localhost), explicitly instantiate an `http.Client` with a timeout (e.g., `Timeout: 10 * time.Second`) instead of using `http.DefaultClient`.
+
+## 2026-01-27 - Path Traversal in Record HLS Handler
+
+**Vulnerability:** The `/terraform/v1/hooks/record/hls/` endpoint allowed path traversal because it used the directory component derived from the URL path (`path.Dir(filename)`) to construct the file path. Although `http.ServeMux` cleans paths, a URL like `.../secret/data/secret.ts` would cause the handler to access `secret/data/secret.ts` relative to the application root, allowing access to arbitrary `.ts` files.
+
+**Learning:** When serving files based on a URL pattern like `:dir/:file`, do not blindly trust the `:dir` component from the URL to match the intended directory on disk. Even if the path doesn't contain `..`, allowing the user to specify the root directory (e.g., `secret` instead of `record`) leads to arbitrary file access.
+
+**Prevention:** Updated `platform/dvr-local-disk.go` to explicitly ignore the directory component from the URL and hardcode the base directory to `record`. Always validate that user-supplied path components do not allow escaping the intended scope.

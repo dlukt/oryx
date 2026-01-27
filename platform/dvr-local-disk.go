@@ -424,18 +424,17 @@ func (v *RecordWorker) Handle(ctx context.Context, handler *http.ServeMux) error
 		filename := r.URL.Path[len("/terraform/v1/hooks/record/hls/"):]
 		fileDir, fileBase := path.Dir(filename), path.Base(filename)
 		uuid := fileBase[:len(fileBase)-len(path.Ext(fileBase))]
-		dir, m3u8 := path.Dir(fileDir), path.Base(fileDir)
+		m3u8 := path.Base(fileDir)
 		if len(uuid) == 0 {
 			return errors.Errorf("invalid uuid %v from %v of %v", uuid, fileBase, r.URL.Path)
-		}
-		if len(dir) == 0 {
-			return errors.Errorf("invalid dir %v from %v of %v", dir, fileDir, r.URL.Path)
 		}
 		if len(m3u8) == 0 {
 			return errors.Errorf("invalid m3u8 %v from %v of %v", m3u8, fileDir, r.URL.Path)
 		}
 
-		tsFilePath := path.Join(dir, m3u8, fmt.Sprintf("%v.ts", uuid))
+		// The dir is always "record", so we ignore the dir in URL.
+		// Note that we must use path.Join to join the path, to avoid path traversal.
+		tsFilePath := path.Join("record", m3u8, fmt.Sprintf("%v.ts", uuid))
 		if _, err := os.Stat(tsFilePath); err != nil {
 			return errors.Wrapf(err, "no ts file %v", tsFilePath)
 		}
