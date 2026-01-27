@@ -8,7 +8,6 @@ import {useSrsLanguage} from "../components/LanguageSwitch";
 import {Accordion, Tab, Tabs} from "react-bootstrap";
 import {useSearchParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {Clipboard} from "../utils";
 import ScenarioSrt from "./ScenarioSrt";
 import ScenarioRecordCos from "./ScenarioRecordCos";
 import ScenarioRecordVod from "./ScenarioRecordVod";
@@ -50,16 +49,6 @@ function ScenarioOther({urls}) {
   const language = useSrsLanguage();
   const isZh = language === 'zh';
 
-  const copyToClipboard = React.useCallback((e, text) => {
-    e.preventDefault();
-
-    Clipboard.copy(text).then(() => {
-      alert(t('helper.copyOk'));
-    }).catch((err) => {
-      alert(`${t('helper.copyFail')} ${err}`);
-    });
-  }, [t]);
-
   return <>
     <Accordion defaultActiveKey='0'>
       <Accordion.Item eventKey="0">
@@ -75,7 +64,7 @@ function ScenarioOther({urls}) {
         <Accordion.Header>{t('scenario.srt')}</Accordion.Header>
         <Accordion.Body>
           <p>{isZh ? '可使用基本的推拉流场景实现，已经支持了SRT协议的教程。' : 'You can implement basic streaming scenarios with a tutorial that already supports the SRT protocol.'}</p>
-          <ScenarioSrt {...{copyToClipboard, urls}} />
+          <ScenarioSrt {...{urls}} />
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
