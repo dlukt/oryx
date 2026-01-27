@@ -10,13 +10,14 @@ import SrsQRCode from "../components/SrsQRCode";
 import * as Icon from "react-bootstrap-icons";
 import {useSrsLanguage} from "../components/LanguageSwitch";
 import IconButton from "../components/IconButton";
+import CopyButton from "../components/CopyButton";
 
 export default function ScenarioSrt(props) {
   const language = useSrsLanguage();
   return language === 'zh' ? <ScenarioSrtCn {...props} /> : <ScenarioSrtEn {...props} />;
 }
 
-function ScenarioSrtCn({copyToClipboard, urls}) {
+function ScenarioSrtCn({urls}) {
   const {srtPublishUrl, srtPlayUrl, flvPlayer, hlsPlayer, flvUrl, m3u8Url, rtcPlayer, updateStreamName} = urls;
   const [hostname, setHostname] = React.useState();
   const [srtPort, setSrtPort] = React.useState();
@@ -113,30 +114,22 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>Type：<code>Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, hostname)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={hostname} />
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPort)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPort} />
                 </li>
                 <li>
                   Latency：<code>20</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '20')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'20'} />
                 </li>
                 <li>
                   Stream ID：<code>{srtPublishStreamId}</code> &nbsp;
                   <IconButton title='更换流名称' onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishStreamId)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishStreamId} />
                 </li>
               </ol>
             </li>
@@ -152,27 +145,19 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>Stream Type(码流类型)：<code>SRT Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, hostname)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={hostname} />
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPort)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPort} />
                 </li>
                 <li>
                   Latency(延迟)：<code>20</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '20')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'20'} />
                 </li>
                 <li>
                   Stream ID(流ID)：<code>{srtPlayStreamId}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayStreamId)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPlayStreamId} />
                 </li>
                 <li>注意：若无法播放，请取消勾选<code>Use Hardware Decoder(使用硬件解码器)</code></li>
               </ol>
@@ -184,15 +169,11 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>可以用FFplay播放，参考下面的<code>ffplay播放</code>部分</li>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -241,9 +222,7 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                   <IconButton title='更换流名称' onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishUrl} />
                 </li>
                 <li>推流密钥（串流密钥）：<code>无，注意请不要填任何字符串</code></li>
               </ol>
@@ -256,9 +235,7 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                 <li>码率控制：<code>CBR</code></li>
                 <li>
                   关键帧间隔： <code>3</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, '3')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'3'} />
                 </li>
                 <li>CPU使用预设：<code>veryfast</code></li>
                 <li>配置（Profile）：<code>baseline</code></li>
@@ -271,24 +248,18 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
           <ol>
             <li>
               SRT流播放地址：<br/><code>{srtPlayUrl}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={srtPlayUrl} />
             </li>
             <li>下载<a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>ffplay</a>，FFmpeg自带的低延迟播放器</li>
             <li>
               Windows，执行命令：<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayWindows} />
             </li>
             <li>
               Mac或Linux，执行命令：<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayMac)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayMac} />
             </li>
             <li>SRT流画面出来较慢，请稍安勿躁</li>
             <li>
@@ -296,15 +267,11 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
               <ul>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -353,9 +320,7 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
                   <IconButton title='更换流名称' onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishUrl} />
                   <br/>
                   <SrsQRCode url={srtPublishUrl} />
                 </li>
@@ -371,25 +336,19 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
           <ol>
             <li>
               SRT流播放地址：<br/><code>{srtPlayUrl}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={srtPlayUrl} />
             </li>
             <SrsQRCode url={srtPlayUrl} />
             <li>下载<a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>ffplay</a>，FFmpeg自带的低延迟播放器</li>
             <li>
               Windows，执行命令：<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayWindows} />
             </li>
             <li>
               Mac或Linux，执行命令：<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, ffplayMac)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayMac} />
             </li>
             <li>SRT流画面出来较慢，请稍安勿躁</li>
             <li>
@@ -397,15 +356,11 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
               <ul>
                 <li>
                   播放<a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV流</a> <code>{flvUrl}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   播放<a href={hlsPlayer} target='_blank' rel='noreferrer'>HLS流</a> <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title='拷贝' onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 <li>播放<a href={rtcPlayer} target='_blank' rel='noreferrer'>WebRTC流</a></li>
               </ul>
@@ -418,7 +373,7 @@ function ScenarioSrtCn({copyToClipboard, urls}) {
   );
 }
 
-function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
+function ScenarioSrtEn({updateStreamName, urls}) {
   const {srtPublishUrl, srtPlayUrl, flvPlayer, hlsPlayer, flvUrl, m3u8Url, rtcPlayer} = urls;
   const [hostname, setHostname] = React.useState();
   const [srtPort, setSrtPort] = React.useState();
@@ -487,30 +442,22 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Type: <code>Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, hostname)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={hostname} />
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPort)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPort} />
                 </li>
                 <li>
                   Latency：<code>20</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '20')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'20'} />
                 </li>
                 <li>
                   Stream ID：<code>{srtPublishStreamId}</code> &nbsp;
                   <IconButton title='Change' onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPublishStreamId)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishStreamId} />
                 </li>
               </ol>
             </li>
@@ -526,27 +473,19 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Stream Type: <code>SRT Caller</code></li>
                 <li>
                   Hostname：<code>{hostname}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, hostname)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={hostname} />
                 </li>
                 <li>
                   Port：<code>{srtPort}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPort)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPort} />
                 </li>
                 <li>
                   Latency(延迟)：<code>20</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '20')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'20'} />
                 </li>
                 <li>
                   Stream ID(流ID)：<code>{srtPlayStreamId}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPlayStreamId)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPlayStreamId} />
                 </li>
                 <li>Note: If play failed, uncheck the <code>Use Hardware Decoder</code> and try</li>
               </ol>
@@ -558,16 +497,12 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>For ffplay, please read other section</li>
                 <li>
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV</a> <code>{flvUrl}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   HLS by <a href={hlsPlayer} target='_blank' rel='noreferrer'>H5</a> &nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 <li>WebRTC by <a href={rtcPlayer} target='_blank' rel='noreferrer'>H5</a></li>
               </ul>
@@ -610,9 +545,7 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                   <IconButton title='Change' onClick={updateStreamName}>
                     <Icon.ArrowRepeat size={20} />
                   </IconButton> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPublishUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={srtPublishUrl} />
                 </li>
                 <li>Stream Key: <code>Empty. Please keep it empty.</code></li>
               </ol>
@@ -625,9 +558,7 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>Rate Control: <code>CBR</code></li>
                 <li>
                   Keyframe Interval: <code>3</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, '3')}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={'3'} />
                 </li>
                 <li>CPU Usage Preset: <code>veryfast</code></li>
                 <li>Profile: <code>baseline</code></li>
@@ -640,24 +571,18 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
           <ol>
             <li>
               SRT URL: <br/><code>{srtPlayUrl}</code> &nbsp;
-              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, srtPlayUrl)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={srtPlayUrl} />
             </li>
             <li>Download ffplay from <a href='https://ffmpeg.org/download.html' target='_blank' rel='noreferrer'>here</a>, a low latency player by FFmpeg</li>
             <li>
               For Windows:<br/>
               <code>{ffplayWindows}</code> &nbsp;
-              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, ffplayWindows)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayWindows} />
             </li>
             <li>
               For Mac or Linux:<br/>
               <code>{ffplayMac}</code> &nbsp;
-              <IconButton title='Copy' onClick={(e) => copyToClipboard(e, ffplayMac)}>
-                <Icon.Clipboard size={20} />
-              </IconButton>
+              <CopyButton text={ffplayMac} />
             </li>
             <li>It takes a while to render the SRT stream, please wait.</li>
             <li>
@@ -666,16 +591,12 @@ function ScenarioSrtEn({updateStreamName, copyToClipboard, urls}) {
                 <li>For ffplay, please read other section</li>
                 <li>
                   <a href={flvPlayer} target='_blank' rel='noreferrer'>HTTP-FLV</a> <code>{flvUrl}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, flvUrl)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={flvUrl} />
                 </li>
                 <li>
                   HLS by <a href={hlsPlayer} target='_blank' rel='noreferrer'>H5</a> &nbsp;
                   <code>{m3u8Url}</code> &nbsp;
-                  <IconButton title='Copy' onClick={(e) => copyToClipboard(e, m3u8Url)}>
-                    <Icon.Clipboard size={20} />
-                  </IconButton>
+                  <CopyButton text={m3u8Url} />
                 </li>
                 <li>WebRTC by <a href={rtcPlayer} target='_blank' rel='noreferrer'>H5</a></li>
               </ul>
